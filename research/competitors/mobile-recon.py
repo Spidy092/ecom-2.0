@@ -44,13 +44,17 @@ JS_METRICS = r"""
     'a[href], button, input, select, textarea, [role="button"], [role="link"], [role="searchbox"]'
   )].filter(visible);
 
-  const controlText = (el) => [
-    el.innerText,
-    el.value,
-    el.placeholder,
-    el.getAttribute('aria-label'),
-    el.getAttribute('title')
-  ].filter(Boolean).join(' ').replace(/\s+/g, ' ').trim();
+  const controlText = (el) => {
+    const labels = el.labels ? [...el.labels].map((label) => label.innerText) : [];
+    return [
+      ...labels,
+      el.innerText,
+      el.value,
+      el.placeholder,
+      el.getAttribute('aria-label'),
+      el.getAttribute('title')
+    ].filter(Boolean).join(' ').replace(/\s+/g, ' ').trim();
+  };
 
   const controlsByText = (pattern) => controls.filter((el) => pattern.test(controlText(el)));
   const topOf = (el) => Math.round(el.getBoundingClientRect().top + window.scrollY);
@@ -130,15 +134,39 @@ def hostname_for(url: str) -> str:
     return parsed.hostname or "local-file"
 
 
-def classify_http_status(http_status: int | None) -> tuple[str, bool]:
-    """Return research status and whether page-level UX metrics are interpretable."""
-    if http_status is None:
-        # file:// and some browser navigations have no HTTP response object.
-        return "ok", True
+def classify_page(
+    http_status: int | None,
+    title: str | None,
+    final_url: str | None,
+) -> tuple[str, bool]:
+    """Return research status and whether storefront UX metrics are interpretable."""
+    normalized_title = (title or "").strip().lower()
+    normalized_url = (final_url or "").lower()
+
     if http_status in (401, 403):
         return "blocked", False
-    if 400 <= http_status:
+    if http_status is not None and 400 <= http_status:
         return "http_error", False
+
+    challenge_title_markers = (
+        "just a moment",
+        "robot challenge",
+        "attention required",
+        "security check",
+        "checking your browser",
+    )
+    challenge_url_markers = (
+        "/captcha",
+        "sgcaptcha",
+        "/cdn-cgi/challenge",
+    )
+
+    if any(marker in normalized_title for marker in challenge_title_markers):
+        return "challenge", False
+    if any(marker in normalized_url for marker in challenge_url_markers):
+        return "challenge", False
+
+    # file:// and successful HTTP pages are usable unless a challenge/error was detected.
     return "ok", True
 
 
@@ -200,8 +228,8 @@ def measure_target(browser, target: dict) -> dict:
 
         page.wait_for_timeout(SETTLE_MS)
         result.update(page.evaluate(JS_METRICS))
-        result["status"], result["metrics_interpretable"] = classify_http_status(
-            result["http_status"]
+        result["status"], result["metrics_interpretable"] = classify_page(
+            result["http_status"], result.get("title"), result.get("final_url")
         )
 
         SCREENSHOTS_DIR.mkdir(parents=True, exist_ok=True)
