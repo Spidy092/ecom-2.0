@@ -1,15 +1,22 @@
-name: Engineering alpha PHP smoke
+name: Engineering alpha smoke
 
 on:
   pull_request:
     paths:
       - 'packages/**/*.php'
+      - 'packages/**/*.js'
+      - 'packages/**/*.json'
+      - 'packages/**/*.css'
       - '.github/workflows/engineering-alpha-php.yml'
   push:
     branches:
       - agent/grovia-alpha-skeleton
+      - agent/grovia-store-api-slice
     paths:
       - 'packages/**/*.php'
+      - 'packages/**/*.js'
+      - 'packages/**/*.json'
+      - 'packages/**/*.css'
       - '.github/workflows/engineering-alpha-php.yml'
 
 permissions:
@@ -39,3 +46,20 @@ jobs:
           for file in "${files[@]}"; do
             php -l "$file"
           done
+
+  javascript-contracts:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      - name: Check product workspace JavaScript syntax
+        run: |
+          node --check packages/storefront-core/assets/js/product-workspace-model.js
+          node --check packages/storefront-core/assets/js/product-workspace.js
+      - name: Validate block metadata JSON
+        run: node -e "JSON.parse(require('fs').readFileSync('packages/storefront-core/blocks/product-workspace/block.json','utf8'))"
+      - name: Run product workspace model tests
+        run: node --test packages/storefront-core/tests/js/product-workspace-model.test.js
