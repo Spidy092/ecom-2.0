@@ -1,0 +1,38 @@
+[
+  {
+    "id": "aisleflow-v0",
+    "name": "AisleFlow V0 control",
+    "kind": "local",
+    "path": "../prototypes/aisleflow-v0/index.html"
+  },
+  {
+    "id": "bacola",
+    "name": "Bacola",
+    "kind": "remote",
+    "url": "https://klbtheme.com/bacola/"
+  },
+  {
+    "id": "freshio",
+    "name": "Freshio",
+    "kind": "remote",
+    "url": "https://demo2.pavothemes.com/freshio/"
+  },
+  {
+    "id": "organio",
+    "name": "Organio",
+    "kind": "remote",
+    "url": "https://demo.casethemes.net/organio/"
+  },
+  {
+    "id": "greenmart-fresh",
+    "name": "GreenMart Fresh Food & Grocery",
+    "kind": "remote",
+    "url": "https://el3.thembaydev.com/greenmart_fresh/"
+  },
+  {
+    "id": "woodmart-grocery",
+    "name": "WoodMart Grocery archive",
+    "kind": "remote",
+    "url": "https://woodmart.xtemos.com/product-category/other/grocery/demo/grocery/"
+  }
+]

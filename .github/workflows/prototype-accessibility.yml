@@ -1,0 +1,42 @@
+name: Prototype accessibility smoke
+
+on:
+  push:
+    branches:
+      - agent/grovia-foundation
+    paths:
+      - 'research/prototypes/aisleflow-v0/**'
+      - '.agents/skills/webapp-testing/**'
+      - '.github/workflows/prototype-accessibility.yml'
+  pull_request:
+    paths:
+      - 'research/prototypes/aisleflow-v0/**'
+      - '.github/workflows/prototype-accessibility.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  browser-smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+          cache-dependency-path: research/prototypes/aisleflow-v0/requirements-dev.txt
+
+      - name: Install Playwright
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r research/prototypes/aisleflow-v0/requirements-dev.txt
+          python -m playwright install --with-deps chromium
+
+      - name: Run prototype accessibility smoke checks
+        run: python research/prototypes/aisleflow-v0/browser_accessibility_smoke.py

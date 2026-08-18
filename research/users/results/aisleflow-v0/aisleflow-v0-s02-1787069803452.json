@@ -1,0 +1,589 @@
+{
+  "schema": "aisleflow-v0-session-1",
+  "exported_at": "2026-08-18T16:16:43.451Z",
+  "participant": {
+    "code": "s02",
+    "group": "builder"
+  },
+  "privacy": {
+    "network_telemetry": false,
+    "search_terms_recorded": false,
+    "postcode_recorded": false,
+    "note": "This file is generated locally in the browser. Search text and postcode values are intentionally excluded."
+  },
+  "prototype": {
+    "mode": "first-time",
+    "viewport_css_px": {
+      "width": 1854,
+      "height": 961
+    }
+  },
+  "built_in_metrics": {
+    "elapsed": "02:35",
+    "deliberate_interactions": "75",
+    "surfaces": "15",
+    "first_add": "43s"
+  },
+  "final_state": {
+    "basket_items": "43",
+    "basket_total": "₹4,535",
+    "delivery_result": "Prototype: delivery available today."
+  },
+  "recorder": {
+    "elapsed_ms": 155408,
+    "event_count": 86,
+    "events": [
+      {
+        "at_ms": 20319,
+        "type": "delivery_check",
+        "available": false
+      },
+      {
+        "at_ms": 25670,
+        "type": "delivery_check",
+        "available": true
+      },
+      {
+        "at_ms": 29969,
+        "type": "search_change",
+        "query_length": 1,
+        "empty": false
+      },
+      {
+        "at_ms": 32006,
+        "type": "search_change",
+        "query_length": 0,
+        "empty": true
+      },
+      {
+        "at_ms": 32757,
+        "type": "search_change",
+        "query_length": 1,
+        "empty": false
+      },
+      {
+        "at_ms": 35627,
+        "type": "search_change",
+        "query_length": 0,
+        "empty": true
+      },
+      {
+        "at_ms": 36226,
+        "type": "search_change",
+        "query_length": 1,
+        "empty": false
+      },
+      {
+        "at_ms": 36684,
+        "type": "search_change",
+        "query_length": 3,
+        "empty": false
+      },
+      {
+        "at_ms": 38380,
+        "type": "search_change",
+        "query_length": 2,
+        "empty": false
+      },
+      {
+        "at_ms": 43320,
+        "type": "product_action",
+        "action": "add",
+        "product": "curd-nandini",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 44964,
+        "type": "product_action",
+        "action": "increment",
+        "product": "curd-nandini",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 45165,
+        "type": "product_action",
+        "action": "increment",
+        "product": "curd-nandini",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 45380,
+        "type": "product_action",
+        "action": "increment",
+        "product": "curd-nandini",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 45525,
+        "type": "product_action",
+        "action": "increment",
+        "product": "curd-nandini",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 45658,
+        "type": "product_action",
+        "action": "increment",
+        "product": "curd-nandini",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 45817,
+        "type": "product_action",
+        "action": "increment",
+        "product": "curd-nandini",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 45977,
+        "type": "product_action",
+        "action": "increment",
+        "product": "curd-nandini",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 46136,
+        "type": "product_action",
+        "action": "increment",
+        "product": "curd-nandini",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 46291,
+        "type": "product_action",
+        "action": "increment",
+        "product": "curd-nandini",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 46498,
+        "type": "product_action",
+        "action": "increment",
+        "product": "curd-nandini",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 46685,
+        "type": "product_action",
+        "action": "increment",
+        "product": "curd-nandini",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 46872,
+        "type": "product_action",
+        "action": "increment",
+        "product": "curd-nandini",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 47067,
+        "type": "product_action",
+        "action": "increment",
+        "product": "curd-nandini",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 47226,
+        "type": "product_action",
+        "action": "increment",
+        "product": "curd-nandini",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 47406,
+        "type": "product_action",
+        "action": "increment",
+        "product": "curd-nandini",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 47580,
+        "type": "product_action",
+        "action": "increment",
+        "product": "curd-nandini",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 47796,
+        "type": "product_action",
+        "action": "increment",
+        "product": "curd-nandini",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 47935,
+        "type": "product_action",
+        "action": "increment",
+        "product": "curd-nandini",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 48100,
+        "type": "product_action",
+        "action": "increment",
+        "product": "curd-nandini",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 48275,
+        "type": "product_action",
+        "action": "increment",
+        "product": "curd-nandini",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 48441,
+        "type": "product_action",
+        "action": "increment",
+        "product": "curd-nandini",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 48634,
+        "type": "product_action",
+        "action": "increment",
+        "product": "curd-nandini",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 48801,
+        "type": "product_action",
+        "action": "increment",
+        "product": "curd-nandini",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 48982,
+        "type": "product_action",
+        "action": "increment",
+        "product": "curd-nandini",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 49141,
+        "type": "product_action",
+        "action": "increment",
+        "product": "curd-nandini",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 49301,
+        "type": "product_action",
+        "action": "increment",
+        "product": "curd-nandini",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 49481,
+        "type": "product_action",
+        "action": "increment",
+        "product": "curd-nandini",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 49669,
+        "type": "product_action",
+        "action": "increment",
+        "product": "curd-nandini",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 49849,
+        "type": "product_action",
+        "action": "increment",
+        "product": "curd-nandini",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 52258,
+        "type": "navigation",
+        "destination": "search",
+        "source": "mobile-dock"
+      },
+      {
+        "at_ms": 53416,
+        "type": "navigation",
+        "destination": "aisles",
+        "source": "mobile-dock"
+      },
+      {
+        "at_ms": 55068,
+        "type": "navigation",
+        "destination": "list",
+        "source": "mobile-dock"
+      },
+      {
+        "at_ms": 65547,
+        "type": "product_action",
+        "action": "add",
+        "product": "surf",
+        "source": "shopping-list"
+      },
+      {
+        "at_ms": 67012,
+        "type": "product_action",
+        "action": "increment",
+        "product": "surf",
+        "source": "shopping-list"
+      },
+      {
+        "at_ms": 67151,
+        "type": "product_action",
+        "action": "increment",
+        "product": "surf",
+        "source": "shopping-list"
+      },
+      {
+        "at_ms": 67296,
+        "type": "product_action",
+        "action": "increment",
+        "product": "surf",
+        "source": "shopping-list"
+      },
+      {
+        "at_ms": 67449,
+        "type": "product_action",
+        "action": "increment",
+        "product": "surf",
+        "source": "shopping-list"
+      },
+      {
+        "at_ms": 68122,
+        "type": "product_action",
+        "action": "increment",
+        "product": "surf",
+        "source": "shopping-list"
+      },
+      {
+        "at_ms": 68274,
+        "type": "product_action",
+        "action": "increment",
+        "product": "surf",
+        "source": "shopping-list"
+      },
+      {
+        "at_ms": 68427,
+        "type": "product_action",
+        "action": "increment",
+        "product": "surf",
+        "source": "shopping-list"
+      },
+      {
+        "at_ms": 68573,
+        "type": "product_action",
+        "action": "increment",
+        "product": "surf",
+        "source": "shopping-list"
+      },
+      {
+        "at_ms": 68718,
+        "type": "product_action",
+        "action": "increment",
+        "product": "surf",
+        "source": "shopping-list"
+      },
+      {
+        "at_ms": 68886,
+        "type": "product_action",
+        "action": "increment",
+        "product": "surf",
+        "source": "shopping-list"
+      },
+      {
+        "at_ms": 69018,
+        "type": "product_action",
+        "action": "increment",
+        "product": "surf",
+        "source": "shopping-list"
+      },
+      {
+        "at_ms": 69198,
+        "type": "product_action",
+        "action": "increment",
+        "product": "surf",
+        "source": "shopping-list"
+      },
+      {
+        "at_ms": 72349,
+        "type": "search_change",
+        "query_length": 0,
+        "empty": true
+      },
+      {
+        "at_ms": 78634,
+        "type": "basket_pulse_open_cart"
+      },
+      {
+        "at_ms": 87968,
+        "type": "search_change",
+        "query_length": 1,
+        "empty": false
+      },
+      {
+        "at_ms": 90580,
+        "type": "search_change",
+        "query_length": 3,
+        "empty": false
+      },
+      {
+        "at_ms": 92682,
+        "type": "search_change",
+        "query_length": 0,
+        "empty": true
+      },
+      {
+        "at_ms": 112087,
+        "type": "product_action",
+        "action": "save",
+        "product": "surf",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 114578,
+        "type": "product_action",
+        "action": "save",
+        "product": "surf",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 115835,
+        "type": "product_action",
+        "action": "save",
+        "product": "surf",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 117166,
+        "type": "product_action",
+        "action": "save",
+        "product": "surf",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 117778,
+        "type": "product_action",
+        "action": "save",
+        "product": "surf",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 117916,
+        "type": "product_action",
+        "action": "save",
+        "product": "surf",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 118077,
+        "type": "product_action",
+        "action": "save",
+        "product": "surf",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 118230,
+        "type": "product_action",
+        "action": "save",
+        "product": "surf",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 118409,
+        "type": "product_action",
+        "action": "save",
+        "product": "surf",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 118702,
+        "type": "product_action",
+        "action": "save",
+        "product": "surf",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 118882,
+        "type": "product_action",
+        "action": "save",
+        "product": "surf",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 123920,
+        "type": "product_action",
+        "action": "save",
+        "product": "eggs-farm",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 125586,
+        "type": "product_action",
+        "action": "save",
+        "product": "bread-wheat",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 127433,
+        "type": "product_action",
+        "action": "save",
+        "product": "rice-sona",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 130091,
+        "type": "product_action",
+        "action": "save",
+        "product": "dal-toor",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 136080,
+        "type": "basket_pulse_open_cart"
+      },
+      {
+        "at_ms": 136934,
+        "type": "basket_pulse_open_cart"
+      },
+      {
+        "at_ms": 137128,
+        "type": "basket_pulse_open_cart"
+      },
+      {
+        "at_ms": 137308,
+        "type": "basket_pulse_open_cart"
+      },
+      {
+        "at_ms": 144914,
+        "type": "product_action",
+        "action": "save",
+        "product": "toothpaste",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 146789,
+        "type": "basket_pulse_open_cart"
+      },
+      {
+        "at_ms": 147538,
+        "type": "basket_pulse_open_cart"
+      },
+      {
+        "at_ms": 147691,
+        "type": "basket_pulse_open_cart"
+      },
+      {
+        "at_ms": 149168,
+        "type": "prototype_checkout_boundary"
+      },
+      {
+        "at_ms": 149822,
+        "type": "prototype_checkout_boundary"
+      },
+      {
+        "at_ms": 150002,
+        "type": "prototype_checkout_boundary"
+      }
+    ]
+  }
+}

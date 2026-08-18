@@ -1,0 +1,54 @@
+name: Competitor mobile reconnaissance
+
+on:
+  push:
+    branches:
+      - agent/grovia-foundation
+    paths:
+      - 'research/competitors/**'
+      - 'research/prototypes/aisleflow-v0/**'
+      - '.github/workflows/competitor-mobile-recon.yml'
+  pull_request:
+    paths:
+      - 'research/competitors/**'
+      - '.github/workflows/competitor-mobile-recon.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  recon:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+          cache-dependency-path: research/prototypes/aisleflow-v0/requirements-dev.txt
+
+      - name: Install Playwright
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r research/prototypes/aisleflow-v0/requirements-dev.txt
+          python -m playwright install --with-deps chromium
+
+      - name: Run read-only mobile reconnaissance
+        run: python research/competitors/mobile-recon.py
+
+      - name: Upload research evidence
+        uses: actions/upload-artifact@v7
+        with:
+          name: mobile-competitor-recon-${{ github.run_number }}
+          path: |
+            research/competitors/results/mobile-recon.json
+            research/competitors/results/mobile-recon.csv
+            research/competitors/results/screenshots/
+          if-no-files-found: error
+          retention-days: 14

@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Working Product — Sales Page V0 Research</title>
+  <meta name="description" content="Low-fidelity sales-message prototype for a grocery-first WooCommerce product." />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to product</a>
+
+  <div class="research-banner">
+    <strong>Research prototype</strong>
+    <span>Codename only · no checkout · no final brand · no marketing claims without evidence</span>
+  </div>
+
+  <header class="site-header">
+    <a class="wordmark" href="#top" aria-label="Working product home">[ Product codename ]</a>
+    <nav aria-label="Page navigation">
+      <a href="#why">Why</a>
+      <a href="#proof">Proof</a>
+      <a href="#included">Included</a>
+      <a href="#offer">Offer</a>
+    </nav>
+  </header>
+
+  <main id="main">
+    <section class="hero" id="top" aria-labelledby="hero-title">
+      <div class="hero-copy">
+        <p class="eyebrow">Grocery-first WooCommerce product</p>
+        <h1 id="hero-title">Build the grocery store people can shop quickly.</h1>
+        <p class="lede">A block-first WooCommerce theme + companion core plugin focused on fast basket building, repeat purchases, delivery certainty, and a smaller required stack.</p>
+
+        <div class="hero-actions">
+          <a class="button primary" href="../aisleflow-v0/index.html">Try the shopping flow</a>
+          <a class="button secondary" href="#included">See what is included</a>
+        </div>
+
+        <ul class="fact-line" aria-label="Product facts">
+          <li>WooCommerce-native commerce</li>
+          <li>No mandatory Elementor</li>
+          <li>One focused starter store</li>
+          <li>Theme + one core plugin</li>
+        </ul>
+      </div>
+
+      <aside class="task-card" aria-label="Example shopping task">
+        <div class="task-card-header">
+          <span>Weekly basket</span>
+          <strong>Keep shopping</strong>
+        </div>
+        <div class="task-step"><span>Milk · 1 L</span><span class="qty">− &nbsp;2&nbsp; +</span></div>
+        <div class="task-step"><span>Eggs · 6 pcs</span><span class="qty">− &nbsp;2&nbsp; +</span></div>
+        <div class="task-step"><span>Tomato · 1 kg</span><span class="qty">− &nbsp;2&nbsp; +</span></div>
+        <div class="task-step"><span>Rice · 5 kg</span><button type="button" disabled>Add</button></div>
+        <div class="task-total"><span>Basket stays visible</span><strong>6 items · ₹—</strong></div>
+        <p>This diagram illustrates the interaction thesis. It is not a conversion claim.</p>
+      </aside>
+    </section>
+
+    <section class="problem" id="why" aria-labelledby="why-title">
+      <div class="section-intro">
+        <p class="eyebrow">Why a grocery-specific product?</p>
+        <h2 id="why-title">Buying ten groceries is not the same task as buying one laptop.</h2>
+      </div>
+
+      <div class="two-column">
+        <article>
+          <h3>For the shopper</h3>
+          <ul>
+            <li>Add and change simple-item quantities where products are discovered.</li>
+            <li>Check delivery serviceability before investing in a large basket.</li>
+            <li>Keep basket count and value visible while continuing to shop.</li>
+            <li>Use Buy Again / Shopping List patterns for repeat household purchases.</li>
+          </ul>
+        </article>
+
+        <article>
+          <h3>For the store owner</h3>
+          <ul>
+            <li>Start from one coherent grocery store instead of choosing among dozens of generic demos.</li>
+            <li>Use WordPress + WooCommerce + the product theme + one companion core plugin.</li>
+            <li>No mandatory Elementor dependency for the core storefront.</li>
+            <li>Receive maintained official releases with documented compatibility and support.</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section class="flow-proof" aria-labelledby="flow-title">
+      <div class="section-intro">
+        <p class="eyebrow">The product difference</p>
+        <h2 id="flow-title">Show the shopping task, not a wall of feature icons.</h2>
+        <p>Our working interaction hypothesis keeps the shopper in one continuous grocery context.</p>
+      </div>
+
+      <ol class="flow-list">
+        <li><span>1</span><div><strong>Confirm delivery</strong><p>Know whether the store serves the address before the basket grows.</p></div></li>
+        <li><span>2</span><div><strong>Search or move through aisles</strong><p>Use the same product interaction model instead of unrelated search/archive templates.</p></div></li>
+        <li><span>3</span><div><strong>Add and adjust inline</strong><p>Simple products do not require a product-detail detour just to change quantity.</p></div></li>
+        <li><span>4</span><div><strong>Basket stays understandable</strong><p>Persistent lightweight feedback instead of forcing a side-cart interruption after every add.</p></div></li>
+        <li><span>5</span><div><strong>Return faster next week</strong><p>Previous purchases and a household list become first-class paths for repeat shoppers.</p></div></li>
+      </ol>
+
+      <a class="text-link" href="../aisleflow-v0/index.html">Open the interactive low-fidelity prototype →</a>
+    </section>
+
+    <section class="proof" id="proof" aria-labelledby="proof-title">
+      <div class="section-intro">
+        <p class="eyebrow">Trust must be earned</p>
+        <h2 id="proof-title">A new product cannot borrow trust from fake numbers.</h2>
+        <p>Before launch, this section must link to reproducible evidence. Unfinished evidence is shown honestly as pending.</p>
+      </div>
+
+      <div class="proof-grid">
+        <article><span class="status research">Research evidence</span><h3>Shopping-flow prototype</h3><p>Fixed mission, interaction count, accessibility smoke tests and competitor reconnaissance are already part of the research branch.</p></article>
+        <article><span class="status pending">Pending production build</span><h3>Performance</h3><p>Publish device, hosting, dataset and test conditions with any performance result. Never promise an arbitrary customer site will match it.</p></article>
+        <article><span class="status pending">Pending manual testing</span><h3>Accessibility</h3><p>Automated interaction invariants exist. Real keyboard, zoom and assistive-technology testing must be completed before conformance language.</p></article>
+        <article><span class="status planned">Required before sale</span><h3>Compatibility & security</h3><p>Supported WordPress/WooCommerce/PHP matrix, changelog, security reporting process and update policy must be public before paid launch.</p></article>
+      </div>
+    </section>
+
+    <section class="included" id="included" aria-labelledby="included-title">
+      <div class="section-intro">
+        <p class="eyebrow">V1 stays small</p>
+        <h2 id="included-title">One product. One starter store. A clear required stack.</h2>
+      </div>
+
+      <div class="stack-diagram" aria-label="Required product stack">
+        <div><span>1</span><strong>WordPress</strong><small>platform</small></div>
+        <div><span>2</span><strong>WooCommerce</strong><small>commerce truth</small></div>
+        <div><span>3</span><strong>Product Theme</strong><small>presentation</small></div>
+        <div><span>4</span><strong>Product Core</strong><small>grocery-specific behavior</small></div>
+      </div>
+
+      <div class="included-grid">
+        <article><strong>Theme</strong><p>Block-first storefront presentation and design system.</p></article>
+        <article><strong>Core plugin</strong><p>Shopping List, Buy Again, delivery serviceability and product-specific functionality.</p></article>
+        <article><strong>Modern Grocery starter store</strong><p>One exceptional starting point instead of dozens of shallow demos.</p></article>
+        <article><strong>Documentation</strong><p>Setup, customization, WooCommerce behavior, troubleshooting and developer notes.</p></article>
+        <article><strong>Maintained updates</strong><p>Available while commercial entitlement is active.</p></article>
+        <article><strong>Standard support</strong><p>Product setup, documented behavior, compatibility and product defects—not custom client development.</p></article>
+      </div>
+    </section>
+
+    <section class="setup" aria-labelledby="setup-title">
+      <div class="section-intro">
+        <p class="eyebrow">Store-owner experience</p>
+        <h2 id="setup-title">The setup should explain the business, not expose implementation chaos.</h2>
+      </div>
+
+      <ol class="setup-path">
+        <li><span>01</span><strong>Install WordPress + WooCommerce</strong></li>
+        <li><span>02</span><strong>Activate Theme + Core</strong></li>
+        <li><span>03</span><strong>Choose Modern Grocery starter store</strong></li>
+        <li><span>04</span><strong>Add brand basics + delivery area</strong></li>
+        <li><span>05</span><strong>Replace demo products and start selling</strong></li>
+      </ol>
+      <p class="note">The exact setup wizard is still a prototype requirement. Taxes, shipping, payments and legal configuration remain WooCommerce/store-owner responsibilities.</p>
+    </section>
+
+    <section class="offer" id="offer" aria-labelledby="offer-title">
+      <div class="offer-copy">
+        <p class="eyebrow">Commercial hypothesis — not yet a public offer</p>
+        <h2 id="offer-title">$59 / year</h2>
+        <p>One production store. Recognized local/dev/staging environments should not consume the production seat where provider validation makes that safe and supportable.</p>
+
+        <ul>
+          <li>Theme + Core</li>
+          <li>Modern Grocery starter store</li>
+          <li>Maintained updates while active</li>
+          <li>Standard support while active</li>
+          <li>30-day first-purchase refund hypothesis</li>
+        </ul>
+
+        <div class="expiry-note">
+          <strong>If the subscription ends:</strong>
+          <p>The already-installed GPL-compatible product keeps working. Maintained updates/support stop. The store is never remotely disabled.</p>
+        </div>
+      </div>
+
+      <aside class="research-cta">
+        <strong>Research mode</strong>
+        <p>Checkout is intentionally unavailable until pricing, refund/support policy, brand clearance, real-user validation and the Merchant-of-Record spike are complete.</p>
+        <a class="button primary" href="../aisleflow-v0/index.html">Try the shopping flow</a>
+        <a class="button secondary" href="../../users/v1-validation-plan.md">View validation plan</a>
+      </aside>
+    </section>
+
+    <section class="questions" aria-labelledby="questions-title">
+      <div class="section-intro">
+        <p class="eyebrow">What this product is not</p>
+        <h2 id="questions-title">Make the boundaries obvious before someone pays.</h2>
+      </div>
+      <div class="boundary-grid">
+        <p><strong>Not hosting.</strong><br />The customer chooses and manages hosting.</p>
+        <p><strong>Not payment processing.</strong><br />WooCommerce/payment gateways own checkout payments.</p>
+        <p><strong>Not a delivery fleet.</strong><br />V1 checks serviceability; it does not dispatch drivers or optimize routes.</p>
+        <p><strong>Not custom development.</strong><br />Standard support does not include building bespoke client features.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>Internal research prototype · 2026-08-18 · Final brand, proof, pricing and terms remain unapproved.</p>
+  </footer>
+
+  <script src="message-variants.js"></script>
+</body>
+</html>

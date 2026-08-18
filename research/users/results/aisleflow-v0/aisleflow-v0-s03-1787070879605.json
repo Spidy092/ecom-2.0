@@ -1,0 +1,347 @@
+{
+  "schema": "aisleflow-v0-session-1",
+  "exported_at": "2026-08-18T16:34:39.604Z",
+  "participant": {
+    "code": "s03",
+    "group": "shopper"
+  },
+  "privacy": {
+    "network_telemetry": false,
+    "search_terms_recorded": false,
+    "postcode_recorded": false,
+    "note": "This file is generated locally in the browser. Search text and postcode values are intentionally excluded."
+  },
+  "prototype": {
+    "mode": "first-time",
+    "viewport_css_px": {
+      "width": 400,
+      "height": 874
+    }
+  },
+  "built_in_metrics": {
+    "elapsed": "01:49",
+    "deliberate_interactions": "48",
+    "surfaces": "19",
+    "first_add": "25s"
+  },
+  "final_state": {
+    "basket_items": "16",
+    "basket_total": "₹795",
+    "delivery_result": "Prototype: delivery available today."
+  },
+  "recorder": {
+    "elapsed_ms": 109504,
+    "event_count": 50,
+    "events": [
+      {
+        "at_ms": 7016,
+        "type": "delivery_check",
+        "available": false
+      },
+      {
+        "at_ms": 10075,
+        "type": "delivery_check",
+        "available": true
+      },
+      {
+        "at_ms": 14083,
+        "type": "aisle_show_all"
+      },
+      {
+        "at_ms": 18006,
+        "type": "search_change",
+        "query_length": 4,
+        "empty": false
+      },
+      {
+        "at_ms": 18597,
+        "type": "search_change",
+        "query_length": 6,
+        "empty": false
+      },
+      {
+        "at_ms": 20410,
+        "type": "search_change",
+        "query_length": 0,
+        "empty": true
+      },
+      {
+        "at_ms": 22303,
+        "type": "search_change",
+        "query_length": 5,
+        "empty": false
+      },
+      {
+        "at_ms": 24640,
+        "type": "product_action",
+        "action": "add",
+        "product": "bread-wheat",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 25910,
+        "type": "aisle_show_all"
+      },
+      {
+        "at_ms": 27047,
+        "type": "aisle_change",
+        "aisle": "Dairy"
+      },
+      {
+        "at_ms": 29801,
+        "type": "aisle_change",
+        "aisle": "Household"
+      },
+      {
+        "at_ms": 33062,
+        "type": "product_action",
+        "action": "increment",
+        "product": "bread-wheat",
+        "source": "cart"
+      },
+      {
+        "at_ms": 33208,
+        "type": "product_action",
+        "action": "increment",
+        "product": "bread-wheat",
+        "source": "cart"
+      },
+      {
+        "at_ms": 33359,
+        "type": "product_action",
+        "action": "increment",
+        "product": "bread-wheat",
+        "source": "cart"
+      },
+      {
+        "at_ms": 33505,
+        "type": "product_action",
+        "action": "increment",
+        "product": "bread-wheat",
+        "source": "cart"
+      },
+      {
+        "at_ms": 33664,
+        "type": "product_action",
+        "action": "increment",
+        "product": "bread-wheat",
+        "source": "cart"
+      },
+      {
+        "at_ms": 33816,
+        "type": "product_action",
+        "action": "increment",
+        "product": "bread-wheat",
+        "source": "cart"
+      },
+      {
+        "at_ms": 33990,
+        "type": "product_action",
+        "action": "increment",
+        "product": "bread-wheat",
+        "source": "cart"
+      },
+      {
+        "at_ms": 34170,
+        "type": "product_action",
+        "action": "increment",
+        "product": "bread-wheat",
+        "source": "cart"
+      },
+      {
+        "at_ms": 35177,
+        "type": "product_action",
+        "action": "decrement",
+        "product": "bread-wheat",
+        "source": "cart"
+      },
+      {
+        "at_ms": 35336,
+        "type": "product_action",
+        "action": "decrement",
+        "product": "bread-wheat",
+        "source": "cart"
+      },
+      {
+        "at_ms": 35516,
+        "type": "product_action",
+        "action": "decrement",
+        "product": "bread-wheat",
+        "source": "cart"
+      },
+      {
+        "at_ms": 36460,
+        "type": "prototype_checkout_boundary"
+      },
+      {
+        "at_ms": 38500,
+        "type": "basket_pulse_open_cart"
+      },
+      {
+        "at_ms": 39541,
+        "type": "navigation",
+        "destination": "list",
+        "source": "mobile-dock"
+      },
+      {
+        "at_ms": 40498,
+        "type": "navigation",
+        "destination": "aisles",
+        "source": "mobile-dock"
+      },
+      {
+        "at_ms": 41546,
+        "type": "navigation",
+        "destination": "search",
+        "source": "mobile-dock"
+      },
+      {
+        "at_ms": 42738,
+        "type": "navigation",
+        "destination": "home",
+        "source": "mobile-dock"
+      },
+      {
+        "at_ms": 44467,
+        "type": "aisle_change",
+        "aisle": "Staples"
+      },
+      {
+        "at_ms": 46270,
+        "type": "aisle_change",
+        "aisle": "All"
+      },
+      {
+        "at_ms": 47970,
+        "type": "aisle_change",
+        "aisle": "Dairy"
+      },
+      {
+        "at_ms": 50093,
+        "type": "product_action",
+        "action": "add",
+        "product": "milk-amul",
+        "source": "shopping-list"
+      },
+      {
+        "at_ms": 51231,
+        "type": "product_action",
+        "action": "save",
+        "product": "milk-amul",
+        "source": "shopping-list"
+      },
+      {
+        "at_ms": 54290,
+        "type": "product_action",
+        "action": "save",
+        "product": "curd-nandini",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 55227,
+        "type": "product_action",
+        "action": "add",
+        "product": "curd-nandini",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 55380,
+        "type": "product_action",
+        "action": "increment",
+        "product": "curd-nandini",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 55539,
+        "type": "product_action",
+        "action": "increment",
+        "product": "curd-nandini",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 55692,
+        "type": "product_action",
+        "action": "increment",
+        "product": "curd-nandini",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 55858,
+        "type": "product_action",
+        "action": "increment",
+        "product": "curd-nandini",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 56010,
+        "type": "product_action",
+        "action": "increment",
+        "product": "curd-nandini",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 56165,
+        "type": "product_action",
+        "action": "increment",
+        "product": "curd-nandini",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 56331,
+        "type": "product_action",
+        "action": "increment",
+        "product": "curd-nandini",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 56482,
+        "type": "product_action",
+        "action": "increment",
+        "product": "curd-nandini",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 57502,
+        "type": "basket_pulse_open_cart"
+      },
+      {
+        "at_ms": 59098,
+        "type": "prototype_checkout_boundary"
+      },
+      {
+        "at_ms": 68514,
+        "type": "product_action",
+        "action": "increment",
+        "product": "milk-amul",
+        "source": "buy-again"
+      },
+      {
+        "at_ms": 71941,
+        "type": "product_action",
+        "action": "decrement",
+        "product": "milk-amul",
+        "source": "cart"
+      },
+      {
+        "at_ms": 72648,
+        "type": "product_action",
+        "action": "decrement",
+        "product": "milk-amul",
+        "source": "cart"
+      },
+      {
+        "at_ms": 78108,
+        "type": "navigation",
+        "destination": "cart",
+        "source": "mobile-dock"
+      },
+      {
+        "at_ms": 102855,
+        "type": "product_action",
+        "action": "add",
+        "product": "eggs-farm",
+        "source": "product-ledger"
+      }
+    ]
+  }
+}

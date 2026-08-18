@@ -1,0 +1,420 @@
+{
+  "schema": "aisleflow-v0-session-1",
+  "exported_at": "2026-08-18T15:51:47.143Z",
+  "participant": {
+    "code": "anonymous",
+    "group": "other"
+  },
+  "privacy": {
+    "network_telemetry": false,
+    "search_terms_recorded": false,
+    "postcode_recorded": false,
+    "note": "This file is generated locally in the browser. Search text and postcode values are intentionally excluded."
+  },
+  "prototype": {
+    "mode": "returning",
+    "viewport_css_px": {
+      "width": 1854,
+      "height": 961
+    }
+  },
+  "built_in_metrics": {
+    "elapsed": "02:14",
+    "deliberate_interactions": "53",
+    "surfaces": "18",
+    "first_add": "50s"
+  },
+  "final_state": {
+    "basket_items": "16",
+    "basket_total": "₹2,519",
+    "delivery_result": "Prototype: delivery available today."
+  },
+  "recorder": {
+    "elapsed_ms": 133981,
+    "event_count": 60,
+    "events": [
+      {
+        "at_ms": 8929,
+        "type": "delivery_check",
+        "available": false
+      },
+      {
+        "at_ms": 14036,
+        "type": "delivery_check",
+        "available": true
+      },
+      {
+        "at_ms": 24200,
+        "type": "search_change",
+        "query_length": 1,
+        "empty": false
+      },
+      {
+        "at_ms": 25002,
+        "type": "search_change",
+        "query_length": 2,
+        "empty": false
+      },
+      {
+        "at_ms": 25850,
+        "type": "search_change",
+        "query_length": 3,
+        "empty": false
+      },
+      {
+        "at_ms": 26509,
+        "type": "search_change",
+        "query_length": 5,
+        "empty": false
+      },
+      {
+        "at_ms": 27341,
+        "type": "search_change",
+        "query_length": 6,
+        "empty": false
+      },
+      {
+        "at_ms": 29563,
+        "type": "search_change",
+        "query_length": 8,
+        "empty": false
+      },
+      {
+        "at_ms": 30446,
+        "type": "search_change",
+        "query_length": 7,
+        "empty": false
+      },
+      {
+        "at_ms": 31134,
+        "type": "search_change",
+        "query_length": 0,
+        "empty": true
+      },
+      {
+        "at_ms": 40965,
+        "type": "search_change",
+        "query_length": 1,
+        "empty": false
+      },
+      {
+        "at_ms": 41476,
+        "type": "search_change",
+        "query_length": 2,
+        "empty": false
+      },
+      {
+        "at_ms": 42042,
+        "type": "search_change",
+        "query_length": 3,
+        "empty": false
+      },
+      {
+        "at_ms": 42773,
+        "type": "search_change",
+        "query_length": 5,
+        "empty": false
+      },
+      {
+        "at_ms": 43647,
+        "type": "search_change",
+        "query_length": 6,
+        "empty": false
+      },
+      {
+        "at_ms": 48178,
+        "type": "aisle_change",
+        "aisle": "Bakery"
+      },
+      {
+        "at_ms": 50121,
+        "type": "product_action",
+        "action": "add",
+        "product": "bread-wheat",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 51175,
+        "type": "product_action",
+        "action": "save",
+        "product": "bread-wheat",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 51980,
+        "type": "product_action",
+        "action": "save",
+        "product": "bread-wheat",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 52473,
+        "type": "product_action",
+        "action": "save",
+        "product": "bread-wheat",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 52646,
+        "type": "product_action",
+        "action": "save",
+        "product": "bread-wheat",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 52813,
+        "type": "product_action",
+        "action": "save",
+        "product": "bread-wheat",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 52980,
+        "type": "product_action",
+        "action": "save",
+        "product": "bread-wheat",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 53119,
+        "type": "product_action",
+        "action": "save",
+        "product": "bread-wheat",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 53299,
+        "type": "product_action",
+        "action": "save",
+        "product": "bread-wheat",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 53798,
+        "type": "product_action",
+        "action": "save",
+        "product": "bread-wheat",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 56719,
+        "type": "product_action",
+        "action": "add",
+        "product": "tomato",
+        "source": "shopping-list"
+      },
+      {
+        "at_ms": 58850,
+        "type": "product_action",
+        "action": "save",
+        "product": "bread-wheat",
+        "source": "shopping-list"
+      },
+      {
+        "at_ms": 62097,
+        "type": "product_action",
+        "action": "save",
+        "product": "bread-wheat",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 63076,
+        "type": "product_action",
+        "action": "save",
+        "product": "bread-wheat",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 66191,
+        "type": "aisle_change",
+        "aisle": "Staples"
+      },
+      {
+        "at_ms": 66539,
+        "type": "aisle_change",
+        "aisle": "Staples"
+      },
+      {
+        "at_ms": 72486,
+        "type": "product_action",
+        "action": "add",
+        "product": "eggs-farm",
+        "source": "buy-again"
+      },
+      {
+        "at_ms": 75922,
+        "type": "product_action",
+        "action": "add",
+        "product": "oil-sunflower",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 77233,
+        "type": "shopping_list_close"
+      },
+      {
+        "at_ms": 88268,
+        "type": "product_action",
+        "action": "add",
+        "product": "dal-toor",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 89469,
+        "type": "product_action",
+        "action": "add",
+        "product": "rice-sona",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 95523,
+        "type": "product_action",
+        "action": "add",
+        "product": "milk-amul",
+        "source": "buy-again"
+      },
+      {
+        "at_ms": 104309,
+        "type": "aisle_change",
+        "aisle": "Dairy"
+      },
+      {
+        "at_ms": 105156,
+        "type": "aisle_change",
+        "aisle": "Bakery"
+      },
+      {
+        "at_ms": 109362,
+        "type": "product_action",
+        "action": "decrement",
+        "product": "bread-wheat",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 109682,
+        "type": "product_action",
+        "action": "add",
+        "product": "bread-wheat",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 109862,
+        "type": "product_action",
+        "action": "decrement",
+        "product": "bread-wheat",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 111423,
+        "type": "product_action",
+        "action": "add",
+        "product": "bread-wheat",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 112139,
+        "type": "product_action",
+        "action": "decrement",
+        "product": "bread-wheat",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 113521,
+        "type": "aisle_change",
+        "aisle": "Snacks"
+      },
+      {
+        "at_ms": 114686,
+        "type": "product_action",
+        "action": "add",
+        "product": "chips-bingo",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 115831,
+        "type": "aisle_show_all"
+      },
+      {
+        "at_ms": 123571,
+        "type": "product_action",
+        "action": "increment",
+        "product": "dal-toor",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 123751,
+        "type": "product_action",
+        "action": "increment",
+        "product": "dal-toor",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 123973,
+        "type": "product_action",
+        "action": "increment",
+        "product": "dal-toor",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 124146,
+        "type": "product_action",
+        "action": "increment",
+        "product": "dal-toor",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 124328,
+        "type": "product_action",
+        "action": "increment",
+        "product": "dal-toor",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 124500,
+        "type": "product_action",
+        "action": "increment",
+        "product": "dal-toor",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 124674,
+        "type": "product_action",
+        "action": "increment",
+        "product": "dal-toor",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 124834,
+        "type": "product_action",
+        "action": "increment",
+        "product": "dal-toor",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 126916,
+        "type": "product_action",
+        "action": "add",
+        "product": "surf",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 129213,
+        "type": "navigation",
+        "destination": "list",
+        "source": "mobile-dock"
+      },
+      {
+        "at_ms": 130268,
+        "type": "navigation",
+        "destination": "aisles",
+        "source": "mobile-dock"
+      },
+      {
+        "at_ms": 131336,
+        "type": "navigation",
+        "destination": "search",
+        "source": "mobile-dock"
+      }
+    ]
+  }
+}

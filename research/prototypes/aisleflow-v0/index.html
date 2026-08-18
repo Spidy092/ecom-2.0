@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AisleFlow V0 — Grocery UX Prototype</title>
+  <meta name="description" content="Low-fidelity interaction prototype for a grocery-first WooCommerce product." />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="research-iteration.css" />
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to groceries</a>
+
+  <div class="prototype-shell" data-mode="first-time">
+    <header class="prototype-header">
+      <div class="prototype-title">
+        <span class="eyebrow">Internal prototype · not final branding</span>
+        <strong>AisleFlow V0</strong>
+      </div>
+
+      <details class="research-console">
+        <summary>Test controls</summary>
+        <div class="research-console-panel">
+          <div class="mode-switch" role="group" aria-label="Prototype shopper mode">
+            <button class="mode-button is-active" type="button" data-mode-button="first-time" aria-pressed="true">First-time test</button>
+            <button class="mode-button" type="button" data-mode-button="returning" aria-pressed="false">Repeat-shopper test</button>
+          </div>
+
+          <section class="research-meter" aria-label="Prototype research metrics">
+            <div><span class="metric-label">Elapsed</span><strong id="metric-time">00:00</strong></div>
+            <div><span class="metric-label">Interactions</span><strong id="metric-interactions">0</strong></div>
+            <div><span class="metric-label">Surfaces</span><strong id="metric-surfaces">1</strong></div>
+            <div><span class="metric-label">First add</span><strong id="metric-first-add">—</strong></div>
+            <button class="quiet-button" type="button" id="reset-research">Reset run</button>
+          </section>
+        </div>
+      </details>
+    </header>
+
+    <main id="main" tabindex="-1">
+      <section class="delivery-band" aria-labelledby="delivery-title">
+        <div class="delivery-copy">
+          <span class="section-kicker">Delivery area</span>
+          <h1 id="delivery-title">Check where we should deliver.</h1>
+          <p class="delivery-explainer">Know serviceability before building the cart.</p>
+        </div>
+        <form id="delivery-form" class="delivery-form">
+          <label for="postcode">Delivery postcode</label>
+          <div class="field-row">
+            <input id="postcode" name="postcode" inputmode="numeric" autocomplete="postal-code" maxlength="6" value="560001" aria-describedby="delivery-result" />
+            <button type="submit">Check</button>
+          </div>
+          <p id="delivery-result" class="delivery-result" role="status" aria-live="polite">Prototype: delivery available today.</p>
+        </form>
+      </section>
+
+      <section class="search-workspace" aria-labelledby="search-heading">
+        <div class="section-heading-row">
+          <div>
+            <span class="section-kicker">Start shopping</span>
+            <h2 id="search-heading">What do you need?</h2>
+          </div>
+          <span class="shortcut-note">Simple items add without a product-page detour</span>
+        </div>
+
+        <label class="search-box" for="search-input">
+          <span aria-hidden="true">⌕</span>
+          <input id="search-input" type="search" placeholder="Search milk, rice, tomatoes…" autocomplete="off" />
+          <kbd>/</kbd>
+        </label>
+      </section>
+
+      <section class="household-rhythm" id="returning-panel" hidden aria-labelledby="returning-title">
+        <div class="section-heading-row">
+          <div>
+            <span class="section-kicker">Recent purchases</span>
+            <h2 id="returning-title">Buy again</h2>
+          </div>
+          <span class="context-note">Products you bought before</span>
+        </div>
+        <div id="buy-again-list" class="quick-list"></div>
+      </section>
+
+      <section class="aisle-workspace" aria-labelledby="aisle-heading">
+        <div class="section-heading-row">
+          <div>
+            <span class="section-kicker">Aisle rail</span>
+            <h2 id="aisle-heading">Move through the store without losing your cart.</h2>
+          </div>
+          <button class="quiet-button" type="button" id="show-all">Show all</button>
+        </div>
+
+        <nav class="aisle-rail" id="aisle-rail" aria-label="Grocery aisles"></nav>
+
+        <div class="workspace-grid">
+          <aside class="aisle-summary" aria-label="Current aisle summary">
+            <div class="aisle-marker" id="aisle-marker">ALL</div>
+            <strong id="aisle-name">All groceries</strong>
+            <p id="aisle-description">A compact product ledger optimized for multi-item shopping.</p>
+            <div class="legend">
+              <span><i class="legend-dot in-stock"></i> In stock</span>
+              <span><i class="legend-dot low-stock"></i> Low stock</span>
+            </div>
+          </aside>
+
+          <section class="product-ledger" aria-label="Products">
+            <div class="results-summary" aria-live="polite">
+              <strong id="results-count">0 products</strong>
+              <span id="results-context">All aisles</span>
+            </div>
+            <div id="product-list" class="product-list"></div>
+            <p class="empty-state" id="empty-state" hidden>No matching groceries. Try another word or aisle.</p>
+          </section>
+        </div>
+      </section>
+
+      <section class="list-panel" id="list-panel" hidden aria-labelledby="list-title">
+        <div class="section-heading-row">
+          <div>
+            <span class="section-kicker">Saved for later</span>
+            <h2 id="list-title">Your saved groceries</h2>
+            <p class="context-note">Products you saved for a future cart.</p>
+          </div>
+          <button class="quiet-button" type="button" id="close-list">Close</button>
+        </div>
+        <div id="shopping-list" class="quick-list"></div>
+      </section>
+
+      <section class="cart-panel" id="cart-panel" hidden aria-labelledby="cart-title">
+        <div class="section-heading-row">
+          <div>
+            <span class="section-kicker">Cart</span>
+            <h2 id="cart-title">Your current cart</h2>
+          </div>
+          <button class="quiet-button" type="button" id="close-cart">Keep shopping</button>
+        </div>
+        <div id="cart-list" class="cart-list"></div>
+        <div class="cart-summary">
+          <div><span>Items</span><strong id="cart-summary-items">0</strong></div>
+          <div><span>Subtotal</span><strong id="cart-summary-total">₹0</strong></div>
+          <button type="button" class="primary-action" id="prototype-checkout">Continue to checkout prototype</button>
+        </div>
+        <p class="prototype-note">Prototype stops here. Payment/checkout implementation remains owned by WooCommerce.</p>
+      </section>
+    </main>
+
+    <div class="basket-pulse" id="basket-pulse" hidden role="status" aria-live="polite">
+      <div>
+        <span id="pulse-message">Cart updated</span>
+        <strong><span id="pulse-items">0</span> items · <span id="pulse-total">₹0</span></strong>
+      </div>
+      <button type="button" id="pulse-view-cart">View cart</button>
+    </div>
+
+    <nav class="mobile-dock" aria-label="Primary shopping navigation">
+      <button type="button" data-nav="home"><span aria-hidden="true">⌂</span><span>Home</span></button>
+      <button type="button" data-nav="search"><span aria-hidden="true">⌕</span><span>Search</span></button>
+      <button type="button" data-nav="aisles"><span aria-hidden="true">≡</span><span>Aisles</span></button>
+      <button type="button" data-nav="list"><span aria-hidden="true">✓</span><span>Saved</span></button>
+      <button type="button" data-nav="cart" class="dock-cart"><span aria-hidden="true">▣</span><span>Cart</span><em id="dock-cart-count" hidden>0</em></button>
+    </nav>
+  </div>
+
+  <script src="app.js"></script>
+  <script src="a11y-normalize.js"></script>
+  <script src="session-recorder.js"></script>
+</body>
+</html>

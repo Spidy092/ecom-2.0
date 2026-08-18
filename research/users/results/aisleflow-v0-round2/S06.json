@@ -1,0 +1,254 @@
+{
+  "schema": "aisleflow-v0-session-1",
+  "exported_at": "2026-08-18T17:19:01.496Z",
+  "participant": {
+    "code": "S06",
+    "group": "shopper"
+  },
+  "privacy": {
+    "network_telemetry": false,
+    "search_terms_recorded": false,
+    "postcode_recorded": false,
+    "note": "This file is generated locally in the browser. Search text and postcode values are intentionally excluded."
+  },
+  "prototype": {
+    "mode": "first-time",
+    "viewport_css_px": {
+      "width": 412,
+      "height": 924
+    }
+  },
+  "built_in_metrics": {
+    "elapsed": "01:40",
+    "deliberate_interactions": "17",
+    "surfaces": "11",
+    "first_add": "70s"
+  },
+  "final_state": {
+    "basket_items": "4",
+    "basket_total": "₹228",
+    "delivery_result": "Prototype: delivery available today."
+  },
+  "recorder": {
+    "elapsed_ms": 100321,
+    "event_count": 36,
+    "events": [
+      {
+        "at_ms": 14181,
+        "type": "search_change",
+        "query_length": 3,
+        "empty": false
+      },
+      {
+        "at_ms": 15161,
+        "type": "search_change",
+        "query_length": 4,
+        "empty": false
+      },
+      {
+        "at_ms": 16841,
+        "type": "search_change",
+        "query_length": 0,
+        "empty": true
+      },
+      {
+        "at_ms": 18605,
+        "type": "aisle_show_all"
+      },
+      {
+        "at_ms": 19889,
+        "type": "navigation",
+        "destination": "home",
+        "source": "mobile-dock"
+      },
+      {
+        "at_ms": 21256,
+        "type": "navigation",
+        "destination": "search",
+        "source": "mobile-dock"
+      },
+      {
+        "at_ms": 22678,
+        "type": "navigation",
+        "destination": "aisles",
+        "source": "mobile-dock"
+      },
+      {
+        "at_ms": 27998,
+        "type": "aisle_change",
+        "aisle": "Produce"
+      },
+      {
+        "at_ms": 31113,
+        "type": "aisle_change",
+        "aisle": "Household"
+      },
+      {
+        "at_ms": 35909,
+        "type": "search_change",
+        "query_length": 6,
+        "empty": false
+      },
+      {
+        "at_ms": 38063,
+        "type": "search_change",
+        "query_length": 3,
+        "empty": false
+      },
+      {
+        "at_ms": 38543,
+        "type": "search_change",
+        "query_length": 2,
+        "empty": false
+      },
+      {
+        "at_ms": 38910,
+        "type": "search_change",
+        "query_length": 1,
+        "empty": false
+      },
+      {
+        "at_ms": 39870,
+        "type": "search_change",
+        "query_length": 0,
+        "empty": true
+      },
+      {
+        "at_ms": 44029,
+        "type": "aisle_change",
+        "aisle": "All"
+      },
+      {
+        "at_ms": 47300,
+        "type": "search_change",
+        "query_length": 6,
+        "empty": false
+      },
+      {
+        "at_ms": 48543,
+        "type": "search_change",
+        "query_length": 5,
+        "empty": false
+      },
+      {
+        "at_ms": 49171,
+        "type": "search_change",
+        "query_length": 0,
+        "empty": true
+      },
+      {
+        "at_ms": 55521,
+        "type": "search_change",
+        "query_length": 2,
+        "empty": false
+      },
+      {
+        "at_ms": 56144,
+        "type": "search_change",
+        "query_length": 4,
+        "empty": false
+      },
+      {
+        "at_ms": 56694,
+        "type": "search_change",
+        "query_length": 6,
+        "empty": false
+      },
+      {
+        "at_ms": 57870,
+        "type": "search_change",
+        "query_length": 5,
+        "empty": false
+      },
+      {
+        "at_ms": 59282,
+        "type": "search_change",
+        "query_length": 0,
+        "empty": true
+      },
+      {
+        "at_ms": 63943,
+        "type": "search_change",
+        "query_length": 1,
+        "empty": false
+      },
+      {
+        "at_ms": 64688,
+        "type": "search_change",
+        "query_length": 4,
+        "empty": false
+      },
+      {
+        "at_ms": 66388,
+        "type": "search_change",
+        "query_length": 0,
+        "empty": true
+      },
+      {
+        "at_ms": 69958,
+        "type": "product_action",
+        "action": "add",
+        "product": "chips-bingo",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 71163,
+        "type": "product_action",
+        "action": "save",
+        "product": "chips-bingo",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 74259,
+        "type": "navigation",
+        "destination": "list",
+        "source": "mobile-dock"
+      },
+      {
+        "at_ms": 80039,
+        "type": "product_action",
+        "action": "save",
+        "product": "chips-bingo",
+        "source": "shopping-list"
+      },
+      {
+        "at_ms": 82564,
+        "type": "shopping_list_close"
+      },
+      {
+        "at_ms": 85186,
+        "type": "navigation",
+        "destination": "aisles",
+        "source": "mobile-dock"
+      },
+      {
+        "at_ms": 86872,
+        "type": "product_action",
+        "action": "add",
+        "product": "bread-wheat",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 88204,
+        "type": "product_action",
+        "action": "add",
+        "product": "eggs-farm",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 89376,
+        "type": "product_action",
+        "action": "save",
+        "product": "curd-nandini",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 90667,
+        "type": "product_action",
+        "action": "add",
+        "product": "milk-amul",
+        "source": "product-ledger"
+      }
+    ]
+  }
+}
