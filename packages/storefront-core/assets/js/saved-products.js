@@ -260,6 +260,14 @@
 			}
 		}
 
+		function focusAfterSavedRemoval() {
+			const nextRemove = savedProductsRoot.querySelector( '[data-bt-remove-saved]' );
+			const target = nextRemove || close || toggle;
+			if ( target ) {
+				target.focus( { preventScroll: true } );
+			}
+		}
+
 		function applyGuestSaved( productId, shouldSave ) {
 			const before = savedIds.slice();
 			const next = shouldSave
@@ -276,7 +284,7 @@
 			};
 		}
 
-		async function setSaved( productId, shouldSave ) {
+		async function setSaved( productId, shouldSave, focusPanelAfter ) {
 			if ( savedMutationInFlight ) {
 				return;
 			}
@@ -315,6 +323,9 @@
 
 				if ( ! panel.hidden ) {
 					await loadSavedProducts();
+					if ( focusPanelAfter ) {
+						focusAfterSavedRemoval();
+					}
 				}
 			} catch ( error ) {
 				announce( error.message || config.messages.savedUnavailable );
@@ -373,7 +384,7 @@
 			if ( saveButton ) {
 				const productId = Number( saveButton.dataset.productId );
 				if ( productId ) {
-					setSaved( productId, ! isSaved( productId ) );
+					setSaved( productId, ! isSaved( productId ), false );
 				}
 				return;
 			}
@@ -382,7 +393,7 @@
 			if ( removeButton ) {
 				const productId = Number( removeButton.dataset.productId );
 				if ( productId ) {
-					setSaved( productId, false );
+					setSaved( productId, false, true );
 				}
 				return;
 			}
