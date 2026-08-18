@@ -89,7 +89,7 @@ jobs:
       - name: Verify preinstalled Google Chrome
         run: google-chrome --version
       - name: Start pinned WordPress + WooCommerce environment
-        run: npx -y @wordpress/env@10.39.0 start --update
+        run: npx -y @wordpress/env@10.39.0 start
       - name: Activate alpha theme and seed deterministic products
         run: |
           npx -y @wordpress/env@10.39.0 run cli wp plugin status woocommerce
