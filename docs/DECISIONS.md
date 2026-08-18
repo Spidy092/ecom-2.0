@@ -96,12 +96,42 @@ Design/prototype Home -> Search/Shop -> product quantity interaction -> cart -> 
 
 Do not install skills merely because they rank highly. Review source, permissions/scripts, license, maintenance/security signals, and project relevance. Keep an inventory in `docs/SKILLS.md`.
 
+## D-015 — Research and uniqueness gate before implementation
+
+**Status:** Accepted  
+**Date:** 2026-08-18
+
+Decision: Grovia must not ship generic design or features. Every meaningful screen, component, flow, or feature requires current competitor/customer research and a written uniqueness thesis before implementation.
+
+Required pre-build questions:
+- What customer problem are we solving?
+- What do the strongest alternatives already do?
+- Where do their UX, setup, performance, accessibility, maintenance, or product decisions fall short?
+- What will our approach do materially better or differently?
+- What measurable criterion can prove the improvement?
+
+If there is no credible differentiation or user value, do not build it.
+
+## D-016 — Competitors are research inputs, never design/code sources
+
+**Status:** Accepted
+
+Decision: analyze competitors for user problems, interaction conventions, gaps, support pain, performance/maintenance burden, pricing, and positioning. Do not copy their code, images, copywriting, distinctive layouts, demo content, branding, or proprietary assets.
+
+## D-017 — “Grovia” is only a working codename
+
+**Status:** Accepted
+
+Decision: do not invest in public branding, domain purchases, marketplace identity, or trademark claims under “Grovia” until formal name research is complete.
+
+Reason: preliminary research found existing Grovia/GroVia brands, including software/AI businesses and a software-related trademark record. The final product name must pass a dedicated naming/domain/trademark screen and be more distinctive.
+
 ---
 
 ## Open decisions
 
 Record these as new entries when resolved:
-- final brand/product name;
+- final brand/product name after naming/trademark/domain research;
 - exact WordPress/WooCommerce/PHP support matrix;
 - licensing/update/payment provider;
 - Shopping List persistence model;
