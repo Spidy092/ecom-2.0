@@ -3,8 +3,9 @@
 
 	const config = window.BhaivaTechStorefrontConfig || {};
 	const model = window.BhaivaTechProductWorkspaceModel;
+	const endpoints = config.endpoints || {};
 
-	if ( ! model || ! config.restUrl || ! config.messages ) {
+	if ( ! model || ! endpoints.products || ! endpoints.cart || ! config.messages ) {
 		return;
 	}
 
@@ -67,7 +68,7 @@
 			throw requestError;
 		}
 
-		async function request( pathOrUrl, options ) {
+		async function request( endpoint, options ) {
 			const requestOptions = Object.assign(
 				{
 					credentials: 'same-origin',
@@ -92,11 +93,7 @@
 				);
 			}
 
-			const url = /^https?:\/\//.test( pathOrUrl )
-				? pathOrUrl
-				: new URL( pathOrUrl, config.restUrl ).toString();
-
-			return parseResponse( await fetch( url, requestOptions ) );
+			return parseResponse( await fetch( endpoint, requestOptions ) );
 		}
 
 		function focusProductAction( productId, preferredAction ) {
@@ -233,7 +230,7 @@
 		async function loadCart() {
 			beginBusy();
 			try {
-				reconcileCart( await request( 'cart', { method: 'GET' } ) );
+				reconcileCart( await request( endpoints.cart, { method: 'GET' } ) );
 			} catch ( error ) {
 				setStatus( config.messages.cartUnavailable );
 			} finally {
@@ -252,7 +249,7 @@
 			setStatus( config.messages.searching );
 
 			try {
-				const nextProducts = await request( model.buildProductsUrl( config.restUrl, query ), {
+				const nextProducts = await request( model.buildProductsUrl( endpoints.products, query ), {
 					method: 'GET',
 					signal: controller.signal,
 				} );
@@ -279,7 +276,7 @@
 			}
 		}
 
-		async function mutateCart( path, body, successMessage, focusProductId, focusAction ) {
+		async function mutateCart( endpoint, body, successMessage, focusProductId, focusAction ) {
 			if ( mutationInFlight ) {
 				return;
 			}
@@ -288,7 +285,7 @@
 			beginBusy();
 
 			try {
-				const nextCart = await request( path, {
+				const nextCart = await request( endpoint, {
 					method: 'POST',
 					body: JSON.stringify( body ),
 				} );
@@ -343,7 +340,7 @@
 
 			if ( action === 'add' ) {
 				mutateCart(
-					'cart/add-item',
+					endpoints.addItem,
 					{ id: productId, quantity: 1 },
 					config.messages.added,
 					productId,
@@ -360,7 +357,7 @@
 
 			if ( action === 'decrement' && Number( cartItem.quantity ) <= 1 ) {
 				mutateCart(
-					'cart/remove-item',
+					endpoints.removeItem,
 					{ key: cartItem.key },
 					config.messages.removed,
 					productId,
@@ -371,7 +368,7 @@
 
 			const delta = action === 'increment' ? 1 : -1;
 			mutateCart(
-				'cart/update-item',
+				endpoints.updateItem,
 				{ key: cartItem.key, quantity: Number( cartItem.quantity ) + delta },
 				config.messages.cartUpdated,
 				productId,
