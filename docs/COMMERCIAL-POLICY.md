@@ -15,15 +15,15 @@ This document defines the smallest customer promise we should be willing to oper
 **Billing:** annual recurring subscription
 
 Includes:
-- official Grovia-theme release package;
-- official Grovia Core companion plugin;
+- official product-theme release package;
+- official companion Core plugin;
 - one Modern Grocery starter site;
 - updates while entitlement is active;
 - security and compatibility maintenance for supported versions;
 - standard product support;
 - access to documentation and release notes;
 - one production activation;
-- one non-production staging/local activation where technically enforceable without abuse.
+- recognized non-production local/dev/staging environments should not consume the paid production seat where technically safe and supportable.
 
 Do not launch multiple paid tiers until customers create a real reason for them.
 
@@ -53,19 +53,22 @@ Never design a licensing failure that can take a production shop offline.
 
 The 1-site plan should allow:
 - **1 production domain**;
-- **1 staging/local development instance** associated with the same customer/site where practical.
+- recognized non-production development/staging environments without consuming the production entitlement where practical and secure.
 
 Examples of non-production environments we may recognize after technical validation:
 - `localhost`;
 - loopback/local development hosts;
-- common `.local`, `.test`, or recognized staging host patterns;
+- common `.local`, `.test`, `.dev`, or `.staging` style environments;
+- recognized hosting-provider staging domains;
 - a clearly marked staging subdomain associated with the production site.
 
 This is a desired policy, not yet a proven Lemon Squeezy implementation. Issue #14 must determine whether this can be delivered reliably without making abuse prevention or support too complex.
 
+The implementation must fail safely: a staging-detection mistake must not disable a production store.
+
 ### Domain changes
 
-Customers should be able to deactivate an old instance and activate a replacement without opening a support ticket in the normal case.
+Customers should be able to deactivate an old production instance and activate a replacement without opening a support ticket in the normal case.
 
 ## 4. Subscription lifecycle
 
@@ -94,7 +97,13 @@ A temporary failure to reach the licensing provider must never disable the exist
 
 ### Initial purchase
 
-Offer a **14-day refund window** for the first purchase.
+Offer a **30-day refund window** for the first purchase.
+
+Why this changed from the earlier 14-day hypothesis:
+- the product will initially have little/no marketplace review history;
+- buyers take more risk on a new commercial theme/product than on a mature incumbent;
+- 30-day guarantees are already normal among established premium WordPress products;
+- stronger risk reversal is more credible than fake launch discounts or artificial urgency.
 
 Goals:
 - reduce risk for a new product with little review history;
@@ -107,6 +116,8 @@ A customer asking within the window should not need to prove an elaborate techni
 ### Renewal
 
 Working policy: allow an **accidental-renewal refund request within 7 days** of the renewal charge when there has been no obvious abuse. Validate this against the final billing/MoR setup before publication.
+
+This is intentionally customer-friendly; many established WordPress products restrict renewal refunds more aggressively. We should keep the policy only if the MoR/payment mechanics and abuse rate make it sustainable.
 
 ### Abuse
 
@@ -123,10 +134,10 @@ Applicable consumer law and the Merchant of Record's rights take precedence. Lem
 Standard support covers:
 - installation/activation problems;
 - setup-wizard and starter-site problems;
-- bugs in documented Grovia functionality;
+- bugs in documented product functionality;
 - supported WordPress/WooCommerce compatibility issues;
 - clarification of documented settings/features;
-- reasonable help diagnosing whether Grovia is involved in a conflict;
+- reasonable help diagnosing whether our product is involved in a conflict;
 - license/update-delivery problems.
 
 ### Not included
@@ -205,7 +216,7 @@ Hosted checkout (MoR)
         ↓
 Receipt + license key
         ↓
-Download theme + Grovia Core
+Download theme + Core
         ↓
 Install / activate
         ↓
@@ -255,7 +266,7 @@ Prefer the MoR-hosted billing/customer portal for V1 rather than building our ow
 
 The product account area only needs to provide or link to:
 - license status;
-- active domain/instance status;
+- active production domain/instance status;
 - update entitlement;
 - documentation/support;
 - billing portal link.
@@ -295,15 +306,29 @@ Possible later structure, not a promise:
 
 Before public paid launch:
 - validate Lemon Squeezy vs Freemius with Issue #14;
-- confirm production + staging activation model;
-- confirm final refund wording with MoR/legal requirements;
+- confirm production + non-production activation model;
+- confirm final 30-day refund wording with MoR/legal requirements;
 - confirm support channel/tooling;
 - confirm exact compatibility matrix;
 - confirm final public product name;
 - confirm actual checkout/store approval;
-- prove theme + plugin update delivery end to end.
+- prove theme + plugin update delivery end to end;
+- validate that the annual price is preferable to/credible against one-time ThemeForest alternatives.
 
-## 17. V1 commercial principle
+## 17. Pricing research reference
+
+See `research/business/pricing-positioning.md`.
+
+Current state:
+- $59/year: **keep as hypothesis**;
+- 1 production site: **keep as hypothesis**;
+- recognized dev/staging: **desired not to consume production seat**;
+- first-purchase refund: **30-day hypothesis**;
+- accidental renewal: **7-day review/refund hypothesis**;
+- lifetime plan: **not V1**;
+- permanent fake discounting: **not allowed**.
+
+## 18. V1 commercial principle
 
 A customer should understand the offer in one sentence:
 
