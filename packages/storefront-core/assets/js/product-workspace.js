@@ -297,6 +297,11 @@
 			} catch ( error ) {
 				if ( error.cart ) {
 					reconcileCart( error.cart, focusProductId, focusAction );
+				} else {
+					// The clicked control is disabled before the request. Re-rendering
+					// from the last authoritative cart state restores an operable UI.
+					renderProducts();
+					focusProductAction( focusProductId, focusAction );
 				}
 				setStatus( error.message || config.messages.requestFailed );
 			} finally {
