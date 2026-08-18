@@ -71,6 +71,26 @@
     });
   }
 
+  function normalizeShopperLanguage() {
+    document.querySelectorAll('.add-button[aria-label]').forEach((button) => {
+      const current = button.getAttribute('aria-label') || '';
+      const next = current.replace(' to basket', ' to cart');
+      if (next !== current) button.setAttribute('aria-label', next);
+    });
+
+    const cartEmpty = cartPanel?.querySelector('.empty-state');
+    if (cartEmpty && /basket/i.test(cartEmpty.textContent || '')) {
+      cartEmpty.textContent = 'Your cart is empty. Add groceries from the aisle ledger.';
+    }
+
+    if (pulseMessage) {
+      const current = pulseMessage.textContent || '';
+      let next = current.replace(/^Saved (.+) to your list$/, 'Saved $1 for later');
+      next = next.replace(/^Removed (.+) from your list$/, 'Removed $1 from saved');
+      if (next !== current) pulseMessage.textContent = next;
+    }
+  }
+
   function normalizeDynamicControls() {
     document.querySelectorAll('.quantity-control').forEach((group) => {
       group.setAttribute('role', 'group');
@@ -108,12 +128,14 @@
     normalizeModeButtons();
     normalizeAisleButtons();
     normalizeDynamicControls();
+    normalizeShopperLanguage();
     normalizeLiveRegions();
   }
 
   function announceBasketChange() {
     window.clearTimeout(basketTimer);
     basketTimer = window.setTimeout(() => {
+      normalizeShopperLanguage();
       const message = pulseMessage?.textContent?.trim();
       if (!message) return;
       const items = pulseItems?.textContent?.trim();
