@@ -82,7 +82,7 @@
 
     document.querySelectorAll('.save-button').forEach((button) => {
       const saved = button.classList.contains('is-saved');
-      const label = saved ? 'Remove from list' : 'Save to list';
+      const label = saved ? 'Remove from saved' : 'Save for later';
       button.removeAttribute('aria-pressed');
       if (button.textContent !== label) button.textContent = label;
       button.style.minHeight = '32px';
@@ -118,7 +118,7 @@
       if (!message) return;
       const items = pulseItems?.textContent?.trim();
       const total = pulseTotal?.textContent?.trim();
-      const basketContext = items && total ? ` Basket: ${items} items, ${total}.` : '';
+      const basketContext = items && total ? ` Cart: ${items} items, ${total}.` : '';
       announce(basketLive, `${message}.${basketContext}`);
     }, 140);
   }
