@@ -11,8 +11,8 @@
 	const MAX_RESULTS = 12;
 	const MIN_QUERY_LENGTH = 2;
 
-	function buildProductsUrl( restBase, query ) {
-		const url = new URL( 'products', restBase );
+	function buildProductsUrl( productsEndpoint, query ) {
+		const url = new URL( productsEndpoint );
 		url.searchParams.set( 'search', String( query ).trim() );
 		url.searchParams.set( 'per_page', String( MAX_RESULTS ) );
 		url.searchParams.set( 'catalog_visibility', 'search' );
