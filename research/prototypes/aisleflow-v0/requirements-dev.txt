@@ -1,0 +1,2 @@
+# Browser-test dependency pinned to the version validated in GitHub Actions on 2026-08-18.
+playwright==1.62.0
