@@ -41,7 +41,11 @@ Files:
 research/prototypes/aisleflow-v0/
 ├── index.html
 ├── styles.css
-└── app.js
+├── app.js
+├── a11y-normalize.js
+├── browser_smoke.py
+├── fixed_mission.py
+└── requirements-dev.txt
 ```
 
 Run it through any local static server, for example:
@@ -53,7 +57,7 @@ python3 -m http.server 8080
 
 Then open `http://localhost:8080`.
 
-No build step or external package is required.
+The storefront prototype itself has no framework/build dependency. Playwright is used only by the research/CI automation.
 
 ## 4. State map
 
@@ -173,7 +177,7 @@ Tomato
 - Pack/unit never disappears after add.
 - Save/List is visually secondary to basket quantity.
 - Low-stock status exists but does not compete with Add.
-- Complex/choice-required products are intentionally not modeled yet; production requirements should route those to a choice surface rather than pretending all products can quick-add.
+- Choice-required products do not silently select a variant; they open a compact chooser or product detail depending on complexity.
 
 ## 8. Delivery behavior
 
@@ -243,21 +247,19 @@ Reasons:
 
 ## 13. Built-in research instrumentation
 
-The prototype displays:
+The facilitator controls are collapsed by default so they do not consume the shopper's first viewport. They expose:
 - elapsed time;
 - deliberate interactions;
 - surface transitions;
-- time to first Add.
+- time to first Add;
+- first-time / returning mode switch;
+- reset.
 
 This is deliberately crude. It is for comparative UX sessions, not production telemetry.
 
-The user can reset the research run without reloading the page.
-
 ## 14. Fixed test mission
 
-Use Issue #8.
-
-Basket:
+Issue #8 uses this basket:
 
 ```text
 Amul Taaza Milk 1 L       ×2
@@ -276,22 +278,78 @@ Then:
 - remove one product completely;
 - check delivery once;
 - open cart;
-- repeat in returning mode using This Week for at least five items.
+- repeat a separate returning-mode reference mission using This Week for at least five items.
 
-## 15. Target hypotheses — NOT claims
+## 15. Automated lower-bound measurement — 2026-08-18
 
-These are internal thresholds to test:
+A deterministic Playwright run now protects the core interaction count from accidental regression.
+
+**Environment:** Chromium through Playwright 1.62.0, 390×844 viewport.  
+**Method:** automation knows the exact selectors and auto-scrolls; therefore these are **minimum mechanical interaction counts, not human usability results**.
+
+### First-time fixed 10-product mission
+
+Measured:
+- **17 deliberate interactions**;
+- **2 surfaces**;
+- **0 simple-product detail transitions**;
+- delivery checked once;
+- basket reached 14 items before the required removal;
+- final basket after removing Toor Dal: **13 items / ₹1,332**.
+
+Mechanical count:
+
+```text
+1 delivery check
++ 14 add/increment actions
++ 1 remove action
++ 1 open-cart action
+= 17 deliberate interactions
+```
+
+### Returning-household reference mission
+
+Measured:
+- **11 deliberate interactions**;
+- **3 surfaces**;
+- five repeat products added from This Week / Buy Again;
+- three additional products added from the main ledger;
+- one repeated item quantity changed;
+- Shopping List inspected;
+- Cart opened;
+- **0 simple-product detail transitions**.
+
+The returning scenario is intentionally not identical to the first-time basket, so `11 vs 17` is **not** a valid claim that returning shopping is 35% faster. It is only evidence that the repeat-shopping surface can complete a useful reference task with a small action count.
+
+CI artifact source: GitHub Actions workflow `Prototype fixed grocery mission`, run #4 on 2026-08-18.
+
+## 16. Mobile hierarchy correction discovered by research automation
+
+The first recon pass found our own search field around **791 px from the top** in a 390×844 viewport. The cause was not customer value: facilitator controls plus an oversized delivery statement consumed the opening screen.
+
+We changed the prototype so:
+- facilitator controls are collapsed;
+- delivery becomes a compact serviceability row rather than a marketing hero;
+- search follows delivery immediately.
+
+The subsequent control measurement placed search around **400 px from the top**, approximately halving the distance to the primary shopping action.
+
+This is an internal lab observation, not a conversion claim.
+
+## 17. Target hypotheses — NOT claims
+
+These remain internal thresholds to test with real people:
 - first item added within 10 seconds after delivery context is understood;
 - simple 10-product basket requires zero product-detail-page transitions;
 - cart item count and total remain discoverable after first add;
-- returning mode materially reduces search/browse actions;
+- returning mode materially reduces search/browse effort for repeat shopping;
 - keyboard-only user can complete the core interaction;
 - no required control depends on hover;
 - core interaction remains understandable at narrow mobile widths and 200% zoom.
 
-We must not market these as achieved until measured with real users and realistic builds.
+Only the zero-simple-product-detail mechanical path has been proven by automation. Human comprehension/speed hypotheses remain open.
 
-## 16. Accessibility design notes
+## 18. Accessibility design and automated checks
 
 Current prototype intentionally includes:
 - skip link;
@@ -299,21 +357,44 @@ Current prototype intentionally includes:
 - native buttons/inputs;
 - keyboard-focus styles;
 - accessible quantity-control labels with product context;
-- live status regions for delivery/cart changes;
+- controlled live status regions for delivery/cart changes;
 - no hover-only actions;
 - reduced-motion handling;
 - touch-target-conscious controls;
-- responsive layout that turns the product ledger into a compact mobile row rather than shrinking a desktop table.
+- responsive product ledger;
+- category navigation modeled as navigation/filter buttons rather than ARIA tabs;
+- focus preservation when dynamic product controls re-render;
+- Cart/List focus-return behavior covered by smoke tests.
 
-Still requiring manual validation:
-- screen-reader announcement verbosity for repeated quantity changes;
-- focus behavior when Cart/List surfaces open;
-- mobile browser safe-area testing;
+Headless Chromium CI currently passes the automated accessibility invariants added for the prototype.
+
+Still requiring real/manual validation:
+- screen-reader announcement quality/verbosity;
+- VoiceOver/TalkBack/NVDA behavior;
 - 200% zoom/reflow;
-- horizontal Aisle Rail keyboard behavior;
-- live-region behavior under rapid add/quantity updates.
+- mobile browser safe areas;
+- touch behavior on real devices;
+- horizontal Aisle Rail comprehension;
+- live-region behavior during human rapid shopping.
 
-## 17. Performance design notes
+A green automated smoke test must never be described as WCAG conformance.
+
+## 19. Competitor reconnaissance notes
+
+A read-only mobile Playwright harness now records a consistent structural sample without bypassing site protections.
+
+Current automation environment results:
+- WoodMart grocery demo: usable storefront response;
+- Organio: bot/challenge response in some runs and therefore not blindly interpreted;
+- Bacola: blocked with HTTP 403;
+- Freshio: blocked with HTTP 403;
+- GreenMart Fresh Food & Grocery: blocked with HTTP 403.
+
+We record those as access limitations rather than attempting bot-protection bypasses.
+
+The WoodMart sample is important because it demonstrates that a mature competitor can surface product quantity controls effectively in the first mobile viewport despite a much broader interface/runtime. We should treat that as a strong benchmark, not assume specialization automatically makes us better.
+
+## 20. Performance design notes
 
 Prototype rules that should carry into engineering research:
 - no framework needed for core interaction concept;
@@ -324,13 +405,13 @@ Prototype rules that should carry into engineering research:
 - bounded result sets will be required in the real Store API/search implementation;
 - cart must remain server-authoritative in production even if UI optimistically updates.
 
-## 18. What is intentionally missing
+## 21. What is intentionally missing
 
 - final brand name/logo;
 - final typefaces/colors;
 - final photography/art direction;
-- product-detail experience;
-- variable-product choice surface;
+- full product-detail experience;
+- production variable-product chooser;
 - real delivery slots/logistics;
 - payment/checkout implementation;
 - WordPress/WooCommerce PHP;
@@ -339,11 +420,11 @@ Prototype rules that should carry into engineering research:
 - testimonials/about/blog layouts;
 - multiple starter demos.
 
-## 19. Current design recommendation
+## 22. Current design recommendation
 
-Proceed with **AisleFlow as the interaction hypothesis**, not as a locked visual theme.
+Proceed with **AisleFlow as the interaction hypothesis**, not as a locked visual theme or public brand.
 
-What should survive into the next test:
+What should survive into real-user testing:
 1. serviceability before basket investment;
 2. search as a first-class action;
 3. Aisle Rail as stable navigation;
@@ -357,16 +438,22 @@ What remains unproven:
 - whether Aisle Rail is genuinely easier than a conventional category drawer;
 - whether the product ledger feels premium enough for store owners while staying dense;
 - whether Basket Pulse is useful or visually noisy over longer sessions;
-- whether returning-user prioritization increases speed without confusing new shoppers;
+- whether returning-user prioritization increases real human speed without confusing new shoppers;
+- whether shoppers value early serviceability enough to justify the vertical space versus showing products even earlier;
 - whether these benefits remain once connected to real WooCommerce latency/edge cases.
 
-## 20. Production gate remains closed
+## 23. Production gate remains closed
 
-Do **not** begin production WordPress implementation based only on this prototype.
+Do **not** begin production WordPress implementation based only on automation.
 
-Before the gate opens:
-- Issue #2 needs hands-on competitor task counts enough for comparison;
-- Issue #5 needs actual buyer/shopper validation;
-- Issue #4 needs current WooCommerce block/Store API/HPOS architecture validation;
-- Issue #8 needs prototype measurements;
-- the PRD should be updated if those findings invalidate current assumptions.
+Completed technical/research gates:
+- WooCommerce block / Store API / HPOS architecture research;
+- automated accessibility invariants;
+- fixed mechanical basket mission;
+- variable-product quick-add product rule;
+- repeatable competitor reconnaissance tooling.
+
+Still required before production implementation:
+- Issue #5: actual buyer/store-owner/shopper validation;
+- Issue #8: human task measurements (time, hesitation, comprehension, keyboard/manual findings);
+- final synthesis must confirm or change the current PRD based on those observations.
