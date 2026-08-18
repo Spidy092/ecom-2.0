@@ -3,15 +3,16 @@
  * Server-rendered shell for the grocery product workspace.
  *
  * WooCommerce remains authoritative for all product/cart state; JavaScript
- * progressively enhances this shell through the public Store API.
+ * progressively enhances this shell through public APIs.
  *
  * @package BhaivaTechStorefrontCore
  */
 
 defined( 'ABSPATH' ) || exit;
 
-$cart_url  = function_exists( 'wc_get_cart_url' ) ? wc_get_cart_url() : '#';
-$search_id = wp_unique_id( 'bt-product-search-' );
+$cart_url       = function_exists( 'wc_get_cart_url' ) ? wc_get_cart_url() : '#';
+$search_id      = wp_unique_id( 'bt-product-search-' );
+$saved_panel_id = wp_unique_id( 'bt-saved-panel-' );
 ?>
 <section class="bt-product-workspace" data-bt-product-workspace>
 	<div class="bt-product-workspace__search">
@@ -34,6 +35,41 @@ $search_id = wp_unique_id( 'bt-product-search-' );
 	<p class="bt-product-workspace__status" role="status" aria-live="polite" aria-atomic="true" data-bt-status>
 		<?php esc_html_e( 'Ready to search.', 'bhaivatech-storefront-alpha' ); ?>
 	</p>
+
+	<div class="bt-product-workspace__saved-summary">
+		<button
+			type="button"
+			class="bt-product-workspace__saved-toggle"
+			aria-expanded="false"
+			aria-controls="<?php echo esc_attr( $saved_panel_id ); ?>"
+			data-bt-saved-toggle
+		>
+			<span><?php esc_html_e( 'Saved', 'bhaivatech-storefront-alpha' ); ?></span>
+			<span aria-hidden="true">·</span>
+			<span data-bt-saved-count>0</span>
+		</button>
+	</div>
+
+	<section
+		id="<?php echo esc_attr( $saved_panel_id ); ?>"
+		class="bt-saved-panel"
+		hidden
+		aria-labelledby="<?php echo esc_attr( $saved_panel_id ); ?>-title"
+		data-bt-saved-panel
+	>
+		<div class="bt-saved-panel__header">
+			<div>
+				<h2 id="<?php echo esc_attr( $saved_panel_id ); ?>-title">
+					<?php esc_html_e( 'Saved for later', 'bhaivatech-storefront-alpha' ); ?>
+				</h2>
+				<p data-bt-saved-scope></p>
+			</div>
+			<button type="button" data-bt-saved-close>
+				<?php esc_html_e( 'Close Saved', 'bhaivatech-storefront-alpha' ); ?>
+			</button>
+		</div>
+		<div class="bt-saved-panel__products" data-bt-saved-products></div>
+	</section>
 
 	<div class="bt-product-workspace__results" data-bt-results></div>
 
