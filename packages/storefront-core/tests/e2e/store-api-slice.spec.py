@@ -53,6 +53,23 @@ def main() -> None:
         expect(page.locator("[data-bt-cart-count]")).to_have_text("2 items")
         expect(product_card(page, "Alpha Milk").locator(".bt-product-card__quantity-value")).to_have_text("2")
 
+        # Quantity decrement remains authoritative and quantity 1 -> 0 removes
+        # the Woo cart line, restoring the Add action and keyboard focus.
+        milk = product_card(page, "Alpha Milk")
+        decrement = milk.locator('button[data-action="decrement"]')
+        decrement.click()
+        expect(page.locator("[data-bt-cart-count]")).to_have_text("1 item")
+        expect(product_card(page, "Alpha Milk").locator(".bt-product-card__quantity-value")).to_have_text("1")
+
+        milk = product_card(page, "Alpha Milk")
+        decrement = milk.locator('button[data-action="decrement"]')
+        expect(decrement).to_be_focused()
+        decrement.click()
+        expect(page.locator("[data-bt-cart-count]")).to_have_text("0 items")
+        restored_add = product_card(page, "Alpha Milk").locator('button[data-action="add"]')
+        expect(restored_add).to_be_visible()
+        expect(restored_add).to_be_focused()
+
         # Variable/choice-required product: never direct-add silently.
         search_for(page, "Alpha Rice")
         rice = product_card(page, "Alpha Rice Pack")
