@@ -1,8 +1,8 @@
 # AisleFlow V0 — pilot session results
 
-**Status:** Preliminary pilot evidence; revise prototype language before the next research round.
-**Date:** 2026-08-18
-**Prototype:** `research/prototypes/aisleflow-v0/`
+**Status:** Preliminary human evidence; revise shopper-facing language before the next research round.  
+**Date:** 2026-08-18  
+**Prototype:** `research/prototypes/aisleflow-v0/`  
 **Raw anonymized exports:** `research/users/results/aisleflow-v0/`
 
 ## Privacy
@@ -13,79 +13,136 @@ Six browser-local JSON exports were reviewed before inclusion. Each declares:
 - `search_terms_recorded: false`; and
 - `postcode_recorded: false`.
 
-The exports contain only anonymous participant codes, interaction events, prototype mode, viewport, and aggregate metrics. No recordings, real names, contact details, search text, or postcode values are included.
+The exports contain anonymous participant codes, interaction events, prototype mode, viewport, and aggregate metrics. No recordings, real names, contact details, search text, or postcode values are present in the exported JSON.
 
 ## Evidence collected
 
-| Export count | Shopper | WooCommerce builder | Other | Viewport |
-| ---: | ---: | ---: | ---: | --- |
-| 6 | 3 | 2 | 1 | 1854 × 961 CSS px in every export |
+| Export count | Shopper | WooCommerce builder | Other |
+| ---: | ---: | ---: | ---: |
+| 6 | 3 | 2 | 1 |
 
-The sessions are exploratory desktop sessions, not the mobile-sized fixed-grocery mission in `research/users/session-kit.md`. Therefore their interaction counts and timing must not be compared with the automated 390 × 844 baseline or used as a performance claim.
+### Viewports actually captured
 
-Reported first-add times ranged from **15 seconds** to **50 seconds**. This is useful directional evidence only: task instructions, participant experience, and researcher observation notes are incomplete.
+| Viewport | Exports | Notes |
+| --- | ---: | --- |
+| 1854 × 961 | 4 | exploratory desktop-sized sessions |
+| 400 × 874 | 2 | one first-time shopper session and one returning-shopper session |
 
-## Participant feedback
+An earlier synthesis incorrectly stated that all six exports were 1854 × 961. The raw exports are authoritative; this document corrects that error.
 
-One shopper reported that the primary shopping flow was good and easy to understand. The same participant could not explain:
+The sessions were exploratory and the fixed grocery mission in `research/users/session-kit.md` was not followed consistently. Therefore interaction counts and timing must **not** be compared directly with the automated 390 × 844 fixed-mission baseline or used as a performance/UX superiority claim.
+
+Reported first-add times across the six exports ranged from **15 seconds** to **50 seconds**.
+
+The two mobile-sized shopper exports were:
+
+| Participant | Mode | Viewport | Elapsed | First add | Deliberate interactions | Surfaces | Final cart items |
+| --- | --- | --- | ---: | ---: | ---: | ---: | ---: |
+| `s03` | First-time | 400 × 874 | 1:49 | 25s | 48 | 19 | 16 |
+| `S04` | Returning | 400 × 874 | 1:07 | 15s | 70 | 6 | 49 |
+
+These are **exploratory traces, not task-completion scores**. For example, the returning mobile trace contains many rapid quantity increments and repeated save toggles, which shows the controls were exercised but does not by itself tell us the participant's intent or whether the interaction was successful.
+
+## Direct participant feedback available
+
+One shopper reported that the primary shopping flow was good and easy to understand. The same participant could not clearly explain:
 
 1. what the returning-shopping experience meant;
 2. the difference between adding/removing an item from the list; and
-3. whether List was the same as Cart/Basket.
+3. whether `List` was the same thing as `Cart` / `Basket`.
 
-This is direct qualitative feedback. It should be treated as a prototype-language finding, not proof that the interaction model fails for all shoppers.
+This is direct qualitative evidence from the pilot. It is enough to justify a terminology revision, but not enough to conclude that the underlying repeat-shopping or saved-items concepts fail for shoppers generally.
+
+## Raw-event observations
+
+The raw traces show that participants were able to:
+
+- check delivery availability;
+- search;
+- change aisles;
+- add products;
+- change quantities;
+- open cart-related surfaces;
+- open the saved/list surface; and
+- exercise Buy Again / repeat-product controls.
+
+No pilot export demonstrates a blocking failure of the core add/quantity/cart interaction.
+
+The `S04` returning-mobile trace includes four rapid `save` actions on the same milk product shortly after the first add. Combined with the direct feedback about List ambiguity, this increases the priority of testing clearer saved-item language. We **cannot** infer the participant's exact intent from event data alone.
 
 ## Interpretation
 
 ### What appears promising
 
-- Participants were able to add products, alter quantities, and reach cart-related surfaces.
-- The primary grocery-shopping loop has no reported blocking failure in this pilot.
+- The primary add/quantity/cart loop was operable in the pilot.
+- Two real mobile-sized traces now exist, so the evidence set is not desktop-only.
+- Search, aisle navigation, delivery checking, saved items, and cart surfaces were all exercised.
+- There is no current evidence that the grocery interaction thesis should be abandoned.
 
 ### Major clarity risk — repeat shopping
 
-The prototype uses `Returning` in facilitator controls and `This week` / `Household rhythm` in the returning surface. At least one shopper did not understand its purpose.
+The prototype currently uses facilitator/internal terminology such as `Returning`, plus shopper-facing `This week` / `Household rhythm`. At least one shopper did not understand what that experience represented.
 
-**Prototype revision candidate:** present the shopper-facing surface as:
+**Revision for the next prototype round:**
 
 ```text
 Buy again
 Products you bought before
 ```
 
-Do not make `Returning` a shopper-facing navigation concept.
+`Returning` can remain an internal research mode if useful, but it must not be a shopper-facing product concept.
 
-### Major clarity risk — Saved list versus current Cart
+### Major clarity risk — Saved versus current Cart
 
-`List` and `Save to list` are ambiguous beside the Cart/Basket. A shopper may reasonably think both contain products they intend to buy.
+`List`, `Shopping list`, `Save to list`, `Basket`, and `Cart` create too many overlapping container words.
 
-**Prototype revision candidate:**
+For the next round, use two shopper-facing concepts only:
 
 ```text
-Bottom navigation: Saved
-Page title: Saved for later
-Supporting text: Products you saved for a future basket.
-Action: Save for later / Remove from saved
+Saved
+Saved for later
+Products you saved for a future cart.
+Save for later
+Remove from saved
 ```
 
-The Cart remains the explicit current-purchase container. Do not change the underlying V1 scope (one Shopping List) based on this wording revision.
+and
+
+```text
+Cart
+Your current cart
+View cart
+Cart updated
+```
+
+The underlying V1 scope remains one personal saved/shopping list. This is a terminology and mental-model revision, not feature expansion.
+
+### Terminology rule for V1 research
+
+- **Buy again** = products derived from previous orders.
+- **Saved** = products the shopper intentionally keeps for a future purchase.
+- **Cart** = products in the current purchase.
+- Avoid mixing `Basket` and `Cart` in shopper-facing UI during the next test round.
 
 ## Decision
 
-**REVISE, then continue research.**
+**REVISE, then continue human research.**
 
-This pilot supports refining the labels before additional testing. It does not yet justify production WordPress/WooCommerce implementation because:
+The pilot is useful enough to change the prototype, but it does not yet justify production WordPress/WooCommerce implementation because:
 
-- all captured sessions used a desktop viewport;
-- the fixed mobile task was not consistently followed;
-- session notes are incomplete; and
-- the participant sample is too small and partly unclassified for a product decision.
+- only two captured sessions are mobile-sized;
+- the fixed first-time/returning missions were not consistently followed;
+- individual researcher observation notes are incomplete;
+- three exports still use `anonymous` rather than unique participant IDs; and
+- the sample is too small for a product-level proceed decision.
 
 ## Next test round
 
-1. Update the prototype copy using the revision candidates above.
-2. Test at 390 × 844 or on real mobile devices.
-3. Use a unique anonymous participant code and record the participant group before each run.
-4. Run the fixed first-time and returning missions from `research/users/session-kit.md`.
-5. Capture concise observation notes, especially whether shoppers can explain `Buy again`, `Saved`, and `Cart` before using them.
-6. Reassess after at least five relevant shopper sessions.
+1. Update the prototype to use `Buy again`, `Saved for later`, and one consistent `Cart` term.
+2. Test at approximately 390 × 844 or on real mobile devices.
+3. Use a unique anonymous participant code (`S05`, `S06`, etc.) before every run.
+4. Record the participant group before every run.
+5. Run the fixed first-time and returning missions from `research/users/session-kit.md` instead of free exploration.
+6. Create one concise observation note per participant; the JSON alone cannot capture hesitation or intent.
+7. Before explaining anything, ask the shopper what **Buy again**, **Saved**, and **Cart** mean to them.
+8. Reassess after at least five relevant mobile shopper sessions using the revised terminology.
