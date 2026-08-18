@@ -7,6 +7,8 @@ on:
       - 'packages/**/*.js'
       - 'packages/**/*.json'
       - 'packages/**/*.css'
+      - 'packages/**/*.py'
+      - '.wp-env.json'
       - '.github/workflows/engineering-alpha-php.yml'
   push:
     branches:
@@ -17,6 +19,8 @@ on:
       - 'packages/**/*.js'
       - 'packages/**/*.json'
       - 'packages/**/*.css'
+      - 'packages/**/*.py'
+      - '.wp-env.json'
       - '.github/workflows/engineering-alpha-php.yml'
 
 permissions:
@@ -63,3 +67,32 @@ jobs:
         run: node -e "JSON.parse(require('fs').readFileSync('packages/storefront-core/blocks/product-workspace/block.json','utf8'))"
       - name: Run product workspace model tests
         run: node --test packages/storefront-core/tests/js/product-workspace-model.test.js
+
+  woo-store-api-e2e:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.13'
+      - name: Install browser test dependency
+        run: |
+          python -m pip install --disable-pip-version-check playwright==1.62.0
+          python -m playwright install --with-deps chromium
+      - name: Start pinned WordPress + WooCommerce environment
+        run: npx -y @wordpress/env@10.39.0 start --update
+      - name: Activate alpha theme and seed deterministic products
+        run: |
+          npx -y @wordpress/env@10.39.0 run cli wp plugin status woocommerce
+          npx -y @wordpress/env@10.39.0 run cli wp plugin status storefront-core
+          npx -y @wordpress/env@10.39.0 run cli wp theme activate storefront-theme
+          npx -y @wordpress/env@10.39.0 run cli wp eval-file wp-content/plugins/storefront-core/tests/e2e/seed-products.php
+      - name: Exercise real Store API session in Chromium
+        run: python packages/storefront-core/tests/e2e/store-api-slice.spec.py
+      - name: Stop wp-env
+        if: always()
+        run: npx -y @wordpress/env@10.39.0 stop
