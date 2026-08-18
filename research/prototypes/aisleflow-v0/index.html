@@ -6,6 +6,7 @@
   <title>AisleFlow V0 — Grocery UX Prototype</title>
   <meta name="description" content="Low-fidelity interaction prototype for a grocery-first WooCommerce product." />
   <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="research-iteration.css" />
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to groceries</a>
@@ -17,25 +18,31 @@
         <strong>AisleFlow V0</strong>
       </div>
 
-      <div class="mode-switch" role="group" aria-label="Prototype shopper mode">
-        <button class="mode-button is-active" type="button" data-mode-button="first-time" aria-pressed="true">First-time</button>
-        <button class="mode-button" type="button" data-mode-button="returning" aria-pressed="false">Returning</button>
-      </div>
-    </header>
+      <details class="research-console">
+        <summary>Test controls</summary>
+        <div class="research-console-panel">
+          <div class="mode-switch" role="group" aria-label="Prototype shopper mode">
+            <button class="mode-button is-active" type="button" data-mode-button="first-time" aria-pressed="true">First-time</button>
+            <button class="mode-button" type="button" data-mode-button="returning" aria-pressed="false">Returning</button>
+          </div>
 
-    <section class="research-meter" aria-label="Prototype research metrics">
-      <div><span class="metric-label">Elapsed</span><strong id="metric-time">00:00</strong></div>
-      <div><span class="metric-label">Interactions</span><strong id="metric-interactions">0</strong></div>
-      <div><span class="metric-label">Surfaces</span><strong id="metric-surfaces">1</strong></div>
-      <div><span class="metric-label">First add</span><strong id="metric-first-add">—</strong></div>
-      <button class="quiet-button" type="button" id="reset-research">Reset run</button>
-    </section>
+          <section class="research-meter" aria-label="Prototype research metrics">
+            <div><span class="metric-label">Elapsed</span><strong id="metric-time">00:00</strong></div>
+            <div><span class="metric-label">Interactions</span><strong id="metric-interactions">0</strong></div>
+            <div><span class="metric-label">Surfaces</span><strong id="metric-surfaces">1</strong></div>
+            <div><span class="metric-label">First add</span><strong id="metric-first-add">—</strong></div>
+            <button class="quiet-button" type="button" id="reset-research">Reset run</button>
+          </section>
+        </div>
+      </details>
+    </header>
 
     <main id="main" tabindex="-1">
       <section class="delivery-band" aria-labelledby="delivery-title">
-        <div>
-          <span class="section-kicker">Delivery certainty</span>
-          <h1 id="delivery-title">Shop only after you know we can reach you.</h1>
+        <div class="delivery-copy">
+          <span class="section-kicker">Delivery area</span>
+          <h1 id="delivery-title">Check where we should deliver.</h1>
+          <p class="delivery-explainer">Know serviceability before building the basket.</p>
         </div>
         <form id="delivery-form" class="delivery-form">
           <label for="postcode">Delivery postcode</label>
@@ -53,7 +60,7 @@
             <span class="section-kicker">Start shopping</span>
             <h2 id="search-heading">What goes in the basket?</h2>
           </div>
-          <span class="shortcut-note">No product page needed for simple items</span>
+          <span class="shortcut-note">Simple items add without a product-page detour</span>
         </div>
 
         <label class="search-box" for="search-input">
