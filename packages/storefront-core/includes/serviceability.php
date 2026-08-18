@@ -83,6 +83,30 @@ function bhaivatech_storefront_serviceability_country_requires_state( string $co
 }
 
 /**
+ * Is a supplied state code valid when WooCommerce has a canonical state list?
+ *
+ * Some countries use free-form region text, so an empty/false Woo state list
+ * is not treated as a validation failure.
+ *
+ * @param string $country Country code.
+ * @param string $state State code.
+ * @return bool
+ */
+function bhaivatech_storefront_serviceability_state_is_valid( string $country, string $state ): bool {
+	if ( '' === $state || ! WC()->countries ) {
+		return true;
+	}
+
+	$states = WC()->countries->get_states( $country );
+
+	if ( ! is_array( $states ) || array() === $states ) {
+		return true;
+	}
+
+	return isset( $states[ $state ] );
+}
+
+/**
  * Default classification for whether one enabled shipping method represents
  * delivery rather than pickup.
  *
@@ -95,8 +119,8 @@ function bhaivatech_storefront_serviceability_country_requires_state( string $co
  * @return bool
  */
 function bhaivatech_storefront_serviceability_method_counts_as_delivery( WC_Shipping_Method $method, WC_Shipping_Zone $zone, array $package ): bool {
-	$pickup_ids = array( 'local_pickup', 'legacy_local_pickup' );
-	$is_pickup  = in_array( (string) $method->id, $pickup_ids, true ) || $method->supports( 'local-pickup' );
+	$pickup_ids  = array( 'local_pickup', 'legacy_local_pickup' );
+	$is_pickup   = in_array( (string) $method->id, $pickup_ids, true ) || $method->supports( 'local-pickup' );
 	$is_delivery = ! $is_pickup;
 
 	/**
@@ -156,6 +180,10 @@ function bhaivatech_storefront_evaluate_serviceability( $country, $state, $postc
 	$state              = strtoupper( bhaivatech_storefront_serviceability_clean_text( $state ) );
 	$postcode           = wc_normalize_postcode( bhaivatech_storefront_serviceability_clean_text( $postcode ) );
 
+	if ( array() === $shipping_countries ) {
+		return array( 'status' => 'not_served' );
+	}
+
 	if ( '' === $postcode ) {
 		return array(
 			'status'   => 'needs_more_location',
@@ -176,6 +204,13 @@ function bhaivatech_storefront_evaluate_serviceability( $country, $state, $postc
 
 	if ( ! isset( $shipping_countries[ $country ] ) ) {
 		return array( 'status' => 'not_served' );
+	}
+
+	if ( ! bhaivatech_storefront_serviceability_state_is_valid( $country, $state ) ) {
+		return array(
+			'status'   => 'needs_more_location',
+			'required' => array( 'state' ),
+		);
 	}
 
 	if ( '' === $state && bhaivatech_storefront_serviceability_country_requires_state( $country ) ) {
