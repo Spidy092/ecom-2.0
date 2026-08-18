@@ -1,0 +1,49 @@
+name: Publish research prototype
+
+on:
+  push:
+    branches:
+      - agent/grovia-foundation
+    paths:
+      - 'research/prototypes/aisleflow-v0/**'
+      - '.github/workflows/prototype-pages.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: research-prototype-pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v6
+
+      - name: Upload AisleFlow V0 prototype
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: research/prototypes/aisleflow-v0
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    timeout-minutes: 5
+
+    steps:
+      - name: Deploy research prototype
+        id: deployment
+        uses: actions/deploy-pages@v5
