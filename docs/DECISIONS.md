@@ -126,16 +126,74 @@ Decision: do not invest in public branding, domain purchases, marketplace identi
 
 Reason: preliminary research found existing Grovia/GroVia brands, including software/AI businesses and a software-related trademark record. The final product name must pass a dedicated naming/domain/trademark screen and be more distinctive.
 
+## D-018 — Store API is the primary shopper-facing commerce seam
+
+**Status:** Accepted  
+**Date:** 2026-08-18
+
+Decision: use WooCommerce Store API and supported Blocks interfaces for product/catalog/cart context rather than building a parallel Grovia commerce API.
+
+Reason: Store API is WooCommerce's supported customer-facing API and provides product, cart and checkout resources. Grovia should spend engineering effort on its grocery interaction advantage rather than duplicating Woo internals.
+
+## D-019 — Sensitive Grovia customer data stays off public Store API schema
+
+**Status:** Accepted
+
+Decision: Shopping List and other Grovia-owned private user state use authenticated WordPress REST/service boundaries with strict permission/ownership checks. Public Store API extension data may contain only safe contextual data.
+
+## D-020 — Cart state is WooCommerce/server authoritative
+
+**Status:** Accepted
+
+Decision: AisleFlow may show temporary optimistic UI, but all cart changes must reconcile to WooCommerce's supported Store API/cart mechanisms. Do not manually force Cart/Checkout Block client state.
+
+## D-021 — Buy Again is HPOS-native
+
+**Status:** Accepted
+
+Decision: Buy Again must use public WooCommerce order CRUD/query APIs such as `wc_get_orders()` / `wc_get_order()` and must never read/write order data directly through `wp_posts` / `wp_postmeta`.
+
+Reason: HPOS changes physical order storage and direct post-table access can become stale or incorrect.
+
+## D-022 — WooCommerce internal APIs are forbidden in production
+
+**Status:** Accepted
+
+Decision: production code may not depend on `Automattic\WooCommerce\Internal\*` or code marked `@internal`. Experimental Woo APIs need an explicit ADR, fallback and removal/upgrade plan.
+
+## D-023 — Cart and Checkout remain WooCommerce-owned
+
+**Status:** Accepted
+
+Decision: Grovia styles/composes and uses supported extensibility for Cart/Checkout Blocks. It does not replace WooCommerce checkout or create custom payment processing in V1.
+
+## D-024 — AisleFlow is an interaction hypothesis, not the product brand
+
+**Status:** Accepted
+
+Decision: AisleFlow is the internal name for the current UX hypothesis combining Rapid Basket, Aisle Rail, Basket Pulse and Household Rhythm. It is not a public brand commitment and remains subject to user/task validation.
+
+## D-025 — Modern PHP is a quality target
+
+**Status:** Accepted in principle; exact minimum still open
+
+Decision: do not adopt PHP 7.4 as Grovia's customer minimum merely because WooCommerce permits it. Develop/recommend on PHP 8.3+ and choose the final minimum after target-host/customer compatibility research.
+
+Rationale: Grovia is a new product without a legacy installed base; supporting EOL runtimes creates avoidable test/security/maintenance cost.
+
 ---
 
 ## Open decisions
 
 Record these as new entries when resolved:
 - final brand/product name after naming/trademark/domain research;
-- exact WordPress/WooCommerce/PHP support matrix;
+- exact PHP customer minimum (development/recommended target is PHP 8.3+);
+- exact WordPress/WooCommerce minimum support matrix at paid beta;
 - licensing/update/payment provider;
 - Shopping List persistence model;
-- delivery-area data model;
+- whether delivery serviceability wraps/synchronizes WooCommerce Shipping Zones;
+- variable-product quick-add choice surface;
+- whether any custom Interactivity API block is justified after prototype/platform testing;
 - public vs private repository strategy before commercial code is committed;
 - RTL launch timing;
 - demo asset providers/licenses.
