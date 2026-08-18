@@ -1,0 +1,154 @@
+{
+  "schema": "aisleflow-v0-session-1",
+  "exported_at": "2026-08-18T15:49:29.710Z",
+  "participant": {
+    "code": "anonymous",
+    "group": "shopper"
+  },
+  "privacy": {
+    "network_telemetry": false,
+    "search_terms_recorded": false,
+    "postcode_recorded": false,
+    "note": "This file is generated locally in the browser. Search text and postcode values are intentionally excluded."
+  },
+  "prototype": {
+    "mode": "returning",
+    "viewport_css_px": {
+      "width": 1854,
+      "height": 961
+    }
+  },
+  "built_in_metrics": {
+    "elapsed": "01:13",
+    "deliberate_interactions": "23",
+    "surfaces": "11",
+    "first_add": "22s"
+  },
+  "final_state": {
+    "basket_items": "7",
+    "basket_total": "₹484",
+    "delivery_result": "Prototype: delivery available today."
+  },
+  "recorder": {
+    "elapsed_ms": 73233,
+    "event_count": 18,
+    "events": [
+      {
+        "at_ms": 18684,
+        "type": "delivery_check",
+        "available": true
+      },
+      {
+        "at_ms": 22402,
+        "type": "product_action",
+        "action": "add",
+        "product": "eggs-farm",
+        "source": "buy-again"
+      },
+      {
+        "at_ms": 24954,
+        "type": "product_action",
+        "action": "add",
+        "product": "milk-amul",
+        "source": "buy-again"
+      },
+      {
+        "at_ms": 28680,
+        "type": "aisle_change",
+        "aisle": "Bakery"
+      },
+      {
+        "at_ms": 31524,
+        "type": "product_action",
+        "action": "add",
+        "product": "bread-wheat",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 32816,
+        "type": "product_action",
+        "action": "save",
+        "product": "bread-wheat",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 36416,
+        "type": "product_action",
+        "action": "increment",
+        "product": "bread-wheat",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 37519,
+        "type": "product_action",
+        "action": "save",
+        "product": "bread-wheat",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 39413,
+        "type": "product_action",
+        "action": "save",
+        "product": "bread-wheat",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 45298,
+        "type": "product_action",
+        "action": "increment",
+        "product": "eggs-farm",
+        "source": "cart"
+      },
+      {
+        "at_ms": 45616,
+        "type": "product_action",
+        "action": "increment",
+        "product": "eggs-farm",
+        "source": "cart"
+      },
+      {
+        "at_ms": 45796,
+        "type": "product_action",
+        "action": "increment",
+        "product": "eggs-farm",
+        "source": "cart"
+      },
+      {
+        "at_ms": 52965,
+        "type": "prototype_checkout_boundary"
+      },
+      {
+        "at_ms": 55804,
+        "type": "navigation",
+        "destination": "list",
+        "source": "mobile-dock"
+      },
+      {
+        "at_ms": 56802,
+        "type": "navigation",
+        "destination": "aisles",
+        "source": "mobile-dock"
+      },
+      {
+        "at_ms": 57850,
+        "type": "navigation",
+        "destination": "search",
+        "source": "mobile-dock"
+      },
+      {
+        "at_ms": 60500,
+        "type": "product_action",
+        "action": "save",
+        "product": "eggs-farm",
+        "source": "shopping-list"
+      },
+      {
+        "at_ms": 63442,
+        "type": "product_action",
+        "action": "save",
+        "product": "milk-amul",
+        "source": "shopping-list"
+      }
+    ]
+  }
+}

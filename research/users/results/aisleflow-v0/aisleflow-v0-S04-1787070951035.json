@@ -1,0 +1,518 @@
+{
+  "schema": "aisleflow-v0-session-1",
+  "exported_at": "2026-08-18T16:35:51.034Z",
+  "participant": {
+    "code": "S04",
+    "group": "shopper"
+  },
+  "privacy": {
+    "network_telemetry": false,
+    "search_terms_recorded": false,
+    "postcode_recorded": false,
+    "note": "This file is generated locally in the browser. Search text and postcode values are intentionally excluded."
+  },
+  "prototype": {
+    "mode": "returning",
+    "viewport_css_px": {
+      "width": 400,
+      "height": 874
+    }
+  },
+  "built_in_metrics": {
+    "elapsed": "01:07",
+    "deliberate_interactions": "70",
+    "surfaces": "6",
+    "first_add": "15s"
+  },
+  "final_state": {
+    "basket_items": "49",
+    "basket_total": "₹9,858",
+    "delivery_result": "Prototype: delivery available today."
+  },
+  "recorder": {
+    "elapsed_ms": 67796,
+    "event_count": 70,
+    "events": [
+      {
+        "at_ms": 15163,
+        "type": "product_action",
+        "action": "add",
+        "product": "milk-amul",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 15330,
+        "type": "product_action",
+        "action": "save",
+        "product": "milk-amul",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 15475,
+        "type": "product_action",
+        "action": "save",
+        "product": "milk-amul",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 15779,
+        "type": "product_action",
+        "action": "save",
+        "product": "milk-amul",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 16113,
+        "type": "product_action",
+        "action": "save",
+        "product": "milk-amul",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 17579,
+        "type": "product_action",
+        "action": "increment",
+        "product": "milk-amul",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 17730,
+        "type": "product_action",
+        "action": "increment",
+        "product": "milk-amul",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 17897,
+        "type": "product_action",
+        "action": "increment",
+        "product": "milk-amul",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 18055,
+        "type": "product_action",
+        "action": "increment",
+        "product": "milk-amul",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 18216,
+        "type": "product_action",
+        "action": "increment",
+        "product": "milk-amul",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 18363,
+        "type": "product_action",
+        "action": "increment",
+        "product": "milk-amul",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 18528,
+        "type": "product_action",
+        "action": "increment",
+        "product": "milk-amul",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 18687,
+        "type": "product_action",
+        "action": "increment",
+        "product": "milk-amul",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 18848,
+        "type": "product_action",
+        "action": "increment",
+        "product": "milk-amul",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 19007,
+        "type": "product_action",
+        "action": "increment",
+        "product": "milk-amul",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 19173,
+        "type": "product_action",
+        "action": "increment",
+        "product": "milk-amul",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 21749,
+        "type": "product_action",
+        "action": "add",
+        "product": "surf",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 21901,
+        "type": "product_action",
+        "action": "increment",
+        "product": "surf",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 22067,
+        "type": "product_action",
+        "action": "increment",
+        "product": "surf",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 22241,
+        "type": "product_action",
+        "action": "increment",
+        "product": "surf",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 22400,
+        "type": "product_action",
+        "action": "increment",
+        "product": "surf",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 22560,
+        "type": "product_action",
+        "action": "increment",
+        "product": "surf",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 22727,
+        "type": "product_action",
+        "action": "increment",
+        "product": "surf",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 22886,
+        "type": "product_action",
+        "action": "increment",
+        "product": "surf",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 23047,
+        "type": "product_action",
+        "action": "increment",
+        "product": "surf",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 23205,
+        "type": "product_action",
+        "action": "increment",
+        "product": "surf",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 23372,
+        "type": "product_action",
+        "action": "increment",
+        "product": "surf",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 23531,
+        "type": "product_action",
+        "action": "increment",
+        "product": "surf",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 23691,
+        "type": "product_action",
+        "action": "increment",
+        "product": "surf",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 23851,
+        "type": "product_action",
+        "action": "increment",
+        "product": "surf",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 24018,
+        "type": "product_action",
+        "action": "increment",
+        "product": "surf",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 24170,
+        "type": "product_action",
+        "action": "increment",
+        "product": "surf",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 24330,
+        "type": "product_action",
+        "action": "increment",
+        "product": "surf",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 24490,
+        "type": "product_action",
+        "action": "increment",
+        "product": "surf",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 24663,
+        "type": "product_action",
+        "action": "increment",
+        "product": "surf",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 24822,
+        "type": "product_action",
+        "action": "increment",
+        "product": "surf",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 24982,
+        "type": "product_action",
+        "action": "increment",
+        "product": "surf",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 25155,
+        "type": "product_action",
+        "action": "increment",
+        "product": "surf",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 25315,
+        "type": "product_action",
+        "action": "increment",
+        "product": "surf",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 25482,
+        "type": "product_action",
+        "action": "increment",
+        "product": "surf",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 25655,
+        "type": "product_action",
+        "action": "increment",
+        "product": "surf",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 25842,
+        "type": "product_action",
+        "action": "increment",
+        "product": "surf",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 25988,
+        "type": "product_action",
+        "action": "increment",
+        "product": "surf",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 26140,
+        "type": "product_action",
+        "action": "increment",
+        "product": "surf",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 26294,
+        "type": "product_action",
+        "action": "increment",
+        "product": "surf",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 26473,
+        "type": "product_action",
+        "action": "increment",
+        "product": "surf",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 26634,
+        "type": "product_action",
+        "action": "increment",
+        "product": "surf",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 26787,
+        "type": "product_action",
+        "action": "increment",
+        "product": "surf",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 26953,
+        "type": "product_action",
+        "action": "increment",
+        "product": "surf",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 27114,
+        "type": "product_action",
+        "action": "increment",
+        "product": "surf",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 27280,
+        "type": "product_action",
+        "action": "increment",
+        "product": "surf",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 29027,
+        "type": "product_action",
+        "action": "save",
+        "product": "surf",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 29978,
+        "type": "basket_pulse_open_cart"
+      },
+      {
+        "at_ms": 34170,
+        "type": "search_change",
+        "query_length": 4,
+        "empty": false
+      },
+      {
+        "at_ms": 37724,
+        "type": "product_action",
+        "action": "add",
+        "product": "rice-sona",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 38646,
+        "type": "product_action",
+        "action": "save",
+        "product": "rice-sona",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 39680,
+        "type": "product_action",
+        "action": "decrement",
+        "product": "rice-sona",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 40818,
+        "type": "product_action",
+        "action": "add",
+        "product": "rice-sona",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 41678,
+        "type": "product_action",
+        "action": "decrement",
+        "product": "rice-sona",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 42274,
+        "type": "product_action",
+        "action": "add",
+        "product": "rice-sona",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 42837,
+        "type": "product_action",
+        "action": "decrement",
+        "product": "rice-sona",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 43433,
+        "type": "product_action",
+        "action": "add",
+        "product": "rice-sona",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 44009,
+        "type": "product_action",
+        "action": "decrement",
+        "product": "rice-sona",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 44597,
+        "type": "product_action",
+        "action": "add",
+        "product": "rice-sona",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 45154,
+        "type": "product_action",
+        "action": "decrement",
+        "product": "rice-sona",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 45707,
+        "type": "product_action",
+        "action": "add",
+        "product": "rice-sona",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 47450,
+        "type": "basket_pulse_open_cart"
+      },
+      {
+        "at_ms": 48345,
+        "type": "navigation",
+        "destination": "aisles",
+        "source": "mobile-dock"
+      },
+      {
+        "at_ms": 50936,
+        "type": "aisle_change",
+        "aisle": "Bakery"
+      },
+      {
+        "at_ms": 64700,
+        "type": "product_action",
+        "action": "increment",
+        "product": "milk-amul",
+        "source": "buy-again"
+      }
+    ]
+  }
+}
