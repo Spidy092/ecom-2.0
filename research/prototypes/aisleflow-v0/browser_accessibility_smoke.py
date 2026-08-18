@@ -2,8 +2,9 @@
 """Headless accessibility-focused smoke checks for the AisleFlow V0 prototype.
 
 This is not a WCAG conformance test. It protects a few interaction invariants that
-were identified during the static accessibility audit, plus the privacy boundary
-of the local research-session exporter.
+were identified during the static accessibility audit, the shopper-language
+mental model learned from pilot evidence, plus the privacy boundary of the local
+research-session exporter.
 """
 
 import json
@@ -34,6 +35,22 @@ def run():
         page.goto(URL)
         page.wait_for_load_state("load")
         page.wait_for_timeout(100)
+
+        # Pilot terminology revision: shopper-facing containers should be
+        # unambiguous — Buy again, Saved, and Cart.
+        body_text = page.locator("body").inner_text()
+        assert "Saved" in body_text
+        assert "Cart" in body_text
+        assert "List\nCart" not in body_text
+        assert "Your current cart" in body_text
+
+        page.locator('.research-console summary').click()
+        page.locator('[data-mode-button="returning"]').click()
+        page.wait_for_timeout(50)
+        assert page.locator('#returning-title').inner_text().strip() == "Buy again"
+        assert "Products you bought before" in page.locator('#returning-panel').inner_text()
+        assert "This week" not in page.locator('#returning-panel').inner_text()
+        page.locator('.research-console summary').click()
 
         # Aisle Rail is a set of filter/navigation buttons, not an ARIA tabs widget.
         assert page.locator("#aisle-rail").get_attribute("role") is None
@@ -66,24 +83,24 @@ def run():
         assert current["action"] == "increment"
         assert "Increase Amul Taaza Milk" in current["label"]
 
-        # One centralized basket live region announces the resulting state.
+        # One centralized cart live region announces the resulting state.
         page.wait_for_timeout(250)
-        basket_status = page.locator("#a11y-basket-status").inner_text()
-        assert "Amul Taaza Milk" in basket_status
-        assert "Basket:" in basket_status
+        cart_status = page.locator("#a11y-basket-status").inner_text()
+        assert "Amul Taaza Milk" in cart_status
+        assert "Cart:" in cart_status
         assert page.locator(".qty-value[aria-live]").count() == 0
         assert page.locator("#basket-pulse").get_attribute("role") is None
 
-        # Save is a command whose label describes the next action, not a changing
-        # label combined with aria-pressed toggle semantics.
+        # Saved-for-later is a command whose label describes the next action,
+        # not a changing label combined with aria-pressed toggle semantics.
         save_curd = page.locator('#product-list [data-product="curd-nandini"][data-action="save"]')
-        assert save_curd.inner_text().strip() == "Save to list"
+        assert save_curd.inner_text().strip() == "Save for later"
         assert save_curd.get_attribute("aria-pressed") is None
         save_curd.focus()
         page.keyboard.press("Enter")
         page.wait_for_timeout(100)
         replacement_save_curd = page.locator('#product-list [data-product="curd-nandini"][data-action="save"]')
-        assert replacement_save_curd.inner_text().strip() == "Remove from list"
+        assert replacement_save_curd.inner_text().strip() == "Remove from saved"
         assert replacement_save_curd.get_attribute("aria-pressed") is None
         assert active(page)["product"] == "curd-nandini"
 
@@ -100,9 +117,23 @@ def run():
         cart_launcher.click()
         page.wait_for_timeout(100)
         assert active(page)["id"] == "cart-panel"
+        assert "Your current cart" in page.locator('#cart-panel').inner_text()
         page.keyboard.press("Escape")
         page.wait_for_timeout(100)
         assert active(page)["nav"] == "cart"
+
+        # Saved surface uses the revised mental model and remains separate from Cart.
+        saved_launcher = page.locator('[data-nav="list"]')
+        assert saved_launcher.inner_text().strip() == "Saved"
+        saved_launcher.click()
+        page.wait_for_timeout(100)
+        assert active(page)["id"] == "list-panel"
+        saved_panel_text = page.locator('#list-panel').inner_text()
+        assert "Saved for later" in saved_panel_text
+        assert "future cart" in saved_panel_text
+        page.keyboard.press("Escape")
+        page.wait_for_timeout(100)
+        assert active(page)["nav"] == "list"
 
         # Delivery state is explicit text, not color-only.
         page.locator("#postcode").fill("999999")
@@ -154,7 +185,7 @@ def run():
 
         browser.close()
 
-    print("AisleFlow V0 browser accessibility/privacy smoke checks passed")
+    print("AisleFlow V0 browser accessibility/privacy/terminology smoke checks passed")
 
 
 if __name__ == "__main__":
