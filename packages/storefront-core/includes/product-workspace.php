@@ -16,7 +16,7 @@ function bhaivatech_storefront_register_product_workspace(): void {
 
 	wp_register_script(
 		$model_handle,
-		plugins_url( 'assets/js/product-workspace-model.js', dirname( __FILE__ ) . '/../storefront-core.php' ),
+		plugins_url( 'assets/js/product-workspace-model.js', BHAIVATECH_STOREFRONT_CORE_FILE ),
 		array(),
 		BHAIVATECH_STOREFRONT_CORE_VERSION,
 		true
@@ -24,7 +24,7 @@ function bhaivatech_storefront_register_product_workspace(): void {
 
 	wp_register_script(
 		$view_handle,
-		plugins_url( 'assets/js/product-workspace.js', dirname( __FILE__ ) . '/../storefront-core.php' ),
+		plugins_url( 'assets/js/product-workspace.js', BHAIVATECH_STOREFRONT_CORE_FILE ),
 		array( $model_handle ),
 		BHAIVATECH_STOREFRONT_CORE_VERSION,
 		true
