@@ -35,7 +35,10 @@ FIRST_TIME_TARGETS = {
 
 
 def metric_int(page, selector: str) -> int:
-    return int(page.locator(selector).inner_text().strip())
+    # Metrics are intentionally hidden inside the facilitator-only research console.
+    # text_content() reads the state without making the controls visible to shoppers.
+    value = page.locator(selector).text_content() or ""
+    return int(value.strip())
 
 
 def basket_total_text(page) -> str:
