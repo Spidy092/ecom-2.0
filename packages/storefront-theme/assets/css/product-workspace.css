@@ -73,6 +73,10 @@
   min-width: 0;
 }
 
+.bt-product-card > .bt-product-card__body:first-child {
+  grid-column: 1 / -1;
+}
+
 .bt-product-card__title {
   color: inherit;
   font-weight: 700;
