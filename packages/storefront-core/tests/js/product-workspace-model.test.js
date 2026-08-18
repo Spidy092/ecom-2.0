@@ -22,6 +22,25 @@ test( 'product search preserves WordPress plain-permalink rest_route endpoints',
 	assert.equal( url.searchParams.get( 'per_page' ), '12' );
 } );
 
+test( 'Saved product query uses supported include ordering and remains bounded', () => {
+	const ids = [ 9, '7', 9, 3, 0, -1 ];
+	const url = new URL( model.buildProductsByIdsUrl(
+		'https://example.test/?rest_route=%2Fwc%2Fstore%2Fv1%2Fproducts',
+		ids
+	) );
+
+	assert.equal( url.searchParams.get( 'rest_route' ), '/wc/store/v1/products' );
+	assert.equal( url.searchParams.get( 'include' ), '9,7,3' );
+	assert.equal( url.searchParams.get( 'orderby' ), 'include' );
+	assert.equal( url.searchParams.get( 'per_page' ), '3' );
+	assert.equal( model.buildProductsByIdsUrl( 'https://example.test/wp-json/wc/store/v1/products', [] ), '' );
+
+	const many = Array.from( { length: 130 }, ( _, index ) => index + 1 );
+	const bounded = new URL( model.buildProductsByIdsUrl( 'https://example.test/wp-json/wc/store/v1/products', many ) );
+	assert.equal( bounded.searchParams.get( 'per_page' ), '100' );
+	assert.equal( bounded.searchParams.get( 'include' ).split( ',' ).length, 100 );
+} );
+
 test( 'recovery uses one bounded three-character prefix query', () => {
 	assert.equal( model.recoveryPrefix( 'tomoto' ), 'tom' );
 	assert.equal( model.recoveryPrefix( 'fresh tomoto' ), 'tom' );
