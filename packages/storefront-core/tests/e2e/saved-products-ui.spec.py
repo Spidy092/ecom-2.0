@@ -95,6 +95,7 @@ def main() -> None:
         expect(guest.locator("[data-bt-saved-count]")).to_have_text("0")
         expect(guest.locator("[data-bt-cart-count]")).to_have_text("1 item")
         expect(guest.locator("[data-bt-saved-products]")).to_contain_text("No products saved yet.")
+        expect(guest.locator("[data-bt-saved-close]")).to_be_focused()
 
         close_saved(guest)
 
@@ -131,6 +132,7 @@ def main() -> None:
 
         saved_card(account, "Alpha Bread").locator("[data-bt-remove-saved]").click()
         expect(account.locator("[data-bt-saved-count]")).to_have_text("0", timeout=10_000)
+        expect(account.locator("[data-bt-saved-close]")).to_be_focused()
         account_context.close()
 
         browser.close()
