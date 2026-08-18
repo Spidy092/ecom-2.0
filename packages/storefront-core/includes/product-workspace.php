@@ -31,9 +31,15 @@ function bhaivatech_storefront_register_product_workspace(): void {
 	);
 
 	$config = array(
-		'restUrl'  => esc_url_raw( rest_url( 'wc/store/v1/' ) ),
-		'nonce'    => wp_create_nonce( 'wc_store_api' ),
-		'messages' => array(
+		'endpoints' => array(
+			'products'   => esc_url_raw( rest_url( 'wc/store/v1/products' ) ),
+			'cart'       => esc_url_raw( rest_url( 'wc/store/v1/cart' ) ),
+			'addItem'    => esc_url_raw( rest_url( 'wc/store/v1/cart/add-item' ) ),
+			'updateItem' => esc_url_raw( rest_url( 'wc/store/v1/cart/update-item' ) ),
+			'removeItem' => esc_url_raw( rest_url( 'wc/store/v1/cart/remove-item' ) ),
+		),
+		'nonce'     => wp_create_nonce( 'wc_store_api' ),
+		'messages'  => array(
 			'requestFailed'   => __( 'Something went wrong. Try again.', 'bhaivatech-storefront-alpha' ),
 			'cartUnavailable' => __( 'Cart could not be loaded. Search is still available.', 'bhaivatech-storefront-alpha' ),
 			'searching'       => __( 'Searching groceries…', 'bhaivatech-storefront-alpha' ),
