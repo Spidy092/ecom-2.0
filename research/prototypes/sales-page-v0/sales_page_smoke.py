@@ -28,6 +28,7 @@ def validate_common(page):
     assert "no checkout" in lower
     assert "commercial hypothesis" in lower
     assert "$59 / year" in body
+    assert "30-day first-purchase refund hypothesis" in lower
     assert "installed gpl-compatible product keeps working" in lower
 
     # Core positioning/comprehension anchors.
