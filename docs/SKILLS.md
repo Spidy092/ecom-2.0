@@ -33,10 +33,39 @@ npx skills add https://github.com/vercel-labs/skills --skill find-skills
 
 The CLI could not complete in the current execution environment, so the reviewed upstream skill is vendored at `.agents/skills/find-skills/` with its license notice.
 
+### `webapp-testing`
+
+- Source: `anthropics/skills`, `skills/webapp-testing`.
+- Purpose: browser-level Playwright testing for the AisleFlow prototype and later WooCommerce storefront regression tests.
+- Upstream license: Apache-2.0.
+- Reviewed upstream skill SHA: `4726215301db64a0cc4d41fc3219c61f37a30f4a`.
+- Reviewed helper SHA: `431f2eba16b268b7f3e2ae4daae9db41c0289b6d`.
+- Review date: 2026-08-18.
+- Status: **installed project-level** with upstream skill, helper, examples and license.
+
+Security note: `scripts/with_server.py` intentionally invokes configured server commands using Python `subprocess.Popen(..., shell=True)` so commands such as `cd ... && ...` work. For this repository:
+
+- only run repository-owned/trusted local server commands;
+- never interpolate issue text, customer input, model-generated unreviewed strings, branch names, filenames, environment values, or other untrusted data into `--server`;
+- prefer a direct static `file://` Playwright path when a server is unnecessary;
+- run the helper with `--help` before use, as the upstream skill instructs.
+
+### `grovia-market-research`
+
+- Source: this repository.
+- Purpose: require current market/competitor/customer evidence and a uniqueness thesis before implementation.
+- Status: **installed**.
+
 ### `grovia-product`
 
 - Source: this repository.
 - Purpose: keep Codex aligned to the V1 PRD, exclusions, product journey, and evidence-driven scope.
+- Status: **installed**.
+
+### `grovia-design-critic`
+
+- Source: this repository.
+- Purpose: reject generic visual/interaction work and critique grocery task speed, originality, mobile UX, accessibility and performance.
 - Status: **installed**.
 
 ### `grovia-wordpress-engineering`
@@ -57,18 +86,10 @@ These are **not automatically installed** merely because they are popular.
 
 ### Anthropic `frontend-design`
 
-Useful during the V1 prototype/design phase. Current skills directory signals show a very large install base and a highly established upstream repository. Install only when we start visual prototype work, after re-reading the current upstream skill/license.
+Useful during the V1 visual-design phase. Install only when we move from interaction validation into actual visual system work, after re-reading the current upstream skill/license.
 
 ```bash
 npx skills add https://github.com/anthropics/skills --skill frontend-design
-```
-
-### Anthropic `webapp-testing`
-
-Useful when the local WordPress demo can run and we need browser-level Playwright workflows. It includes helper scripts, so scripts must be reviewed before project installation.
-
-```bash
-npx skills add https://github.com/anthropics/skills --skill webapp-testing
 ```
 
 ### Matt Pocock `tdd`
