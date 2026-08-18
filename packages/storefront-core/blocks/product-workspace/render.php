@@ -10,6 +10,8 @@
 
 defined( 'ABSPATH' ) || exit;
 
+wp_enqueue_script( 'bhaivatech-storefront-saved-products' );
+
 $cart_url       = function_exists( 'wc_get_cart_url' ) ? wc_get_cart_url() : '#';
 $search_id      = wp_unique_id( 'bt-product-search-' );
 $saved_panel_id = wp_unique_id( 'bt-saved-panel-' );
