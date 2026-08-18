@@ -44,6 +44,6 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: sales-page-v0-mobile-${{ github.run_number }}
-          path: research/prototypes/sales-page-v0/sales-page-mobile.png
+          path: research/prototypes/sales-page-v0/sales-page-mobile-*.png
           if-no-files-found: error
           retention-days: 14
