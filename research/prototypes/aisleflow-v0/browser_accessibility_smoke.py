@@ -2,9 +2,11 @@
 """Headless accessibility-focused smoke checks for the AisleFlow V0 prototype.
 
 This is not a WCAG conformance test. It protects a few interaction invariants that
-were identified during the static accessibility audit.
+were identified during the static accessibility audit, plus the privacy boundary
+of the local research-session exporter.
 """
 
+import json
 from pathlib import Path
 from playwright.sync_api import sync_playwright
 
@@ -120,9 +122,39 @@ def run():
         scroll_behavior = page.evaluate("getComputedStyle(document.documentElement).scrollBehavior")
         assert scroll_behavior == "auto"
 
+        # Research export is deliberately local and excludes entered search/postcode values.
+        page.locator(".research-console summary").click()
+        page.locator("#session-participant-code").fill("S01")
+        page.locator("#session-participant-group").select_option("shopper")
+
+        sensitive_search = "do-not-record-search-term"
+        sensitive_postcode = "123456"
+        page.locator("#search-input").fill(sensitive_search)
+        page.wait_for_timeout(450)
+        page.locator("#postcode").fill(sensitive_postcode)
+        page.locator("#delivery-form button[type='submit']").click()
+        page.wait_for_timeout(50)
+
+        with page.expect_download() as download_info:
+            page.locator("#export-session").click()
+        download = download_info.value
+        payload_text = Path(download.path()).read_text(encoding="utf-8")
+        payload = json.loads(payload_text)
+
+        assert payload["participant"]["code"] == "S01"
+        assert payload["participant"]["group"] == "shopper"
+        assert payload["privacy"]["network_telemetry"] is False
+        assert payload["privacy"]["search_terms_recorded"] is False
+        assert payload["privacy"]["postcode_recorded"] is False
+        assert sensitive_search not in payload_text
+        assert sensitive_postcode not in payload_text
+        event_types = {event["type"] for event in payload["recorder"]["events"]}
+        assert "search_change" in event_types
+        assert "delivery_check" in event_types
+
         browser.close()
 
-    print("AisleFlow V0 browser accessibility smoke checks passed")
+    print("AisleFlow V0 browser accessibility/privacy smoke checks passed")
 
 
 if __name__ == "__main__":
