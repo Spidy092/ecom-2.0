@@ -130,6 +130,18 @@ def hostname_for(url: str) -> str:
     return parsed.hostname or "local-file"
 
 
+def classify_http_status(http_status: int | None) -> tuple[str, bool]:
+    """Return research status and whether page-level UX metrics are interpretable."""
+    if http_status is None:
+        # file:// and some browser navigations have no HTTP response object.
+        return "ok", True
+    if http_status in (401, 403):
+        return "blocked", False
+    if 400 <= http_status:
+        return "http_error", False
+    return "ok", True
+
+
 def measure_target(browser, target: dict) -> dict:
     context = browser.new_context(
         viewport=VIEWPORT,
@@ -173,6 +185,7 @@ def measure_target(browser, target: dict) -> dict:
         "viewport": VIEWPORT,
         "status": "unknown",
         "http_status": None,
+        "metrics_interpretable": False,
         "error": None,
     }
 
@@ -187,7 +200,9 @@ def measure_target(browser, target: dict) -> dict:
 
         page.wait_for_timeout(SETTLE_MS)
         result.update(page.evaluate(JS_METRICS))
-        result["status"] = "ok"
+        result["status"], result["metrics_interpretable"] = classify_http_status(
+            result["http_status"]
+        )
 
         SCREENSHOTS_DIR.mkdir(parents=True, exist_ok=True)
         page.screenshot(
@@ -200,12 +215,15 @@ def measure_target(browser, target: dict) -> dict:
         )
     except PlaywrightTimeoutError as error:
         result["status"] = "timeout"
+        result["metrics_interpretable"] = False
         result["error"] = str(error)
     except PlaywrightError as error:
         result["status"] = "browser_error"
+        result["metrics_interpretable"] = False
         result["error"] = str(error)
     except Exception as error:  # Research harness must record one target failure and continue.
         result["status"] = "error"
+        result["metrics_interpretable"] = False
         result["error"] = f"{type(error).__name__}: {error}"
     finally:
         result["console_errors"] = console_errors
@@ -223,6 +241,7 @@ def write_csv(results: list[dict]) -> None:
         "kind",
         "status",
         "http_status",
+        "metrics_interpretable",
         "requested_url",
         "final_url",
         "dom_elements",
@@ -270,6 +289,7 @@ def main() -> None:
             result = measure_target(browser, target)
             print(
                 f"  status={result['status']} http={result.get('http_status')} "
+                f"interpretable={result.get('metrics_interpretable')} "
                 f"controls={result.get('visible_controls', 'n/a')} "
                 f"resources={result.get('resource_requests', 'n/a')}"
             )
