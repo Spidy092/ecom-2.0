@@ -1,0 +1,2 @@
+# Pinned research/browser dependency for reproducible CI.
+playwright==1.62.0
