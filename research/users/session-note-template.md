@@ -1,6 +1,6 @@
 # V1 Research Session Note
 
-> Duplicate this file per participant. Keep observation separate from interpretation.
+> Duplicate this file per participant. Keep observation separate from interpretation. Use an anonymous participant code only.
 
 ## Participant
 
@@ -9,24 +9,26 @@
 - Date:
 - Researcher:
 - Device/browser:
+- Viewport:
 - Experience context:
 - Recording consent: Yes / No
 
 ## Mission
 
-- First-time fixed grocery mission / Returning household / Builder interview
+- First-time fixed grocery mission / Repeat-shopper mission / Builder interview
 - Prototype version/commit:
 
 ## Task metrics
 
-- Time to first meaningful basket action:
+- Time to first meaningful cart action:
 - Prototype deliberate interactions:
 - Prototype surfaces:
 - Product-detail transitions:
 - Researcher assists:
 - Quantity corrections:
-- Search terms:
 - Aisles used:
+
+Do not write private search terms or real postcode values into the public repository.
 
 ## Direct observations
 
@@ -54,28 +56,32 @@ Write only what happened.
 - Did participant trust it?
 - Observation:
 
-## Basket/cart state
+## Cart state
 
 - Did participant know products were added?
 - Did participant understand item count?
 - Did participant understand total before Cart?
 - Observation:
 
-## Navigation language
+## Navigation / mental-model language
 
-Participant interpretation before explanation:
+Participant interpretation **before explanation**:
 
 - `Aisles` meant:
-- `List` meant:
-- `This Week` meant:
+- `Buy again` meant:
+- `Saved` meant:
+- `Cart` meant:
+- Was `Saved` versus `Cart` clearly different? Yes / No
+- Why:
 
 ## Repeat-shopping behavior
 
 If applicable:
 
-- Did repeat items reduce searching?
+- Did Buy Again reduce searching?
 - Did the participant understand why the products appeared?
 - Did repeat content add clutter/confusion?
+- Did `Save for later` / `Remove from saved` behave as expected?
 
 ## Direct quotes
 
