@@ -8,6 +8,10 @@ on:
       - 'research/competitors/**'
       - 'research/prototypes/aisleflow-v0/**'
       - '.github/workflows/competitor-mobile-recon.yml'
+  pull_request:
+    paths:
+      - 'research/competitors/**'
+      - '.github/workflows/competitor-mobile-recon.yml'
   workflow_dispatch:
 
 permissions:
