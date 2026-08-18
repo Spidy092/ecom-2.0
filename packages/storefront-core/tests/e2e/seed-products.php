@@ -1,6 +1,6 @@
 <?php
 /**
- * Seed deterministic WooCommerce product fixtures for engineering-alpha E2E.
+ * Seed deterministic WooCommerce product and shopper fixtures for alpha E2E.
  */
 
 if ( ! class_exists( 'WooCommerce' ) ) {
@@ -76,4 +76,22 @@ foreach ( $rice_variations as $pack_value => $price ) {
 WC_Product_Variable::sync( $rice->get_id() );
 wc_delete_product_transients( $rice->get_id() );
 
-WP_CLI::success( 'Seeded Alpha Milk, Alpha Bread, Alpha Tomato and purchasable Alpha Rice Pack variations.' );
+$shopper_password = 'alpha-saved-pass';
+foreach ( array( 'alpha-saved-a', 'alpha-saved-b' ) as $login ) {
+	$user_id = username_exists( $login );
+
+	if ( ! $user_id ) {
+		$user_id = wp_create_user( $login, $shopper_password, $login . '@example.test' );
+	}
+
+	if ( is_wp_error( $user_id ) ) {
+		WP_CLI::error( 'Could not create Saved E2E shopper ' . $login . '.' );
+	}
+
+	wp_set_password( $shopper_password, (int) $user_id );
+	$user = new WP_User( (int) $user_id );
+	$user->set_role( 'customer' );
+	delete_user_meta( (int) $user_id, BHAIVATECH_STOREFRONT_SAVED_META_KEY );
+}
+
+WP_CLI::success( 'Seeded products plus isolated Saved shoppers alpha-saved-a and alpha-saved-b.' );
