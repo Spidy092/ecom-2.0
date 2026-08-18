@@ -18,8 +18,8 @@
       </div>
 
       <div class="mode-switch" role="group" aria-label="Prototype shopper mode">
-        <button class="mode-button is-active" type="button" data-mode-button="first-time">First-time</button>
-        <button class="mode-button" type="button" data-mode-button="returning">Returning</button>
+        <button class="mode-button is-active" type="button" data-mode-button="first-time" aria-pressed="true">First-time</button>
+        <button class="mode-button" type="button" data-mode-button="returning" aria-pressed="false">Returning</button>
       </div>
     </header>
 
@@ -83,7 +83,7 @@
           <button class="quiet-button" type="button" id="show-all">Show all</button>
         </div>
 
-        <div class="aisle-rail" id="aisle-rail" role="tablist" aria-label="Grocery aisles"></div>
+        <nav class="aisle-rail" id="aisle-rail" aria-label="Grocery aisles"></nav>
 
         <div class="workspace-grid">
           <aside class="aisle-summary" aria-label="Current aisle summary">
