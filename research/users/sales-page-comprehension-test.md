@@ -80,6 +80,27 @@ Reopen the page and ask the participant to:
 
 Record where they look first and where terminology causes confusion.
 
+## Pricing objection follow-up
+
+Only after the participant understands the offer, ask:
+
+> WoodMart currently sells for about $59 one-time with future/lifetime theme updates. This working offer is $59/year with maintained updates and support. What would this product need to prove for the annual price to feel worth paying?
+
+Record the reason, not just `yes/no`.
+
+Possible evidence categories:
+- grocery specialization;
+- faster shopper task;
+- easier setup;
+- support quality;
+- security/compatibility maintenance;
+- lower dependency burden;
+- documentation;
+- agency/client workflow;
+- price itself is unacceptable.
+
+Do not argue with the participant or defend annual pricing during the research session.
+
 ## Scoring
 
 ### Product identity
@@ -119,8 +140,10 @@ Fail if participant leaves believing the product includes:
 When price has been viewed, pass if participant understands:
 - working hypothesis: $59/year;
 - one production store;
+- recognized dev/staging environments are intended not to consume the paid production seat where provider validation permits;
 - updates/support are entitlement benefits;
-- existing installed product is not remotely disabled after expiry.
+- existing installed product is not remotely disabled after expiry;
+- working first-purchase refund hypothesis is 30 days.
 
 ## Initial internal thresholds
 
@@ -165,6 +188,11 @@ Device:
 - Trust:
 - Purchase blocker:
 
+Annual pricing reaction
+- Would compare against:
+- Why one-time alternative wins/loses:
+- Evidence required to renew annually:
+
 Scores
 - Product identity: PASS / FAIL
 - Differentiator: PASS / FAIL
@@ -184,7 +212,7 @@ Post-review feedback:
 Researcher interpretation:
 
 Recommended action:
-KEEP / COPY CHANGE / STRUCTURE CHANGE / NEED MORE EVIDENCE
+KEEP / COPY CHANGE / STRUCTURE CHANGE / PRICE CHANGE / NEED MORE EVIDENCE
 ```
 
 ## Synthesis table
@@ -204,6 +232,7 @@ Do not:
 - connect checkout;
 - design final brand/visual identity around a headline;
 - publish conversion claims;
-- add testimonials/social proof.
+- add testimonials/social proof;
+- claim $59/year is validated merely because established WordPress products charge annual fees.
 
 Issue #16 remains open until qualified-buyer evidence is recorded and synthesized.
