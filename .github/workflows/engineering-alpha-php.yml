@@ -110,6 +110,10 @@ jobs:
         run: npx -y @wordpress/env@10.39.0 run cli wp eval "update_option( 'woocommerce_specific_ship_to_countries', array( 'IN' ) );"
       - name: Exercise postcode-only single-country inference in Chrome
         run: python packages/storefront-core/tests/e2e/serviceability-single-country.spec.py
+      - name: Disable WooCommerce shipping
+        run: npx -y @wordpress/env@10.39.0 run cli wp eval "update_option( 'woocommerce_ship_to_countries', 'disabled' );"
+      - name: Exercise disabled-shipping serviceability in Chrome
+        run: python packages/storefront-core/tests/e2e/serviceability-disabled.spec.py
       - name: Stop wp-env
         if: always()
         run: npx -y @wordpress/env@10.39.0 stop
