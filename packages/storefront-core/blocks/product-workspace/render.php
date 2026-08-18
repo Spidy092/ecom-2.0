@@ -10,15 +10,16 @@
 
 defined( 'ABSPATH' ) || exit;
 
-$cart_url = function_exists( 'wc_get_cart_url' ) ? wc_get_cart_url() : '#';
+$cart_url  = function_exists( 'wc_get_cart_url' ) ? wc_get_cart_url() : '#';
+$search_id = wp_unique_id( 'bt-product-search-' );
 ?>
 <section class="bt-product-workspace" data-bt-product-workspace>
 	<div class="bt-product-workspace__search">
-		<label for="bt-product-search-<?php echo esc_attr( wp_unique_id() ); ?>">
+		<label for="<?php echo esc_attr( $search_id ); ?>">
 			<?php esc_html_e( 'Search groceries', 'bhaivatech-storefront-alpha' ); ?>
 		</label>
 		<input
-			id="bt-product-search-<?php echo esc_attr( wp_unique_id() ); ?>"
+			id="<?php echo esc_attr( $search_id ); ?>"
 			class="bt-product-workspace__input"
 			type="search"
 			autocomplete="off"
