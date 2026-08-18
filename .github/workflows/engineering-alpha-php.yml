@@ -23,6 +23,10 @@ on:
       - '.wp-env.json'
       - '.github/workflows/engineering-alpha-php.yml'
 
+concurrency:
+  group: engineering-alpha-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
 
