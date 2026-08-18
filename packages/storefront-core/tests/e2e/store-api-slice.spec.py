@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import os
+import re
 
 from playwright.sync_api import expect, sync_playwright
 
@@ -17,12 +18,17 @@ def product_card(page, name: str):
 def search_for(page, query: str):
     search = page.locator("[data-bt-search]")
     search.fill(query)
-    expect(page.locator("[data-bt-status]")).not_to_have_text("Searching groceries…", timeout=10_000)
+    expect(page.locator("[data-bt-status]")).to_have_text(
+        re.compile(r"(?:\d+ products? found\.|No exact matches\.)"),
+        timeout=10_000,
+    )
 
 
 def main() -> None:
     with sync_playwright() as playwright:
-        browser = playwright.chromium.launch(headless=True)
+        # GitHub-hosted Ubuntu runners include stable Google Chrome. Using the
+        # branded channel avoids downloading a second browser just for this gate.
+        browser = playwright.chromium.launch(channel="chrome", headless=True)
         context = browser.new_context(viewport={"width": 390, "height": 844})
         page = context.new_page()
 
