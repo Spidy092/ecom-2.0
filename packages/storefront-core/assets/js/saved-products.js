@@ -45,6 +45,7 @@
 		let savedProducts = [];
 		let savedMutationInFlight = false;
 		let savedProductsLoading = false;
+		let accountLoadPromise = null;
 
 		function announce( message ) {
 			status.textContent = message;
@@ -260,12 +261,19 @@
 		}
 
 		function applyGuestSaved( productId, shouldSave ) {
+			const before = savedIds.slice();
 			const next = shouldSave
 				? savedModel.add( savedIds, productId )
 				: savedModel.remove( savedIds, productId );
+			const changed = next.length !== before.length || next.some( function ( id, index ) {
+				return id !== before[ index ];
+			} );
 			const result = savedModel.write( storage, next );
 			savedIds = result.ids;
-			return result.persisted;
+			return {
+				changed,
+				persisted: result.persisted,
+			};
 		}
 
 		async function setSaved( productId, shouldSave ) {
@@ -276,22 +284,34 @@
 			savedMutationInFlight = true;
 
 			try {
+				let notice = shouldSave ? config.messages.savedAdded : config.messages.savedRemoved;
+
 				if ( savedConfig.loggedIn ) {
+					if ( accountLoadPromise ) {
+						await accountLoadPromise;
+					}
+
 					const payload = await accountRequest(
 						savedProductEndpoint( productId ),
 						shouldSave ? 'POST' : 'DELETE'
 					);
 					savedIds = savedModel.normalizeIds( payload.ids, Number( savedConfig.accountMax || 100 ) );
 				} else {
-					const persisted = applyGuestSaved( productId, shouldSave );
-					if ( ! persisted ) {
-						announce( config.messages.savedSessionOnly );
+					const guestResult = applyGuestSaved( productId, shouldSave );
+
+					if ( shouldSave && ! guestResult.changed ) {
+						announce( config.messages.savedGuestLimit );
+						return;
+					}
+
+					if ( ! guestResult.persisted ) {
+						notice = config.messages.savedSessionOnly;
 					}
 				}
 
 				updateCount();
 				decorateSearchCards();
-				announce( shouldSave ? config.messages.savedAdded : config.messages.savedRemoved );
+				announce( notice );
 
 				if ( ! panel.hidden ) {
 					await loadSavedProducts();
@@ -313,6 +333,10 @@
 				savedIds = savedModel.normalizeIds( payload.ids, Number( savedConfig.accountMax || 100 ) );
 				updateCount();
 				decorateSearchCards();
+
+				if ( ! panel.hidden ) {
+					await loadSavedProducts();
+				}
 			} catch ( error ) {
 				announce( error.message || config.messages.savedUnavailable );
 			}
@@ -385,6 +409,6 @@
 		updateCount();
 		decorateSearchCards();
 		renderSavedPanel();
-		loadAccountSaved();
+		accountLoadPromise = loadAccountSaved();
 	} );
 } )();
