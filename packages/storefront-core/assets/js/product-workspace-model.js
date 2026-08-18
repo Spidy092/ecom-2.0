@@ -11,6 +11,7 @@
 	const MAX_RESULTS = 12;
 	const MIN_QUERY_LENGTH = 2;
 	const RECOVERY_PREFIX_LENGTH = 3;
+	const MAX_SAVED_PRODUCTS_QUERY = 100;
 
 	function normalizeSearchText( value ) {
 		return String( value == null ? '' : value )
@@ -54,6 +55,31 @@
 	function buildRecoveryUrl( productsEndpoint, query ) {
 		const prefix = recoveryPrefix( query );
 		return prefix ? buildProductsUrl( productsEndpoint, prefix ) : '';
+	}
+
+	function buildProductsByIdsUrl( productsEndpoint, ids ) {
+		const normalized = [];
+		const seen = new Set();
+
+		( Array.isArray( ids ) ? ids : [] ).forEach( function ( candidate ) {
+			const id = Number( candidate );
+			if ( ! Number.isSafeInteger( id ) || id <= 0 || seen.has( id ) ) {
+				return;
+			}
+			seen.add( id );
+			normalized.push( id );
+		} );
+
+		const bounded = normalized.slice( 0, MAX_SAVED_PRODUCTS_QUERY );
+		if ( ! bounded.length ) {
+			return '';
+		}
+
+		const url = new URL( productsEndpoint );
+		url.searchParams.set( 'include', bounded.join( ',' ) );
+		url.searchParams.set( 'orderby', 'include' );
+		url.searchParams.set( 'per_page', String( bounded.length ) );
+		return url.toString();
 	}
 
 	function editDistance( left, right ) {
@@ -208,10 +234,12 @@
 		MAX_RESULTS,
 		MIN_QUERY_LENGTH,
 		RECOVERY_PREFIX_LENGTH,
+		MAX_SAVED_PRODUCTS_QUERY,
 		normalizeSearchText,
 		recoveryPrefix,
 		buildProductsUrl,
 		buildRecoveryUrl,
+		buildProductsByIdsUrl,
 		editDistance,
 		suggestSearchTerm,
 		canDirectAdd,
