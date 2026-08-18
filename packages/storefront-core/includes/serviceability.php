@@ -58,6 +58,33 @@ function bhaivatech_storefront_serviceability_shipping_countries(): array {
 }
 
 /**
+ * Return country codes for which configured Woo zones make state necessary to
+ * avoid ambiguous matching.
+ *
+ * @return string[]
+ */
+function bhaivatech_storefront_serviceability_state_required_countries(): array {
+	$required = array();
+
+	foreach ( WC_Shipping_Zones::get_shipping_zones() as $zone ) {
+		foreach ( $zone->get_zone_locations() as $location ) {
+			if ( 'state' !== $location->type ) {
+				continue;
+			}
+
+			$parts   = explode( ':', strtoupper( (string) $location->code ), 2 );
+			$country = $parts[0] ?? '';
+
+			if ( '' !== $country ) {
+				$required[ $country ] = $country;
+			}
+		}
+	}
+
+	return array_values( $required );
+}
+
+/**
  * Determine whether configured shipping zones make state necessary for a
  * correct match in the selected country.
  *
@@ -65,21 +92,52 @@ function bhaivatech_storefront_serviceability_shipping_countries(): array {
  * @return bool
  */
 function bhaivatech_storefront_serviceability_country_requires_state( string $country ): bool {
-	$country = strtoupper( $country );
-	$prefix  = $country . ':';
+	return in_array(
+		strtoupper( $country ),
+		bhaivatech_storefront_serviceability_state_required_countries(),
+		true
+	);
+}
 
-	foreach ( WC_Shipping_Zones::get_shipping_zones() as $zone ) {
-		foreach ( $zone->get_zone_locations() as $location ) {
-			if (
-				'state' === $location->type &&
-				str_starts_with( strtoupper( (string) $location->code ), $prefix )
-			) {
-				return true;
+/**
+ * Public configuration needed to render the serviceability form without
+ * exposing shipping-zone or method administration details.
+ *
+ * Canonical state labels are exposed only for shipping countries that actually
+ * need state to disambiguate configured zones.
+ *
+ * @return array{countries:array<int,array{code:string,label:string}>,singleCountry:string,stateOptions:array<string,array<string,string>>}
+ */
+function bhaivatech_storefront_serviceability_public_config(): array {
+	$shipping_countries = bhaivatech_storefront_serviceability_shipping_countries();
+	$countries          = array();
+	$state_options      = array();
+
+	foreach ( $shipping_countries as $code => $label ) {
+		$countries[] = array(
+			'code'  => (string) $code,
+			'label' => (string) $label,
+		);
+	}
+
+	if ( WC()->countries ) {
+		foreach ( bhaivatech_storefront_serviceability_state_required_countries() as $country ) {
+			if ( ! isset( $shipping_countries[ $country ] ) ) {
+				continue;
+			}
+
+			$states = WC()->countries->get_states( $country );
+			if ( is_array( $states ) && array() !== $states ) {
+				$state_options[ $country ] = $states;
 			}
 		}
 	}
 
-	return false;
+	return array(
+		'countries'      => $countries,
+		'singleCountry'  => 1 === count( $shipping_countries ) ? (string) array_key_first( $shipping_countries ) : '',
+		'stateOptions'   => $state_options,
+	);
 }
 
 /**
