@@ -82,8 +82,9 @@
 
     document.querySelectorAll('.save-button').forEach((button) => {
       const saved = button.classList.contains('is-saved');
+      const label = saved ? 'Remove from list' : 'Save to list';
       button.removeAttribute('aria-pressed');
-      button.textContent = saved ? 'Remove from list' : 'Save to list';
+      if (button.textContent !== label) button.textContent = label;
       button.style.minHeight = '32px';
     });
 
