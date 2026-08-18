@@ -306,7 +306,7 @@ kbd { border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 6p
   .delivery-band { grid-template-columns: 1fr; gap: 20px; padding-top: 24px; }
   h1 { font-size: clamp(2.15rem, 13vw, 4rem); }
   .section-heading-row { align-items: flex-start; }
-  .shortcut-note, .context-note { display: none; }
+  .shortcut-note { display: none; }
   .search-box { min-height: 60px; border-radius: 14px; }
   .quick-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .workspace-grid { grid-template-columns: 1fr; }

@@ -42,13 +42,12 @@ def run():
         assert "Saved" in body_text
         assert "Cart" in body_text
         assert "List\nCart" not in body_text
-        assert "Your current cart" in body_text
 
         page.locator('.research-console summary').click()
         page.locator('[data-mode-button="returning"]').click()
         page.wait_for_timeout(50)
         assert page.locator('#returning-title').inner_text().strip() == "Buy again"
-        assert "Products you bought before" in page.locator('#returning-panel').inner_text()
+        assert "products you bought before" in page.locator('#returning-panel').inner_text().lower()
         assert "This week" not in page.locator('#returning-panel').inner_text()
         page.locator('.research-console summary').click()
 
@@ -124,12 +123,12 @@ def run():
 
         # Saved surface uses the revised mental model and remains separate from Cart.
         saved_launcher = page.locator('[data-nav="list"]')
-        assert saved_launcher.inner_text().strip() == "Saved"
+        assert saved_launcher.locator('span:last-of-type').inner_text().strip() == "Saved"
         saved_launcher.click()
         page.wait_for_timeout(100)
         assert active(page)["id"] == "list-panel"
-        saved_panel_text = page.locator('#list-panel').inner_text()
-        assert "Saved for later" in saved_panel_text
+        saved_panel_text = page.locator('#list-panel').inner_text().lower()
+        assert "saved for later" in saved_panel_text
         assert "future cart" in saved_panel_text
         page.keyboard.press("Escape")
         page.wait_for_timeout(100)

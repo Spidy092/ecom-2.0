@@ -1,0 +1,326 @@
+{
+  "schema": "aisleflow-v0-session-1",
+  "exported_at": "2026-08-18T17:11:50.546Z",
+  "participant": {
+    "code": "S05",
+    "group": "shopper"
+  },
+  "privacy": {
+    "network_telemetry": false,
+    "search_terms_recorded": false,
+    "postcode_recorded": false,
+    "note": "This file is generated locally in the browser. Search text and postcode values are intentionally excluded."
+  },
+  "prototype": {
+    "mode": "first-time",
+    "viewport_css_px": {
+      "width": 440,
+      "height": 956
+    }
+  },
+  "built_in_metrics": {
+    "elapsed": "02:10",
+    "deliberate_interactions": "44",
+    "surfaces": "11",
+    "first_add": "42s"
+  },
+  "final_state": {
+    "basket_items": "9",
+    "basket_total": "₹404",
+    "delivery_result": "Prototype: delivery available today."
+  },
+  "recorder": {
+    "elapsed_ms": 130423,
+    "event_count": 46,
+    "events": [
+      {
+        "at_ms": 4804,
+        "type": "delivery_check",
+        "available": true
+      },
+      {
+        "at_ms": 20042,
+        "type": "delivery_check",
+        "available": true
+      },
+      {
+        "at_ms": 37982,
+        "type": "delivery_check",
+        "available": true
+      },
+      {
+        "at_ms": 41654,
+        "type": "product_action",
+        "action": "add",
+        "product": "milk-amul",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 43360,
+        "type": "product_action",
+        "action": "save",
+        "product": "milk-amul",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 44151,
+        "type": "product_action",
+        "action": "save",
+        "product": "milk-amul",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 49840,
+        "type": "product_action",
+        "action": "save",
+        "product": "eggs-farm",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 50976,
+        "type": "product_action",
+        "action": "save",
+        "product": "eggs-farm",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 51711,
+        "type": "product_action",
+        "action": "save",
+        "product": "eggs-farm",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 52308,
+        "type": "product_action",
+        "action": "save",
+        "product": "eggs-farm",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 53036,
+        "type": "product_action",
+        "action": "save",
+        "product": "eggs-farm",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 58372,
+        "type": "product_action",
+        "action": "save",
+        "product": "tomato",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 59694,
+        "type": "product_action",
+        "action": "add",
+        "product": "tomato",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 63337,
+        "type": "product_action",
+        "action": "save",
+        "product": "apple",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 66215,
+        "type": "basket_pulse_open_cart"
+      },
+      {
+        "at_ms": 67201,
+        "type": "basket_pulse_open_cart"
+      },
+      {
+        "at_ms": 74305,
+        "type": "product_action",
+        "action": "save",
+        "product": "toothpaste",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 76925,
+        "type": "product_action",
+        "action": "save",
+        "product": "surf",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 77917,
+        "type": "product_action",
+        "action": "save",
+        "product": "surf",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 79284,
+        "type": "product_action",
+        "action": "save",
+        "product": "chips-bingo",
+        "source": "product-ledger"
+      },
+      {
+        "at_ms": 83009,
+        "type": "product_action",
+        "action": "increment",
+        "product": "tomato",
+        "source": "cart"
+      },
+      {
+        "at_ms": 83168,
+        "type": "product_action",
+        "action": "increment",
+        "product": "tomato",
+        "source": "cart"
+      },
+      {
+        "at_ms": 83335,
+        "type": "product_action",
+        "action": "increment",
+        "product": "tomato",
+        "source": "cart"
+      },
+      {
+        "at_ms": 83487,
+        "type": "product_action",
+        "action": "increment",
+        "product": "tomato",
+        "source": "cart"
+      },
+      {
+        "at_ms": 83654,
+        "type": "product_action",
+        "action": "increment",
+        "product": "tomato",
+        "source": "cart"
+      },
+      {
+        "at_ms": 83807,
+        "type": "product_action",
+        "action": "increment",
+        "product": "tomato",
+        "source": "cart"
+      },
+      {
+        "at_ms": 83980,
+        "type": "product_action",
+        "action": "increment",
+        "product": "tomato",
+        "source": "cart"
+      },
+      {
+        "at_ms": 86812,
+        "type": "prototype_checkout_boundary"
+      },
+      {
+        "at_ms": 87906,
+        "type": "navigation",
+        "destination": "list",
+        "source": "mobile-dock"
+      },
+      {
+        "at_ms": 90966,
+        "type": "product_action",
+        "action": "save",
+        "product": "rice-sona",
+        "source": "shopping-list"
+      },
+      {
+        "at_ms": 92264,
+        "type": "product_action",
+        "action": "save",
+        "product": "dal-toor",
+        "source": "shopping-list"
+      },
+      {
+        "at_ms": 93324,
+        "type": "product_action",
+        "action": "save",
+        "product": "banana",
+        "source": "shopping-list"
+      },
+      {
+        "at_ms": 94392,
+        "type": "product_action",
+        "action": "save",
+        "product": "milk-amul",
+        "source": "shopping-list"
+      },
+      {
+        "at_ms": 95601,
+        "type": "product_action",
+        "action": "save",
+        "product": "bread-wheat",
+        "source": "shopping-list"
+      },
+      {
+        "at_ms": 97098,
+        "type": "product_action",
+        "action": "save",
+        "product": "apple",
+        "source": "shopping-list"
+      },
+      {
+        "at_ms": 98465,
+        "type": "product_action",
+        "action": "save",
+        "product": "surf",
+        "source": "shopping-list"
+      },
+      {
+        "at_ms": 99845,
+        "type": "product_action",
+        "action": "save",
+        "product": "chips-bingo",
+        "source": "shopping-list"
+      },
+      {
+        "at_ms": 100886,
+        "type": "product_action",
+        "action": "save",
+        "product": "toothpaste",
+        "source": "shopping-list"
+      },
+      {
+        "at_ms": 107728,
+        "type": "aisle_show_all"
+      },
+      {
+        "at_ms": 112056,
+        "type": "navigation",
+        "destination": "search",
+        "source": "mobile-dock"
+      },
+      {
+        "at_ms": 114969,
+        "type": "search_change",
+        "query_length": 4,
+        "empty": false
+      },
+      {
+        "at_ms": 116907,
+        "type": "search_change",
+        "query_length": 5,
+        "empty": false
+      },
+      {
+        "at_ms": 120719,
+        "type": "basket_pulse_open_cart"
+      },
+      {
+        "at_ms": 122661,
+        "type": "prototype_checkout_boundary"
+      },
+      {
+        "at_ms": 123596,
+        "type": "prototype_checkout_boundary"
+      },
+      {
+        "at_ms": 124185,
+        "type": "prototype_checkout_boundary"
+      }
+    ]
+  }
+}
