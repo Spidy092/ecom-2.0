@@ -62,14 +62,15 @@ jobs:
         with:
           node-version: '24'
           package-manager-cache: false
-      - name: Check product workspace JavaScript syntax
+      - name: Check storefront JavaScript syntax
         run: |
           node --check packages/storefront-core/assets/js/product-workspace-model.js
           node --check packages/storefront-core/assets/js/product-workspace.js
+          node --check packages/storefront-core/assets/js/saved-products-model.js
       - name: Validate block metadata JSON
         run: node -e "JSON.parse(require('fs').readFileSync('packages/storefront-core/blocks/product-workspace/block.json','utf8'))"
-      - name: Run product workspace model tests
-        run: node --test packages/storefront-core/tests/js/product-workspace-model.test.js
+      - name: Run storefront model tests
+        run: node --test packages/storefront-core/tests/js/*.test.js
 
   woo-store-api-e2e:
     runs-on: ubuntu-latest
@@ -96,6 +97,8 @@ jobs:
           npx -y @wordpress/env@10.39.0 run cli wp eval-file wp-content/plugins/storefront-core/tests/e2e/seed-products.php
       - name: Exercise real Store API session in Chrome
         run: python packages/storefront-core/tests/e2e/store-api-slice.spec.py
+      - name: Exercise Saved auth and ownership boundaries in Chrome
+        run: python packages/storefront-core/tests/e2e/saved-products-api.spec.py
       - name: Stop wp-env
         if: always()
         run: npx -y @wordpress/env@10.39.0 stop
