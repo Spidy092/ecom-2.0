@@ -104,6 +104,7 @@ function bhaivatech_storefront_register_product_workspace(): void {
 			'savedUnavailable'      => __( 'Saved could not be loaded. Try again.', 'bhaivatech-storefront-alpha' ),
 			'savedUnavailableCount' => __( '%d saved products are currently unavailable.', 'bhaivatech-storefront-alpha' ),
 			'savedSessionOnly'      => __( 'Saved for this session only because browser storage is unavailable.', 'bhaivatech-storefront-alpha' ),
+			'savedGuestLimit'       => __( 'You can save up to 50 products on this browser.', 'bhaivatech-storefront-alpha' ),
 			'savedAccountScope'     => __( 'Saved to your account.', 'bhaivatech-storefront-alpha' ),
 			'savedBrowserScope'     => __( 'Saved on this browser.', 'bhaivatech-storefront-alpha' ),
 		),
