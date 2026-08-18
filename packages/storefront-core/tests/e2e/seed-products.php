@@ -48,7 +48,6 @@ $tomato->save();
 $rice = new WC_Product_Variable();
 $rice->set_name( 'Alpha Rice Pack' );
 $rice->set_status( 'publish' );
-$rice->set_stock_status( 'instock' );
 
 $pack = new WC_Product_Attribute();
 $pack->set_name( 'Pack' );
@@ -58,4 +57,23 @@ $pack->set_variation( true );
 $rice->set_attributes( array( $pack ) );
 $rice->save();
 
-WP_CLI::success( 'Seeded Alpha Milk, Alpha Bread, Alpha Tomato and Alpha Rice Pack.' );
+$rice_variations = array(
+	'1 kg' => '199.00',
+	'5 kg' => '799.00',
+);
+
+foreach ( $rice_variations as $pack_value => $price ) {
+	$variation = new WC_Product_Variation();
+	$variation->set_parent_id( $rice->get_id() );
+	$variation->set_attributes( array( 'pack' => $pack_value ) );
+	$variation->set_regular_price( $price );
+	$variation->set_manage_stock( true );
+	$variation->set_stock_quantity( 10 );
+	$variation->set_stock_status( 'instock' );
+	$variation->save();
+}
+
+WC_Product_Variable::sync( $rice->get_id() );
+wc_delete_product_transients( $rice->get_id() );
+
+WP_CLI::success( 'Seeded Alpha Milk, Alpha Bread, Alpha Tomato and purchasable Alpha Rice Pack variations.' );
