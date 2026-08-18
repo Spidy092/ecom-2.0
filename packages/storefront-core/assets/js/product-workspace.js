@@ -4,7 +4,7 @@
 	const config = window.BhaivaTechStorefrontConfig || {};
 	const model = window.BhaivaTechProductWorkspaceModel;
 
-	if ( ! model || ! config.restUrl ) {
+	if ( ! model || ! config.restUrl || ! config.messages ) {
 		return;
 	}
 
@@ -23,13 +23,20 @@
 		let searchController = null;
 		let mutationInFlight = false;
 		let nonce = config.nonce || '';
+		let pendingOperations = 0;
 
 		function setStatus( message ) {
 			status.textContent = message;
 		}
 
-		function setBusy( busy ) {
-			root.setAttribute( 'aria-busy', busy ? 'true' : 'false' );
+		function beginBusy() {
+			pendingOperations += 1;
+			root.setAttribute( 'aria-busy', 'true' );
+		}
+
+		function endBusy() {
+			pendingOperations = Math.max( 0, pendingOperations - 1 );
+			root.setAttribute( 'aria-busy', pendingOperations > 0 ? 'true' : 'false' );
 		}
 
 		function updateNonce( response ) {
@@ -92,7 +99,19 @@
 			return parseResponse( await fetch( url, requestOptions ) );
 		}
 
-		function reconcileCart( nextCart ) {
+		function focusProductAction( productId, preferredAction ) {
+			if ( ! productId || ! preferredAction ) {
+				return;
+			}
+
+			const selector = '[data-product-id="' + String( Number( productId ) ) + '"] button[data-action="' + preferredAction + '"]';
+			const target = results.querySelector( selector );
+			if ( target ) {
+				target.focus( { preventScroll: true } );
+			}
+		}
+
+		function reconcileCart( nextCart, focusProductId, focusAction ) {
 			cart = nextCart || null;
 			const summary = model.cartSummary( cart );
 			cartCount.textContent = summary.count === 1
@@ -100,6 +119,7 @@
 				: config.messages.manyItems.replace( '%d', String( summary.count ) );
 			cartTotal.textContent = summary.total;
 			renderProducts();
+			focusProductAction( focusProductId, focusAction );
 		}
 
 		function makeTextElement( tag, className, text ) {
@@ -158,7 +178,6 @@
 			decrement.textContent = '−';
 
 			const quantity = makeTextElement( 'span', 'bt-product-card__quantity-value', String( cartItem.quantity ) );
-			quantity.setAttribute( 'aria-live', 'off' );
 
 			const increment = document.createElement( 'button' );
 			increment.type = 'button';
@@ -181,21 +200,23 @@
 				article.className = 'bt-product-card';
 				article.dataset.productId = String( product.id );
 
-				const imageLink = document.createElement( 'a' );
-				imageLink.className = 'bt-product-card__image-link';
-				imageLink.href = product.permalink;
+				const body = document.createElement( 'div' );
+				body.className = 'bt-product-card__body';
 
 				if ( Array.isArray( product.images ) && product.images[ 0 ] ) {
+					const imageLink = document.createElement( 'a' );
+					imageLink.className = 'bt-product-card__image-link';
+					imageLink.href = product.permalink;
+					imageLink.setAttribute( 'aria-label', product.name );
+
 					const image = document.createElement( 'img' );
 					image.src = product.images[ 0 ].thumbnail || product.images[ 0 ].src;
 					image.alt = product.images[ 0 ].alt || '';
 					image.loading = 'lazy';
 					image.decoding = 'async';
 					imageLink.appendChild( image );
+					article.appendChild( imageLink );
 				}
-
-				const body = document.createElement( 'div' );
-				body.className = 'bt-product-card__body';
 
 				const titleLink = document.createElement( 'a' );
 				titleLink.className = 'bt-product-card__title';
@@ -204,16 +225,19 @@
 
 				const price = makeTextElement( 'span', 'bt-product-card__price', model.productPrice( product ) );
 				body.append( titleLink, price, makeProductAction( product ) );
-				article.append( imageLink, body );
+				article.appendChild( body );
 				results.appendChild( article );
 			} );
 		}
 
 		async function loadCart() {
+			beginBusy();
 			try {
 				reconcileCart( await request( 'cart', { method: 'GET' } ) );
 			} catch ( error ) {
 				setStatus( config.messages.cartUnavailable );
+			} finally {
+				endBusy();
 			}
 		}
 
@@ -222,15 +246,22 @@
 				searchController.abort();
 			}
 
-			searchController = new AbortController();
-			setBusy( true );
+			const controller = new AbortController();
+			searchController = controller;
+			beginBusy();
 			setStatus( config.messages.searching );
 
 			try {
-				products = await request( model.buildProductsUrl( config.restUrl, query ), {
+				const nextProducts = await request( model.buildProductsUrl( config.restUrl, query ), {
 					method: 'GET',
-					signal: searchController.signal,
+					signal: controller.signal,
 				} );
+
+				if ( searchController !== controller ) {
+					return;
+				}
+
+				products = nextProducts;
 				renderProducts();
 				setStatus(
 					products.length
@@ -238,39 +269,39 @@
 						: config.messages.noResults
 				);
 			} catch ( error ) {
-				if ( error.name !== 'AbortError' ) {
+				if ( error.name !== 'AbortError' && searchController === controller ) {
 					products = [];
 					renderProducts();
 					setStatus( error.message || config.messages.requestFailed );
 				}
 			} finally {
-				setBusy( false );
+				endBusy();
 			}
 		}
 
-		async function mutateCart( path, body, successMessage ) {
+		async function mutateCart( path, body, successMessage, focusProductId, focusAction ) {
 			if ( mutationInFlight ) {
 				return;
 			}
 
 			mutationInFlight = true;
-			setBusy( true );
+			beginBusy();
 
 			try {
 				const nextCart = await request( path, {
 					method: 'POST',
 					body: JSON.stringify( body ),
 				} );
-				reconcileCart( nextCart );
+				reconcileCart( nextCart, focusProductId, focusAction );
 				setStatus( successMessage );
 			} catch ( error ) {
 				if ( error.cart ) {
-					reconcileCart( error.cart );
+					reconcileCart( error.cart, focusProductId, focusAction );
 				}
 				setStatus( error.message || config.messages.requestFailed );
 			} finally {
 				mutationInFlight = false;
-				setBusy( false );
+				endBusy();
 			}
 		}
 
@@ -281,6 +312,7 @@
 			if ( query.length < model.MIN_QUERY_LENGTH ) {
 				if ( searchController ) {
 					searchController.abort();
+					searchController = null;
 				}
 				products = [];
 				renderProducts();
@@ -299,22 +331,36 @@
 				return;
 			}
 
+			button.disabled = true;
 			const action = button.dataset.action;
 			const productId = Number( button.dataset.productId );
 			const cartItem = model.findCartItemForProduct( cart, productId );
 
 			if ( action === 'add' ) {
-				mutateCart( 'cart/add-item', { id: productId, quantity: 1 }, config.messages.added );
+				mutateCart(
+					'cart/add-item',
+					{ id: productId, quantity: 1 },
+					config.messages.added,
+					productId,
+					'increment'
+				);
 				return;
 			}
 
 			if ( ! cartItem ) {
+				button.disabled = false;
 				loadCart();
 				return;
 			}
 
 			if ( action === 'decrement' && Number( cartItem.quantity ) <= 1 ) {
-				mutateCart( 'cart/remove-item', { key: cartItem.key }, config.messages.removed );
+				mutateCart(
+					'cart/remove-item',
+					{ key: cartItem.key },
+					config.messages.removed,
+					productId,
+					'add'
+				);
 				return;
 			}
 
@@ -322,7 +368,9 @@
 			mutateCart(
 				'cart/update-item',
 				{ key: cartItem.key, quantity: Number( cartItem.quantity ) + delta },
-				config.messages.cartUpdated
+				config.messages.cartUpdated,
+				productId,
+				action
 			);
 		} );
 
