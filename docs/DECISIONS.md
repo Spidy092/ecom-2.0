@@ -181,6 +181,29 @@ Decision: do not adopt PHP 7.4 as Grovia's customer minimum merely because WooCo
 
 Rationale: Grovia is a new product without a legacy installed base; supporting EOL runtimes creates avoidable test/security/maintenance cost.
 
+## D-026 — Use a Merchant of Record; Lemon Squeezy leads the V1 sandbox spike
+
+**Status:** Provisional — sandbox validation required  
+**Date:** 2026-08-18
+
+Decision: do not build proprietary checkout, tax, subscription or licensing infrastructure for the first commercial release. Use a Merchant of Record behind a small product-owned commercial-license adapter.
+
+Current preferred V1 candidate: **Lemon Squeezy**, pending a sandbox spike.
+
+Why the preference changed during research:
+- Lemon Squeezy now documents an official WordPress theme/plugin automatic-update flow using license keys and its WordPress integration;
+- it also provides Merchant of Record tax handling, subscriptions and a customer portal;
+- its base commercial model is 5% + US$0.50 per transaction, with documented additional fees for international, PayPal and subscription transactions;
+- this may provide enough V1 infrastructure with less platform cost/surface than the full Freemius WordPress solution.
+
+**Freemius remains the fallback/scale candidate** because its WordPress-specific stack is materially deeper: multisite licensing, release management, beta/staged rollouts and broader WordPress commercial tooling. Its current WordPress solution starts at 7% plus gateway fees, so the extra cost must demonstrate real operational value for us.
+
+Architecture rule: vendor-specific licensing/update code must stay behind an adapter and must never own grocery/storefront domain behavior.
+
+Privacy rule: no optional product-usage telemetry should be silently enabled merely because a monetization provider offers it.
+
+Research: `research/business/monetization-stack.md`.
+
 ---
 
 ## Open decisions
@@ -189,7 +212,7 @@ Record these as new entries when resolved:
 - final brand/product name after naming/trademark/domain research;
 - exact PHP customer minimum (development/recommended target is PHP 8.3+);
 - exact WordPress/WooCommerce minimum support matrix at paid beta;
-- licensing/update/payment provider;
+- final licensing/update/payment provider after Lemon Squeezy/Freemius sandbox validation;
 - Shopping List persistence model;
 - whether delivery serviceability wraps/synchronizes WooCommerce Shipping Zones;
 - variable-product quick-add choice surface;
