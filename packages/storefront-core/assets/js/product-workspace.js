@@ -20,6 +20,8 @@
 
 		let cart = null;
 		let products = [];
+		let lastSearchQuery = '';
+		let recoverySuggestion = '';
 		let searchTimer = null;
 		let searchController = null;
 		let mutationInFlight = false;
@@ -128,6 +130,48 @@
 			return element;
 		}
 
+		function makeRecoveryPanel() {
+			if ( ! lastSearchQuery || products.length ) {
+				return null;
+			}
+
+			const panel = document.createElement( 'div' );
+			panel.className = 'bt-search-recovery';
+
+			panel.appendChild(
+				makeTextElement(
+					'p',
+					'bt-search-recovery__message',
+					config.messages.noResultsFor.replace( '%s', lastSearchQuery )
+				)
+			);
+
+			if ( recoverySuggestion ) {
+				panel.appendChild(
+					makeTextElement(
+						'p',
+						'bt-search-recovery__suggestion',
+						config.messages.didYouMean.replace( '%s', recoverySuggestion )
+					)
+				);
+
+				const searchSuggestion = document.createElement( 'button' );
+				searchSuggestion.type = 'button';
+				searchSuggestion.dataset.action = 'search-suggestion';
+				searchSuggestion.dataset.query = recoverySuggestion;
+				searchSuggestion.textContent = config.messages.searchSuggestion.replace( '%s', recoverySuggestion );
+				panel.appendChild( searchSuggestion );
+			}
+
+			const browse = document.createElement( 'a' );
+			browse.className = 'bt-search-recovery__browse';
+			browse.href = config.shopUrl || '/';
+			browse.textContent = config.messages.browseProducts;
+			panel.appendChild( browse );
+
+			return panel;
+		}
+
 		function makeProductAction( product ) {
 			const action = document.createElement( 'div' );
 			action.className = 'bt-product-card__action';
@@ -192,6 +236,12 @@
 		function renderProducts() {
 			results.replaceChildren();
 
+			const recoveryPanel = makeRecoveryPanel();
+			if ( recoveryPanel ) {
+				results.appendChild( recoveryPanel );
+				return;
+			}
+
 			products.forEach( function ( product ) {
 				const article = document.createElement( 'article' );
 				article.className = 'bt-product-card';
@@ -238,6 +288,29 @@
 			}
 		}
 
+		async function recoveryFor( query, controller ) {
+			const recoveryUrl = model.buildRecoveryUrl( endpoints.products, query );
+			if ( ! recoveryUrl ) {
+				return '';
+			}
+
+			try {
+				const candidates = await request( recoveryUrl, {
+					method: 'GET',
+					signal: controller.signal,
+				} );
+				return model.suggestSearchTerm( query, candidates );
+			} catch ( error ) {
+				if ( error.name === 'AbortError' ) {
+					throw error;
+				}
+
+				// Recovery is optional. A failed suggestion lookup must not turn a
+				// successful exact zero-result search into a generic error state.
+				return '';
+			}
+		}
+
 		async function search( query ) {
 			if ( searchController ) {
 				searchController.abort();
@@ -258,7 +331,18 @@
 					return;
 				}
 
+				let nextSuggestion = '';
+				if ( nextProducts.length === 0 ) {
+					nextSuggestion = await recoveryFor( query, controller );
+				}
+
+				if ( searchController !== controller ) {
+					return;
+				}
+
 				products = nextProducts;
+				lastSearchQuery = query;
+				recoverySuggestion = nextSuggestion;
 				renderProducts();
 				setStatus(
 					products.length
@@ -268,6 +352,8 @@
 			} catch ( error ) {
 				if ( error.name !== 'AbortError' && searchController === controller ) {
 					products = [];
+					lastSearchQuery = '';
+					recoverySuggestion = '';
 					renderProducts();
 					setStatus( error.message || config.messages.requestFailed );
 				}
@@ -317,6 +403,8 @@
 					searchController = null;
 				}
 				products = [];
+				lastSearchQuery = '';
+				recoverySuggestion = '';
 				renderProducts();
 				setStatus( config.messages.keepTyping );
 				return;
@@ -329,12 +417,26 @@
 
 		results.addEventListener( 'click', function ( event ) {
 			const button = event.target.closest( 'button[data-action]' );
-			if ( ! button || mutationInFlight ) {
+			if ( ! button ) {
+				return;
+			}
+
+			const action = button.dataset.action;
+			if ( action === 'search-suggestion' ) {
+				const suggestedQuery = button.dataset.query || '';
+				if ( suggestedQuery ) {
+					searchInput.value = suggestedQuery;
+					searchInput.focus();
+					search( suggestedQuery );
+				}
+				return;
+			}
+
+			if ( mutationInFlight ) {
 				return;
 			}
 
 			button.disabled = true;
-			const action = button.dataset.action;
 			const productId = Number( button.dataset.productId );
 			const cartItem = model.findCartItemForProduct( cart, productId );
 
