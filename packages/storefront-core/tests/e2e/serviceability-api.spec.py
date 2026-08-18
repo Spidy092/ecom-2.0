@@ -87,6 +87,7 @@ def main() -> None:
         expect_status(page, {"country": "US", "postcode": "90210"}, "needs_more_location", ["state"])
         expect_status(page, {"country": "US", "state": "CA", "postcode": "90210"}, "served")
         expect_status(page, {"country": "US", "state": "NY", "postcode": "10001"}, "served")
+        expect_status(page, {"country": "US", "state": "ZZ", "postcode": "10001"}, "needs_more_location", ["state"])
 
         # A specifically matched UK zone with local-pickup only is not described
         # as delivery serviceability, and must not fall through to zone 0.
