@@ -67,6 +67,7 @@ jobs:
           node --check packages/storefront-core/assets/js/product-workspace-model.js
           node --check packages/storefront-core/assets/js/product-workspace.js
           node --check packages/storefront-core/assets/js/saved-products-model.js
+          node --check packages/storefront-core/assets/js/saved-products.js
       - name: Validate block metadata JSON
         run: node -e "JSON.parse(require('fs').readFileSync('packages/storefront-core/blocks/product-workspace/block.json','utf8'))"
       - name: Run storefront model tests
@@ -99,6 +100,8 @@ jobs:
         run: python packages/storefront-core/tests/e2e/store-api-slice.spec.py
       - name: Exercise Saved auth and ownership boundaries in Chrome
         run: python packages/storefront-core/tests/e2e/saved-products-api.spec.py
+      - name: Exercise Saved shopper UI in Chrome
+        run: python packages/storefront-core/tests/e2e/saved-products-ui.spec.py
       - name: Stop wp-env
         if: always()
         run: npx -y @wordpress/env@10.39.0 stop
