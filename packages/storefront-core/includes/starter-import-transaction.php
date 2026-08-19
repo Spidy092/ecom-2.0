@@ -10,8 +10,9 @@
 
 defined( 'ABSPATH' ) || exit;
 
-const BHAIVATECH_STOREFRONT_STARTER_IMPORT_OPTION = 'bhaivatech_storefront_starter_import_state';
-const BHAIVATECH_STOREFRONT_STARTER_SCHEMA        = 1;
+const BHAIVATECH_STOREFRONT_STARTER_IMPORT_OPTION      = 'bhaivatech_storefront_starter_import_state';
+const BHAIVATECH_STOREFRONT_STARTER_IMPORT_LOCK_OPTION = 'bhaivatech_storefront_starter_import_lock';
+const BHAIVATECH_STOREFRONT_STARTER_SCHEMA             = 1;
 
 /**
  * Ordered business-level phases for a starter-store import.
@@ -132,6 +133,38 @@ function bhaivatech_storefront_save_starter_import_state( array $state ): void {
 }
 
 /**
+ * Acquire a database-backed begin lock using WordPress's unique option key.
+ *
+ * add_option() is used rather than get/update so two concurrent begin requests
+ * cannot both acquire the same lock key.
+ */
+function bhaivatech_storefront_acquire_starter_import_lock( string $digest ): bool {
+	return add_option(
+		BHAIVATECH_STOREFRONT_STARTER_IMPORT_LOCK_OPTION,
+		array(
+			'manifest_digest' => $digest,
+			'acquired_at_utc' => gmdate( 'c' ),
+		),
+		'',
+		false
+	);
+}
+
+/**
+ * Release the transaction lock after failure, completion or explicit reset.
+ */
+function bhaivatech_storefront_release_starter_import_lock(): void {
+	delete_option( BHAIVATECH_STOREFRONT_STARTER_IMPORT_LOCK_OPTION );
+}
+
+/**
+ * Whether the transaction currently owns a persisted lock.
+ */
+function bhaivatech_storefront_has_starter_import_lock(): bool {
+	return false !== get_option( BHAIVATECH_STOREFRONT_STARTER_IMPORT_LOCK_OPTION, false );
+}
+
+/**
  * Begin or resume the same manifest transaction.
  *
  * @param array<string, mixed> $manifest Starter manifest.
@@ -159,6 +192,31 @@ function bhaivatech_storefront_begin_starter_import( array $manifest ) {
 		return $state;
 	}
 
+	if ( ! bhaivatech_storefront_acquire_starter_import_lock( $digest ) ) {
+		return new WP_Error( 'starter_import_lock_unavailable', 'Another starter import begin request owns the transaction lock.' );
+	}
+
+	// Re-read after acquiring the atomic lock so a stale pre-lock read cannot
+	// overwrite a transaction that changed and released the lock in between.
+	$state = bhaivatech_storefront_get_starter_import_state();
+
+	if ( 'running' === $state['status'] ) {
+		bhaivatech_storefront_release_starter_import_lock();
+		return new WP_Error( 'starter_import_in_progress', 'A starter import transaction is already running.' );
+	}
+
+	if ( '' !== $state['manifest_digest'] && $digest !== $state['manifest_digest'] && 'idle' !== $state['status'] ) {
+		bhaivatech_storefront_release_starter_import_lock();
+		return new WP_Error( 'starter_import_manifest_changed', 'Existing starter import state belongs to another manifest version.' );
+	}
+
+	if ( 'complete' === $state['status'] && $digest === $state['manifest_digest'] ) {
+		bhaivatech_storefront_release_starter_import_lock();
+		$state['result'] = 'already_complete';
+		return $state;
+	}
+
+	$was_failed      = 'failed' === $state['status'];
 	$steps           = bhaivatech_storefront_starter_import_steps();
 	$completed_steps = array_values( array_intersect( $steps, (array) $state['completed_steps'] ) );
 	$next_step       = $steps[ count( $completed_steps ) ] ?? '';
@@ -173,7 +231,7 @@ function bhaivatech_storefront_begin_starter_import( array $manifest ) {
 		'completed_steps'  => $completed_steps,
 		'failed_step'      => '',
 		'last_error_code'  => '',
-		'result'           => empty( $completed_steps ) ? 'started' : 'resumed',
+		'result'           => $was_failed ? 'resumed' : 'started',
 	);
 
 	bhaivatech_storefront_save_starter_import_state( $state );
@@ -194,6 +252,10 @@ function bhaivatech_storefront_complete_starter_import_step( string $step ) {
 		return new WP_Error( 'starter_import_not_running', 'Starter import transaction is not running.' );
 	}
 
+	if ( ! bhaivatech_storefront_has_starter_import_lock() ) {
+		return new WP_Error( 'starter_import_lock_missing', 'Starter import transaction lock is missing.' );
+	}
+
 	if ( $step !== $state['current_step'] || ! in_array( $step, $steps, true ) ) {
 		return new WP_Error( 'starter_import_step_out_of_order', 'Starter import step was completed out of order.' );
 	}
@@ -211,6 +273,11 @@ function bhaivatech_storefront_complete_starter_import_step( string $step ) {
 	}
 
 	bhaivatech_storefront_save_starter_import_state( $state );
+
+	if ( 'complete' === $state['status'] ) {
+		bhaivatech_storefront_release_starter_import_lock();
+	}
+
 	return bhaivatech_storefront_get_starter_import_state();
 }
 
@@ -230,6 +297,10 @@ function bhaivatech_storefront_fail_starter_import( string $step, string $error_
 		return new WP_Error( 'starter_import_failure_out_of_order', 'Starter import failure does not match the current transaction step.' );
 	}
 
+	if ( ! bhaivatech_storefront_has_starter_import_lock() ) {
+		return new WP_Error( 'starter_import_lock_missing', 'Starter import transaction lock is missing.' );
+	}
+
 	$error_code = sanitize_key( $error_code );
 	if ( '' === $error_code ) {
 		$error_code = 'unknown_failure';
@@ -240,6 +311,7 @@ function bhaivatech_storefront_fail_starter_import( string $step, string $error_
 	$state['last_error_code'] = $error_code;
 
 	bhaivatech_storefront_save_starter_import_state( $state );
+	bhaivatech_storefront_release_starter_import_lock();
 	return bhaivatech_storefront_get_starter_import_state();
 }
 
@@ -250,4 +322,5 @@ function bhaivatech_storefront_fail_starter_import( string $step, string $error_
  */
 function bhaivatech_storefront_reset_starter_import_state(): void {
 	delete_option( BHAIVATECH_STOREFRONT_STARTER_IMPORT_OPTION );
+	bhaivatech_storefront_release_starter_import_lock();
 }
