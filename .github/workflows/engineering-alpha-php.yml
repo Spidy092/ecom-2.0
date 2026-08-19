@@ -95,8 +95,13 @@ jobs:
         run: python -m pip install --disable-pip-version-check playwright==1.62.0
       - name: Verify preinstalled Google Chrome
         run: google-chrome --version
-      - name: Start pinned WordPress + WooCommerce environment
+      - name: Start release-gating pinned WordPress + WooCommerce environment
         run: npx -y @wordpress/env@10.39.0 start
+      - name: Print release-gating platform versions
+        run: |
+          npx -y @wordpress/env@10.39.0 run cli wp core version
+          npx -y @wordpress/env@10.39.0 run cli wp plugin get woocommerce --field=version
+          npx -y @wordpress/env@10.39.0 run cli php -r 'echo PHP_VERSION, PHP_EOL;'
       - name: Activate alpha theme and seed deterministic products
         run: |
           npx -y @wordpress/env@10.39.0 run cli wp plugin status woocommerce
