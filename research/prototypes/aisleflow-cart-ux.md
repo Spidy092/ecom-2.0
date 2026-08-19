@@ -40,6 +40,10 @@ This prototype now exercises the first grocery basket interaction against WooCom
 - Use keyboard focus on Add, quantity controls and View basket.
 - Verify action announcements are useful and not continuously noisy.
 
+## Validation note
+
+Static source review is complete, but the repository currently has no CI checks attached to this branch and this environment cannot execute the remote Playground interactively. Keep the PR in draft until the branch Playground is exercised on mobile and the cart/session behavior is confirmed end to end.
+
 ## Not implemented yet
 
 - delivery postcode/serviceability rules;
