@@ -36,6 +36,7 @@ Storefront Core owns:
 - manifest validation;
 - transaction identity;
 - ordered phase state;
+- atomic begin ownership;
 - retry/resume semantics;
 - idempotency markers;
 - verification state;
@@ -87,19 +88,38 @@ Stored technical state is intentionally small:
 
 Never persist customer content, exception dumps, credentials, request payloads, license secrets, order data or PII inside transaction state.
 
-## 5. Begin rules
+## 5. Atomic begin lock
+
+A status flag alone is not enough because two HTTP requests can read the same idle state before either writes `running`.
+
+Before a transaction changes state, Core acquires a database-backed WordPress option lock using a unique option key. `add_option()` provides the uniqueness guard so only one begin request can own the lock.
+
+Rules:
+
+- a second lock owner is rejected;
+- state is re-read after lock acquisition so a stale pre-lock read cannot overwrite a transaction that changed in between;
+- the lock remains held across intermediate phases;
+- failure releases the lock so the same manifest can retry;
+- completion releases the lock;
+- explicit internal reset releases the lock;
+- an `already_complete` check does not retain a lock.
+
+A customer-facing recovery action for a genuinely abandoned/stale lock is **not** exposed yet. That behavior must be designed with the real importer runtime rather than inventing an arbitrary timeout.
+
+## 6. Begin rules
 
 Starting a transaction must:
 
 1. validate the manifest schema and immutable identity;
 2. reject another currently running transaction;
-3. reject silent reuse of state belonging to a different manifest version;
-4. start at `preflight` for a new transaction;
-5. resume at the first incomplete phase for the same failed manifest;
-6. increment the attempt counter on a real retry;
-7. return `already_complete` for the same completed manifest instead of running writes again.
+3. reject another request that already owns the atomic begin lock;
+4. reject silent reuse of state belonging to a different manifest version;
+5. start at `preflight` for a new transaction;
+6. resume at the first incomplete phase for the same failed manifest, including a failure at the first `preflight` phase;
+7. increment the attempt counter on a real retry;
+8. return `already_complete` for the same completed manifest instead of running writes again.
 
-## 6. Ordered phase rules
+## 7. Ordered phase rules
 
 A phase can only be completed when it is the current phase.
 
@@ -112,7 +132,7 @@ preflight -> verification   rejected
 
 This prevents callers from accidentally marking a partially configured store as verified/complete.
 
-## 7. Failure and retry rules
+## 8. Failure and retry rules
 
 When a phase fails:
 
@@ -120,7 +140,9 @@ When a phase fails:
 - failed phase is recorded;
 - completed phases remain recorded;
 - only a sanitized machine-readable error code is persisted;
+- the atomic transaction lock is released;
 - same manifest can resume from the failed/incomplete phase;
+- retry reacquires the lock;
 - a different manifest version cannot silently inherit the previous state.
 
 Example:
@@ -138,7 +160,36 @@ verification
 complete
 ```
 
-## 8. Content idempotency contract — required before UI enablement
+## 9. Verification-only starter resource manifest
+
+Before destructive content operations exist, the alpha already has a machine-checkable list of resources the current product expects.
+
+Current verification targets:
+
+```text
+modern-grocery/woocommerce/page/shop
+modern-grocery/woocommerce/page/cart
+modern-grocery/woocommerce/page/checkout
+modern-grocery/woocommerce/page/myaccount
+modern-grocery/theme/template/front-page
+modern-grocery/theme/part/footer
+modern-grocery/core/block/product-workspace
+modern-grocery/core/block/mobile-shopping-nav
+```
+
+This manifest is verification-only. It does not authorize Core to create or overwrite any of those resources.
+
+The current preflight checks:
+
+- WooCommerce page IDs resolve to published pages;
+- expected product-theme files exist under the active stylesheet directory;
+- required Storefront Core blocks are registered;
+- resource keys are namespaced and unique;
+- only bounded result codes are exported to support diagnostics.
+
+Setup/System Status reports a simple ready/total result and exact stable keys for failed checks instead of a generic "import failed" message.
+
+## 10. Content idempotency contract — required before UI enablement
 
 The transaction state alone is not enough. Every future destructive content operation must also have a stable resource identity.
 
@@ -165,7 +216,7 @@ modern-grocery/pattern/home-intro
 
 A rerun must resolve the same managed resource rather than creating `Home (2)` or another duplicate.
 
-## 9. Customer-owned content rule
+## 11. Customer-owned content rule
 
 The importer must not silently overwrite unrelated customer content merely because a slug/title matches the starter manifest.
 
@@ -177,7 +228,7 @@ When an existing resource is not positively identified as product-managed, the i
 
 Silent destructive replacement is not acceptable.
 
-## 10. Preflight requirements before destructive work
+## 12. Preflight requirements before destructive work
 
 The final preflight should verify only requirements that materially affect the import, including:
 
@@ -185,6 +236,7 @@ The final preflight should verify only requirements that materially affect the i
 - Core + intended product theme active;
 - required capabilities;
 - package/manifest integrity;
+- verification-only resource readiness;
 - required REST/filesystem/network behavior where actually needed;
 - enough environment resources for the tested starter package;
 - no conflicting active transaction;
@@ -192,7 +244,7 @@ The final preflight should verify only requirements that materially affect the i
 
 Do not invent arbitrary minimum memory/time thresholds without measuring the real package.
 
-## 11. Verification contract
+## 13. Verification contract
 
 `complete` must mean more than “no exception happened.”
 
@@ -206,9 +258,9 @@ Before completion, verification should prove the resources the importer owns rea
 - storefront routes needed by the demo resolve;
 - verification does not depend on a fake screenshot or hard-coded post IDs.
 
-Exact checks will be added with the real content manifest.
+Exact destructive-resource checks will be added with the real content manifest.
 
-## 12. Rollback boundary
+## 14. Rollback boundary
 
 A universal database rollback is not promised.
 
@@ -221,7 +273,7 @@ Instead, the importer should prefer:
 
 If automatic rollback is unsafe, preserve the state and explain the recovery action rather than guessing.
 
-## 13. Privacy and support reporting
+## 15. Privacy and support reporting
 
 The downloadable System Status report may include bounded transaction fields useful to support:
 
@@ -232,29 +284,42 @@ The downloadable System Status report may include bounded transaction fields use
 - failed phase;
 - last error code.
 
-It must not include the internal digest, package URL/token, license key, filesystem path, customer/order data, credentials or raw exception traces.
+It may also include bounded verification-preflight fields:
 
-## 14. Current automated contract
+- stable resource key;
+- resource type;
+- ready/not-ready boolean;
+- bounded result code.
+
+It must not include the internal digest, lock contents, package URL/token, license key, filesystem path, customer/order data, credentials or raw exception traces.
+
+## 16. Current automated contract
 
 CI exercises:
 
+- resource-manifest validation and unique stable keys;
+- verification-preflight structure;
+- product-theme/Core verification targets;
 - manifest validation;
 - unsupported schema rejection;
-- first start;
-- parallel-run rejection;
+- atomic begin-lock rejection;
+- first start and lock ownership;
+- parallel-running rejection;
 - out-of-order phase rejection;
-- phase failure;
+- failure + lock release;
+- retry after first-phase failure;
 - same-manifest resume;
 - attempt increment;
 - completed-phase preservation;
-- full completion;
+- lock retention across intermediate phases;
+- full completion + lock release;
 - completed rerun becoming `already_complete`;
 - changed-manifest rejection;
-- state reset back to `idle`.
+- state/lock reset back to `idle`.
 
-The browser setup/status test separately verifies that no destructive import action is exposed yet.
+The browser setup/status test separately verifies that no destructive import action is exposed yet and that the downloadable report stays privacy-bounded.
 
-## 15. Remaining gate before real import
+## 17. Remaining gate before real import
 
 Do not expose `Import Modern Grocery` until:
 
