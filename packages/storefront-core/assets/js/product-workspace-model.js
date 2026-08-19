@@ -12,6 +12,8 @@
 	const MIN_QUERY_LENGTH = 2;
 	const RECOVERY_PREFIX_LENGTH = 3;
 	const MAX_SAVED_PRODUCTS_QUERY = 100;
+	const MAX_DEPARTMENT_CATEGORIES = 100;
+	const DEPARTMENT_RAIL_MAX = 8;
 
 	function normalizeSearchText( value ) {
 		return String( value == null ? '' : value )
@@ -80,6 +82,50 @@
 		url.searchParams.set( 'orderby', 'include' );
 		url.searchParams.set( 'per_page', String( bounded.length ) );
 		return url.toString();
+	}
+
+	function buildTopCategoriesUrl( categoriesEndpoint ) {
+		const url = new URL( categoriesEndpoint );
+		url.searchParams.set( 'parent', '0' );
+		url.searchParams.set( 'hide_empty', 'true' );
+		url.searchParams.set( 'per_page', String( MAX_DEPARTMENT_CATEGORIES ) );
+		url.searchParams.set( 'orderby', 'name' );
+		url.searchParams.set( 'order', 'asc' );
+		return url.toString();
+	}
+
+	function normalizeCategoryValue( category ) {
+		if ( category && typeof category === 'object' ) {
+			if ( Number.isSafeInteger( Number( category.id ) ) && Number( category.id ) > 0 ) {
+				return String( Number( category.id ) );
+			}
+			return String( category.slug || '' ).trim();
+		}
+
+		const numeric = Number( category );
+		if ( Number.isSafeInteger( numeric ) && numeric > 0 ) {
+			return String( numeric );
+		}
+
+		return String( category || '' ).trim();
+	}
+
+	function buildDepartmentProductsUrl( productsEndpoint, category ) {
+		const value = normalizeCategoryValue( category );
+		if ( ! value ) {
+			return '';
+		}
+
+		const url = new URL( productsEndpoint );
+		url.searchParams.set( 'category', value );
+		url.searchParams.set( 'per_page', String( MAX_RESULTS ) );
+		url.searchParams.set( 'catalog_visibility', 'catalog' );
+		return url.toString();
+	}
+
+	function departmentPresentation( count ) {
+		const normalized = Math.max( 0, Number( count ) || 0 );
+		return normalized >= 2 && normalized <= DEPARTMENT_RAIL_MAX ? 'rail' : 'chooser';
 	}
 
 	function editDistance( left, right ) {
@@ -235,11 +281,16 @@
 		MIN_QUERY_LENGTH,
 		RECOVERY_PREFIX_LENGTH,
 		MAX_SAVED_PRODUCTS_QUERY,
+		MAX_DEPARTMENT_CATEGORIES,
+		DEPARTMENT_RAIL_MAX,
 		normalizeSearchText,
 		recoveryPrefix,
 		buildProductsUrl,
 		buildRecoveryUrl,
 		buildProductsByIdsUrl,
+		buildTopCategoriesUrl,
+		buildDepartmentProductsUrl,
+		departmentPresentation,
 		editDistance,
 		suggestSearchTerm,
 		canDirectAdd,
