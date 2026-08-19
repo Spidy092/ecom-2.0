@@ -18,9 +18,9 @@ function bhaivatech_grocery_alpha_setup(): void {
 add_action( 'after_setup_theme', 'bhaivatech_grocery_alpha_setup' );
 
 /**
- * Attach theme-owned presentation styles only to the product workspace block.
+ * Attach theme-owned presentation styles to Storefront Core blocks.
  */
-function bhaivatech_grocery_alpha_block_styles(): void {
+function bhaivatech_grocery_alpha_register_block_styles(): void {
 	wp_enqueue_block_style(
 		'bhaivatech-storefront/product-workspace',
 		array(
@@ -30,5 +30,15 @@ function bhaivatech_grocery_alpha_block_styles(): void {
 			'ver'    => wp_get_theme()->get( 'Version' ),
 		)
 	);
+
+	wp_enqueue_block_style(
+		'bhaivatech-storefront/mobile-shopping-nav',
+		array(
+			'handle' => 'bhaivatech-grocery-alpha-mobile-shopping-nav',
+			'src'    => get_theme_file_uri( 'assets/css/mobile-shopping-nav.css' ),
+			'path'   => get_theme_file_path( 'assets/css/mobile-shopping-nav.css' ),
+			'ver'    => wp_get_theme()->get( 'Version' ),
+		)
+	);
 }
-add_action( 'init', 'bhaivatech_grocery_alpha_block_styles' );
+add_action( 'init', 'bhaivatech_grocery_alpha_register_block_styles' );
