@@ -83,6 +83,23 @@ function bhaivatech_storefront_collect_system_status(): array {
 	$cron_disabled      = defined( 'DISABLE_WP_CRON' ) && DISABLE_WP_CRON;
 	$template_overrides = bhaivatech_storefront_status_template_overrides();
 	$starter_state      = bhaivatech_storefront_get_starter_import_state();
+	$starter_preflight  = bhaivatech_storefront_run_starter_resource_preflight();
+
+	if ( is_wp_error( $starter_preflight ) ) {
+		$starter_preflight = array(
+			'ready'     => 0,
+			'total'     => 0,
+			'all_ready' => false,
+			'checks'    => array(
+				array(
+					'key'   => 'modern-grocery/manifest',
+					'type'  => 'manifest',
+					'ready' => false,
+					'code'  => sanitize_key( $starter_preflight->get_error_code() ),
+				),
+			),
+		);
+	}
 
 	return array(
 		'generated_at_utc' => gmdate( 'c' ),
@@ -112,6 +129,7 @@ function bhaivatech_storefront_collect_system_status(): array {
 			'failed_step'      => (string) $starter_state['failed_step'],
 			'last_error_code'  => (string) $starter_state['last_error_code'],
 		),
+		'starter_preflight'  => $starter_preflight,
 		'active_plugins'     => bhaivatech_storefront_status_active_plugins(),
 		'template_overrides' => $template_overrides,
 		'privacy_scope'      => 'No URLs, customer/order data, credentials, cookies/nonces or license secrets are included.',
@@ -168,6 +186,8 @@ function bhaivatech_storefront_render_setup_status_page(): void {
 	$shop_page_ready = $shop_page_id > 0 && 'publish' === get_post_status( $shop_page_id );
 	$starter_status  = (string) $status['starter_import']['status'];
 	$starter_label   = 'complete' === $starter_status ? 'Ready' : ( 'failed' === $starter_status || 'running' === $starter_status ? 'Review' : 'Info' );
+	$preflight_value = (string) $status['starter_preflight']['ready'] . '/' . (string) $status['starter_preflight']['total'];
+	$preflight_label = $status['starter_preflight']['all_ready'] ? 'Ready' : 'Review';
 	?>
 	<div class="wrap">
 		<h1><?php esc_html_e( 'Store Setup & Status', 'bhaivatech-storefront-alpha' ); ?></h1>
@@ -178,7 +198,7 @@ function bhaivatech_storefront_render_setup_status_page(): void {
 			<li><strong><?php esc_html_e( 'Platform requirements', 'bhaivatech-storefront-alpha' ); ?></strong> — <?php echo esc_html( $wp_ready && $php_ready && $woo_ready ? __( 'ready', 'bhaivatech-storefront-alpha' ) : __( 'review the checks below', 'bhaivatech-storefront-alpha' ) ); ?></li>
 			<li><strong><?php esc_html_e( 'Theme + Core', 'bhaivatech-storefront-alpha' ); ?></strong> — <?php echo esc_html( $theme_ready ? __( 'product theme and Core are active', 'bhaivatech-storefront-alpha' ) : __( 'Core is active; activate the product theme before importing a starter store', 'bhaivatech-storefront-alpha' ) ); ?></li>
 			<li><strong><?php esc_html_e( 'WooCommerce store basics', 'bhaivatech-storefront-alpha' ); ?></strong> — <a href="<?php echo esc_url( admin_url( 'admin.php?page=wc-settings' ) ); ?>"><?php esc_html_e( 'review WooCommerce settings', 'bhaivatech-storefront-alpha' ); ?></a></li>
-			<li><strong><?php esc_html_e( 'Modern Grocery starter store', 'bhaivatech-storefront-alpha' ); ?></strong> — <?php esc_html_e( 'the transaction/retry contract now exists internally, but content import remains disabled until the commercial package provider and content-operation verification are complete; no content is changed from this screen.', 'bhaivatech-storefront-alpha' ); ?></li>
+			<li><strong><?php esc_html_e( 'Modern Grocery starter store', 'bhaivatech-storefront-alpha' ); ?></strong> — <?php esc_html_e( 'the transaction/retry contract and verification-only resource preflight now exist internally, but content import remains disabled until the commercial package provider and content-operation verification are complete; no content is changed from this screen.', 'bhaivatech-storefront-alpha' ); ?></li>
 			<li><strong><?php esc_html_e( 'Verify storefront', 'bhaivatech-storefront-alpha' ); ?></strong> — <?php if ( $shop_page_ready ) : ?><a href="<?php echo esc_url( get_permalink( $shop_page_id ) ); ?>"><?php esc_html_e( 'open Shop', 'bhaivatech-storefront-alpha' ); ?></a><?php else : ?><?php esc_html_e( 'Shop page needs review.', 'bhaivatech-storefront-alpha' ); ?><?php endif; ?></li>
 		</ol>
 
@@ -195,9 +215,21 @@ function bhaivatech_storefront_render_setup_status_page(): void {
 				<?php bhaivatech_storefront_render_status_row( 'WP-Cron', $status['environment']['wp_cron_enabled'] ? 'Enabled' : 'Disabled', $status['environment']['wp_cron_enabled'] ? 'Ready' : 'Review', 'If WP-Cron is disabled, the host should provide a real cron runner.' ); ?>
 				<?php bhaivatech_storefront_render_status_row( 'WordPress memory limit', $status['environment']['wp_memory_limit'], 'Info', 'Recorded for support diagnosis. The importer memory threshold is not finalized yet.' ); ?>
 				<?php bhaivatech_storefront_render_status_row( 'Woo template overrides', (string) count( $status['template_overrides'] ), 0 === count( $status['template_overrides'] ) ? 'Ready' : 'Review', 'Zero is preferred. Every override becomes an explicit WooCommerce compatibility obligation.' ); ?>
+				<?php bhaivatech_storefront_render_status_row( 'Starter resource preflight', $preflight_value, $preflight_label, 'Verifies required WooCommerce pages, product-theme assets and Core block registrations without changing customer content.' ); ?>
 				<?php bhaivatech_storefront_render_status_row( 'Starter import transaction', $starter_status, $starter_label, 'Transaction state is technical only; the customer-facing destructive importer is still disabled in this alpha.' ); ?>
 			</tbody>
 		</table>
+
+		<?php if ( ! $status['starter_preflight']['all_ready'] ) : ?>
+			<h3><?php esc_html_e( 'Starter preflight items to review', 'bhaivatech-storefront-alpha' ); ?></h3>
+			<ul>
+				<?php foreach ( $status['starter_preflight']['checks'] as $check ) : ?>
+					<?php if ( ! $check['ready'] ) : ?>
+						<li><code><?php echo esc_html( $check['key'] ); ?></code> — <?php echo esc_html( $check['code'] ); ?></li>
+					<?php endif; ?>
+				<?php endforeach; ?>
+			</ul>
+		<?php endif; ?>
 
 		<h2><?php esc_html_e( 'Plugin compatibility', 'bhaivatech-storefront-alpha' ); ?></h2>
 		<p><?php esc_html_e( 'The product is designed to coexist with WordPress and WooCommerce extensions that use supported public APIs. WooCommerce is required; Elementor and other page builders are not required for the core storefront. A plugin is only advertised as validated compatibility after we test it.', 'bhaivatech-storefront-alpha' ); ?></p>
