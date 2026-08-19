@@ -19,6 +19,7 @@ require_once __DIR__ . '/includes/product-workspace.php';
 require_once __DIR__ . '/includes/mobile-shopping-nav.php';
 require_once __DIR__ . '/includes/saved-products.php';
 require_once __DIR__ . '/includes/serviceability.php';
+require_once __DIR__ . '/includes/setup-status.php';
 
 /**
  * Show a clear admin notice when WooCommerce is not active.
@@ -46,6 +47,8 @@ function bhaivatech_storefront_core_bootstrap(): void {
 	add_action( 'init', 'bhaivatech_storefront_register_mobile_shopping_nav' );
 	add_action( 'rest_api_init', 'bhaivatech_storefront_register_saved_routes' );
 	add_action( 'rest_api_init', 'bhaivatech_storefront_register_serviceability_route' );
+	add_action( 'admin_menu', 'bhaivatech_storefront_register_setup_status_page' );
+	add_action( 'admin_post_bhaivatech_storefront_export_status', 'bhaivatech_storefront_export_system_status' );
 
 	/**
 	 * Engineering-alpha extension point. Feature services are registered only
