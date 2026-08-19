@@ -89,8 +89,58 @@ def main() -> None:
         page.locator("[data-bt-mobile-search-link]").click()
         expect(page.locator("[data-bt-search]")).to_be_focused()
         assert page.url.endswith("#grocery-search"), page.url
-
         context.close()
+
+        # A malformed successful category response is a transport/integration
+        # failure, never an honest empty-department state.
+        broken_categories = browser.new_context(viewport={"width": 390, "height": 844})
+        broken_page = broken_categories.new_page()
+        broken_page.route(
+            re.compile(r"/wc/store/v1/products/categories(?:\?|$)"),
+            lambda route: route.fulfill(
+                status=200,
+                content_type="application/json",
+                body="{not-json",
+            ),
+        )
+        broken_page.goto(BASE_URL, wait_until="networkidle")
+        expect(broken_page.locator("[data-bt-browse-state]")).to_have_text(
+            "Departments could not be loaded. Browse the full shop instead.",
+            timeout=10_000,
+        )
+        expect(broken_page.locator("[data-bt-browse-fallback]")).to_be_visible()
+        broken_categories.close()
+
+        # A malformed successful product response likewise enters the
+        # recoverable product-error path instead of saying the department is empty.
+        broken_products = browser.new_context(viewport={"width": 390, "height": 844})
+        broken_product_page = broken_products.new_page()
+
+        def corrupt_department_products(route):
+            if "category=" in route.request.url:
+                route.fulfill(
+                    status=200,
+                    content_type="application/json",
+                    body="{not-json",
+                )
+                return
+            route.continue_()
+
+        broken_product_page.route(
+            re.compile(r"/wc/store/v1/products(?:\?|$)"),
+            corrupt_department_products,
+        )
+        broken_product_page.goto(BASE_URL, wait_until="networkidle")
+        produce = broken_product_page.locator("[data-bt-departments] button").filter(has_text="Produce")
+        expect(produce).to_be_visible()
+        produce.click()
+        expect(broken_product_page.locator("[data-bt-status]")).to_have_text(
+            "Products in Produce could not be loaded. Try again.",
+            timeout=10_000,
+        )
+        expect(broken_product_page.locator("[data-bt-browse-fallback]")).to_be_visible()
+        broken_products.close()
+
         browser.close()
 
 
