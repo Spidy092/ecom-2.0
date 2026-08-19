@@ -69,8 +69,12 @@ jobs:
           node --check packages/storefront-core/assets/js/saved-products-model.js
           node --check packages/storefront-core/assets/js/saved-products.js
           node --check packages/storefront-core/assets/js/delivery-serviceability.js
+          node --check packages/storefront-core/assets/js/mobile-shopping-nav.js
+          node --check packages/storefront-core/assets/js/department-browse.js
       - name: Validate block metadata JSON
-        run: node -e "JSON.parse(require('fs').readFileSync('packages/storefront-core/blocks/product-workspace/block.json','utf8'))"
+        run: |
+          node -e "JSON.parse(require('fs').readFileSync('packages/storefront-core/blocks/product-workspace/block.json','utf8'))"
+          node -e "JSON.parse(require('fs').readFileSync('packages/storefront-core/blocks/mobile-shopping-nav/block.json','utf8'))"
       - name: Run storefront model tests
         run: node --test packages/storefront-core/tests/js/*.test.js
 
@@ -103,6 +107,14 @@ jobs:
         run: python packages/storefront-core/tests/e2e/saved-products-api.spec.py
       - name: Exercise Saved shopper UI in Chrome
         run: python packages/storefront-core/tests/e2e/saved-products-ui.spec.py
+      - name: Exercise mobile shopping navigation in Chrome
+        run: python packages/storefront-core/tests/e2e/mobile-shopping-nav.spec.py
+      - name: Exercise adaptive department rail in Chrome
+        run: python packages/storefront-core/tests/e2e/department-browse.spec.py
+      - name: Expand fixture to large department taxonomy
+        run: npx -y @wordpress/env@10.39.0 run cli wp eval-file wp-content/plugins/storefront-core/tests/e2e/seed-department-overflow.php
+      - name: Exercise adaptive department chooser in Chrome
+        run: python packages/storefront-core/tests/e2e/department-browse-overflow.spec.py
       - name: Seed deterministic shipping zones
         run: npx -y @wordpress/env@10.39.0 run cli wp eval-file wp-content/plugins/storefront-core/tests/e2e/seed-serviceability.php
       - name: Exercise multi-country serviceability API in Chrome
