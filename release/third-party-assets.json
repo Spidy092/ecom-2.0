@@ -66,11 +66,12 @@
     }
   ],
   "paid_release_blockers": [
-    "theme and core LICENSE files reviewed",
+    "final legal copyright holder/entity and customer-facing non-code asset license treatment reviewed",
     "all redistributed third-party entries approved with evidence",
     "human review completed for ambiguous or proprietary asset licenses"
   ],
   "notes": [
+    "Theme/Core code-package LICENSE/NOTICE presence and GPLv2-or-later header consistency are enforced separately by docs/PACKAGE-LICENSE-CONTRACT.md and package CI.",
     "No third-party font, photo, illustration, icon pack or vendored runtime library is currently approved for redistribution in the engineering-alpha Theme/Core packages.",
     "V1 typography uses system fonts and the product icon direction is first-party minimal SVG; see docs/VISUAL-ASSET-STRATEGY.md.",
     "Canonical first-party demo imagery is governed in detail by release/demo-assets.json. The package inventory records the same exact binary paths because every license-sensitive customer-package file must be explicitly owned; this does not classify the images as a third-party dependency.",

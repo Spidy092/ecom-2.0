@@ -9,6 +9,8 @@ on:
       - 'release/third-party-assets.json'
       - 'release/demo-assets.json'
       - 'docs/COMMERCIAL-PACKAGE-CONTRACT.md'
+      - 'docs/PACKAGE-LICENSE-CONTRACT.md'
+      - 'docs/LICENSING.md'
       - 'docs/ASSET-LICENSING-GATE.md'
       - 'docs/VISUAL-ASSET-STRATEGY.md'
       - 'docs/CUSTOMIZATION-CONTRACT.md'
@@ -24,6 +26,8 @@ on:
       - 'tools/release/**'
       - 'release/third-party-assets.json'
       - 'release/demo-assets.json'
+      - 'docs/PACKAGE-LICENSE-CONTRACT.md'
+      - 'docs/LICENSING.md'
       - 'docs/CUSTOMIZATION-CONTRACT.md'
       - '.wp-env.package.json'
       - '.github/workflows/package-contract.yml'
@@ -49,11 +53,19 @@ jobs:
       - name: Check release-tool syntax
         run: |
           python -m py_compile tools/release/build_packages.py
+          python -m py_compile tools/release/verify_package_licenses.py
+          python -m py_compile tools/release/test_package_licenses.py
           python -m py_compile tools/release/verify_asset_inventory.py
           python -m py_compile tools/release/test_asset_inventory.py
           python -m py_compile tools/release/verify_demo_assets.py
           python -m py_compile tools/release/test_demo_assets.py
           python -m py_compile tools/release/verify_theme_customization.py
+
+      - name: Exercise package license and notice gate
+        run: python tools/release/test_package_licenses.py
+
+      - name: Verify Theme/Core package license contract
+        run: python tools/release/verify_package_licenses.py
 
       - name: Verify native theme customization contract
         run: python tools/release/verify_theme_customization.py
@@ -97,17 +109,26 @@ jobs:
               assert a['bytes'] == b['bytes'], (key, a['bytes'], b['bytes'])
               assert len(a['sha256']) == 64
               assert a['bytes'] > 0
+              assert a['license'] == 'GPL-2.0-or-later'
+              assert a['license_uri'] == 'https://www.gnu.org/licenses/gpl-2.0.html'
+              assert a['license_file'] == 'LICENSE.txt'
+              assert a['notice_file'] == 'NOTICE.md'
+              assert a['third_party_notice_file'] == 'THIRD-PARTY-NOTICES.md'
 
               first_zip = Path('artifacts/release-a') / a['filename']
               second_zip = Path('artifacts/release-b') / b['filename']
               assert first_zip.read_bytes() == second_zip.read_bytes(), key
 
               with zipfile.ZipFile(first_zip) as archive:
-                  notice = f"{a['package_root']}/THIRD-PARTY-NOTICES.md"
-                  assert notice in archive.namelist(), (key, notice)
+                  names = set(archive.namelist())
+                  root = a['package_root']
+                  for member in ('LICENSE.txt', 'NOTICE.md', 'THIRD-PARTY-NOTICES.md'):
+                      expected = f"{root}/{member}"
+                      assert expected in names, (key, expected)
 
           blockers = first['paid_release_blockers']
-          assert any('LICENSE' in item for item in blockers)
+          assert not any('reviewed LICENSE files' in item for item in blockers)
+          assert any('legal copyright holder' in item for item in blockers)
           assert any('provider' in item for item in blockers)
           assert any('install/activation' in item for item in blockers)
           PY

@@ -31,6 +31,10 @@ CORE_SLUG = "storefront-core"
 
 ZIP_TIMESTAMP = (2020, 1, 1, 0, 0, 0)
 RELEASE_SCHEMA = 1
+PACKAGE_LICENSE_ID = "GPL-2.0-or-later"
+PACKAGE_LICENSE_FILE = "LICENSE.txt"
+PACKAGE_NOTICE_FILE = "NOTICE.md"
+THIRD_PARTY_NOTICE_FILE = "THIRD-PARTY-NOTICES.md"
 
 EXCLUDED_PARTS = {
     ".git",
@@ -69,6 +73,17 @@ def require_header(text: str, field: str, source: Path) -> str:
     return value
 
 
+def validate_package_legal_files(source: Path) -> None:
+    for filename in (
+        PACKAGE_LICENSE_FILE,
+        PACKAGE_NOTICE_FILE,
+        THIRD_PARTY_NOTICE_FILE,
+    ):
+        path = source / filename
+        if not path.is_file():
+            fail(f"required customer package legal file is missing: {path.relative_to(REPO_ROOT)}")
+
+
 def validate_theme() -> dict[str, str]:
     style_path = THEME_SOURCE / "style.css"
     style = read_text(style_path)
@@ -80,6 +95,7 @@ def validate_theme() -> dict[str, str]:
             "Requires at least",
             "Requires PHP",
             "License",
+            "License URI",
             "Text Domain",
         )
     }
@@ -98,6 +114,7 @@ def validate_theme() -> dict[str, str]:
         if not required.is_file():
             fail(f"required theme runtime file is missing: {required.relative_to(REPO_ROOT)}")
 
+    validate_package_legal_files(THEME_SOURCE)
     return fields
 
 
@@ -113,6 +130,7 @@ def validate_core() -> dict[str, str]:
             "Requires PHP",
             "Requires Plugins",
             "License",
+            "License URI",
         )
     }
 
@@ -132,6 +150,7 @@ def validate_core() -> dict[str, str]:
             f"do not match ({fields['Version']} != {constant.group(1)})"
         )
 
+    validate_package_legal_files(CORE_SOURCE)
     return fields
 
 
@@ -221,13 +240,18 @@ def inspect_zip(path: Path, expected_root: str, required_members: Iterable[str])
             fail(f"forbidden development path shipped in {path.name}: {name}")
 
 
-def artifact_record(path: Path, slug: str, version: str) -> dict[str, object]:
+def artifact_record(path: Path, slug: str, version: str, license_uri: str) -> dict[str, object]:
     return {
         "filename": path.name,
         "package_root": slug,
         "version": version,
         "sha256": sha256(path),
         "bytes": path.stat().st_size,
+        "license": PACKAGE_LICENSE_ID,
+        "license_uri": license_uri,
+        "license_file": PACKAGE_LICENSE_FILE,
+        "notice_file": PACKAGE_NOTICE_FILE,
+        "third_party_notice_file": THIRD_PARTY_NOTICE_FILE,
     }
 
 
@@ -247,11 +271,24 @@ def build(output: Path, source_commit: str) -> None:
     write_deterministic_zip(THEME_SOURCE, THEME_SLUG, theme_zip)
     write_deterministic_zip(CORE_SOURCE, CORE_SLUG, core_zip)
 
-    inspect_zip(theme_zip, THEME_SLUG, ("style.css", "theme.json", "functions.php"))
-    inspect_zip(core_zip, CORE_SLUG, ("storefront-core.php",))
+    shared_legal_members = (
+        PACKAGE_LICENSE_FILE,
+        PACKAGE_NOTICE_FILE,
+        THIRD_PARTY_NOTICE_FILE,
+    )
+    inspect_zip(
+        theme_zip,
+        THEME_SLUG,
+        ("style.css", "theme.json", "functions.php", *shared_legal_members),
+    )
+    inspect_zip(
+        core_zip,
+        CORE_SLUG,
+        ("storefront-core.php", *shared_legal_members),
+    )
 
-    theme_record = artifact_record(theme_zip, THEME_SLUG, theme["Version"])
-    core_record = artifact_record(core_zip, CORE_SLUG, core["Version"])
+    theme_record = artifact_record(theme_zip, THEME_SLUG, theme["Version"], theme["License URI"])
+    core_record = artifact_record(core_zip, CORE_SLUG, core["Version"], core["License URI"])
 
     manifest = {
         "schema": RELEASE_SCHEMA,
@@ -264,10 +301,10 @@ def build(output: Path, source_commit: str) -> None:
         },
         "paid_release_blockers": [
             "final package/product names approved",
-            "reviewed LICENSE files in both package roots",
+            "final legal copyright holder/entity and non-code asset customer license reviewed",
             "third-party notices/assets reviewed",
             "commercial provider lifecycle proven",
-            "install/activation smoke test from built ZIPs",
+            "install/activation smoke green for the exact release artifacts",
         ],
     }
 
