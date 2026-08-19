@@ -93,16 +93,16 @@ jobs:
 
       - name: Install generated Core ZIP through WordPress
         run: |
-          npx -y @wordpress/env@10.39.0 run cli --config=.wp-env.package.json wp plugin install "wp-content/package-artifacts/${CORE_PACKAGE}" --activate
-          npx -y @wordpress/env@10.39.0 run cli --config=.wp-env.package.json wp plugin status storefront-core
+          npx -y @wordpress/env@10.39.0 --config=.wp-env.package.json run cli wp plugin install "wp-content/package-artifacts/${CORE_PACKAGE}" --activate
+          npx -y @wordpress/env@10.39.0 --config=.wp-env.package.json run cli wp plugin status storefront-core
 
       - name: Install generated Theme ZIP through WordPress
         run: |
-          npx -y @wordpress/env@10.39.0 run cli --config=.wp-env.package.json wp theme install "wp-content/package-artifacts/${THEME_PACKAGE}" --activate
-          npx -y @wordpress/env@10.39.0 run cli --config=.wp-env.package.json wp theme status storefront-theme
+          npx -y @wordpress/env@10.39.0 --config=.wp-env.package.json run cli wp theme install "wp-content/package-artifacts/${THEME_PACKAGE}" --activate
+          npx -y @wordpress/env@10.39.0 --config=.wp-env.package.json run cli wp theme status storefront-theme
 
       - name: Verify WooCommerce dependency remains active
-        run: npx -y @wordpress/env@10.39.0 run cli --config=.wp-env.package.json wp plugin status woocommerce
+        run: npx -y @wordpress/env@10.39.0 --config=.wp-env.package.json run cli wp plugin status woocommerce
 
       - name: Show package manifest and checksums
         run: |
