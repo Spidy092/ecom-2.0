@@ -1,0 +1,59 @@
+.bt-storefront-main {
+  min-height: 100vh;
+}
+
+.bt-storefront-intro {
+  display: grid;
+  gap: 0.65rem;
+  max-width: 52rem;
+  margin-bottom: var(--wp--preset--spacing--50, 1.5rem);
+}
+
+.bt-storefront-intro__eyebrow {
+  width: max-content;
+  margin: 0;
+  border-bottom: 2px solid var(--wp--preset--color--copper, #9a3412);
+  padding-bottom: 0.2rem;
+  color: var(--wp--preset--color--copper-dark, #7c2d12);
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.09em;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.bt-storefront-intro h1 {
+  max-width: 16ch;
+  margin: 0;
+  font-size: var(--wp--preset--font-size--h1, clamp(1.8rem, 4vw, 2.4rem));
+  letter-spacing: -0.035em;
+}
+
+.bt-storefront-intro__lead {
+  max-width: 42rem;
+  margin: 0;
+  color: var(--wp--preset--color--muted, #596463);
+  font-size: var(--wp--preset--font-size--lead, 1.125rem);
+  line-height: 1.55;
+}
+
+.bt-storefront-alpha-note {
+  max-width: 42rem;
+  margin: 0;
+  color: var(--wp--preset--color--muted, #596463);
+  font-size: var(--wp--preset--font-size--xs, 0.8125rem);
+}
+
+@media (max-width: 520px) {
+  .bt-storefront-intro {
+    margin-bottom: 1.25rem;
+  }
+
+  .bt-storefront-intro h1 {
+    max-width: 18ch;
+  }
+
+  .bt-storefront-intro__lead {
+    font-size: 1rem;
+  }
+}
