@@ -5,11 +5,11 @@
 
 defined( 'ABSPATH' ) || exit;
 
-$setup_file = dirname( __DIR__, 2 ) . '/includes/setup-status.php';
-$source     = file_get_contents( $setup_file );
+$onboarding_file = dirname( __DIR__, 2 ) . '/includes/buyer-onboarding.php';
+$source          = file_get_contents( $onboarding_file );
 
 if ( false === $source ) {
-	WP_CLI::error( 'Could not read setup-status.php.' );
+	WP_CLI::error( 'Could not read buyer-onboarding.php.' );
 }
 
 $required_fragments = array(
