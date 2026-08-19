@@ -1,0 +1,50 @@
+{
+  "schema": 1,
+  "updated_on": "2026-08-19",
+  "status": "engineering-gate",
+  "claim_policy": {
+    "reference": "Full engineering regression suite plus generated-package compatibility smoke on the exact combination.",
+    "validated": "Generated Theme/Core ZIP install and activation, exact runtime version checks, HPOS, Store API/Core REST route and storefront smoke on the exact combination.",
+    "architecture-compatible": "No known architecture conflict, but not a customer-facing support claim until exact CI evidence exists.",
+    "not-claimed": "No customer-facing compatibility statement until a dedicated CI row passes."
+  },
+  "reference": {
+    "id": "wp-7.0.3_wc-11.0.1_php-8.3",
+    "wordpress": "7.0.3",
+    "woocommerce": "11.0.1",
+    "php": "8.3",
+    "tier": "reference"
+  },
+  "combinations": [
+    {"id": "wp-7.0.3_wc-11.0.1_php-8.3", "wordpress": "7.0.3", "woocommerce": "11.0.1", "php": "8.3", "tier": "reference"},
+    {"id": "wp-7.0.3_wc-11.0.1_php-8.4", "wordpress": "7.0.3", "woocommerce": "11.0.1", "php": "8.4", "tier": "validated"},
+    {"id": "wp-6.9.6_wc-11.0.1_php-8.3", "wordpress": "6.9.6", "woocommerce": "11.0.1", "php": "8.3", "tier": "validated"},
+    {"id": "wp-6.9.6_wc-11.0.1_php-8.4", "wordpress": "6.9.6", "woocommerce": "11.0.1", "php": "8.4", "tier": "validated"}
+  ],
+  "not_claimed": [
+    {"dimension": "wordpress", "value": "7.1", "reason": "Scheduled for 2026-08-19, but no final stable 7.1 release was used as evidence for this matrix. Add only after a stable release is verified and exact CI passes."},
+    {"dimension": "php", "value": "8.5", "reason": "WordPress support alone is insufficient; current WooCommerce server guidance documents testing through PHP 8.4. Validate separately before claiming support."},
+    {"dimension": "woocommerce", "value": "10.x and earlier", "reason": "Not a V1 support target; add only if customer evidence justifies maintaining an older WooCommerce line."},
+    {"dimension": "extensions", "value": "third-party plugins/page builders", "reason": "This core runtime matrix does not imply extension compatibility; use the separate compatibility inventory."}
+  ],
+  "runtime_checks": [
+    "exact WordPress version",
+    "exact WooCommerce version",
+    "exact PHP major.minor",
+    "WooCommerce active",
+    "Storefront Core active",
+    "Storefront Theme active",
+    "HPOS enabled",
+    "Woo Store API products route available",
+    "Core serviceability REST route available",
+    "front-end storefront returns HTTP 200"
+  ],
+  "update_rule": "When WordPress or WooCommerce publishes a new security/patch release, do not silently widen the support claim. Update pins, run the matrix, and only then change customer-facing compatibility documentation.",
+  "evidence_sources": [
+    "https://wordpress.org/news/2026/08/wordpress-7-0-3-release/",
+    "https://wordpress.org/documentation/wordpress-version/version-6-9-6/",
+    "https://wordpress.org/plugins/woocommerce/",
+    "https://make.wordpress.org/core/handbook/references/php-compatibility-and-wordpress-versions/",
+    "https://woocommerce.com/document/server-requirements/"
+  ]
+}

@@ -1,0 +1,141 @@
+name: Platform compatibility matrix
+
+on:
+  pull_request:
+    paths:
+      - '.wp-env.json'
+      - '.wp-env.package.json'
+      - 'release/compatibility-matrix.json'
+      - 'docs/COMPATIBILITY-MATRIX.md'
+      - 'packages/storefront-theme/**'
+      - 'packages/storefront-core/**'
+      - 'tools/release/**'
+      - '.github/workflows/compatibility-matrix.yml'
+  push:
+    branches:
+      - 'agent/grovia-*'
+    paths:
+      - '.wp-env.json'
+      - '.wp-env.package.json'
+      - 'release/compatibility-matrix.json'
+      - 'docs/COMPATIBILITY-MATRIX.md'
+      - 'packages/storefront-theme/**'
+      - 'packages/storefront-core/**'
+      - 'tools/release/**'
+      - '.github/workflows/compatibility-matrix.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.matrix.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.13'
+      - name: Verify compatibility matrix contract
+        run: python tools/release/verify_compatibility_matrix.py
+      - id: matrix
+        name: Export exact CI rows
+        run: echo "matrix=$(python tools/release/verify_compatibility_matrix.py --github-matrix)" >> "$GITHUB_OUTPUT"
+
+  compatibility:
+    needs: prepare
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJSON(needs.prepare.outputs.matrix) }}
+
+    name: WP ${{ matrix.wordpress }} / Woo ${{ matrix.woocommerce }} / PHP ${{ matrix.php }}
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.13'
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+          package-manager-cache: false
+
+      - name: Verify compatibility and package contracts
+        run: |
+          python tools/release/verify_compatibility_matrix.py
+          python tools/release/verify_package_licenses.py
+          python tools/release/verify_demo_assets.py
+          python tools/release/verify_asset_inventory.py
+
+      - name: Build exact customer packages
+        run: python tools/release/build_packages.py --output artifacts/compatibility --source-commit "$GITHUB_SHA"
+
+      - name: Resolve package filenames
+        run: |
+          python - <<'PY' >> "$GITHUB_ENV"
+          import json
+          from pathlib import Path
+          manifest = json.loads(Path('artifacts/compatibility/release-manifest.json').read_text())
+          print('THEME_PACKAGE=' + manifest['artifacts']['theme']['filename'])
+          print('CORE_PACKAGE=' + manifest['artifacts']['core']['filename'])
+          PY
+
+      - name: Generate exact wp-env row
+        env:
+          MATRIX_WP: ${{ matrix.wordpress }}
+          MATRIX_WOO: ${{ matrix.woocommerce }}
+          MATRIX_PHP: ${{ matrix.php }}
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          config = {
+              '$schema': 'https://schemas.wp.org/trunk/wp-env.json',
+              'core': f"https://wordpress.org/wordpress-{os.environ['MATRIX_WP']}.zip",
+              'phpVersion': os.environ['MATRIX_PHP'],
+              'plugins': [f"https://downloads.wordpress.org/plugin/woocommerce.{os.environ['MATRIX_WOO']}.zip"],
+              'mappings': {
+                  'wp-content/package-artifacts': './artifacts/compatibility',
+                  'wp-content/compatibility-tools': './tools/release'
+              },
+              'config': {'WP_DEBUG': True, 'SCRIPT_DEBUG': False}
+          }
+          Path('.wp-env.compatibility.json').write_text(json.dumps(config, indent=2) + '\n')
+          PY
+
+      - name: Start exact compatibility environment
+        run: npx -y @wordpress/env@10.39.0 start --config=.wp-env.compatibility.json
+
+      - name: Install generated Core ZIP
+        run: |
+          npx -y @wordpress/env@10.39.0 --config=.wp-env.compatibility.json run cli wp plugin install "wp-content/package-artifacts/${CORE_PACKAGE}" --activate
+          npx -y @wordpress/env@10.39.0 --config=.wp-env.compatibility.json run cli wp plugin status storefront-core
+
+      - name: Install generated Theme ZIP
+        run: |
+          npx -y @wordpress/env@10.39.0 --config=.wp-env.compatibility.json run cli wp theme install "wp-content/package-artifacts/${THEME_PACKAGE}" --activate
+          npx -y @wordpress/env@10.39.0 --config=.wp-env.compatibility.json run cli wp theme status storefront-theme
+
+      - name: Prove exact runtime versions HPOS Store API and Core REST
+        run: >-
+          npx -y @wordpress/env@10.39.0 --config=.wp-env.compatibility.json run cli wp eval-file
+          wp-content/compatibility-tools/compatibility-smoke.php
+          '${{ matrix.wordpress }}'
+          '${{ matrix.woocommerce }}'
+          '${{ matrix.php }}'
+
+      - name: Verify storefront HTTP response
+        run: curl --fail --silent --show-error --max-time 30 http://localhost:8888/ >/dev/null
+
+      - name: Report validated row
+        run: echo "Validated ${{ matrix.id }} (${{ matrix.tier }}) using generated customer ZIPs"
+
+      - name: Stop exact compatibility environment
+        if: always()
+        run: npx -y @wordpress/env@10.39.0 stop --config=.wp-env.compatibility.json || true
