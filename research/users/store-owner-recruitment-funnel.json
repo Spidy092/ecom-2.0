@@ -1,0 +1,56 @@
+{
+  "schema": 1,
+  "round": "store-owner-onboarding-round1",
+  "updated_on": "2026-08-19",
+  "privacy": "Aggregate counts only. Do not add names, emails, phone numbers, companies, store URLs or other participant identifiers.",
+  "channels": [
+    {
+      "id": "woo-community-slack",
+      "status": "ready_to_post",
+      "contacted": 0,
+      "responses": 0,
+      "qualified": 0,
+      "scheduled": 0,
+      "completed": 0
+    },
+    {
+      "id": "india-woo-wp-meetups",
+      "status": "ready_to_request_permission",
+      "contacted": 0,
+      "responses": 0,
+      "qualified": 0,
+      "scheduled": 0,
+      "completed": 0
+    },
+    {
+      "id": "official-woo-community-surfaces",
+      "status": "rules_check_required",
+      "contacted": 0,
+      "responses": 0,
+      "qualified": 0,
+      "scheduled": 0,
+      "completed": 0
+    },
+    {
+      "id": "direct-relevant-professionals",
+      "status": "fallback",
+      "contacted": 0,
+      "responses": 0,
+      "qualified": 0,
+      "scheduled": 0,
+      "completed": 0
+    }
+  ],
+  "totals": {
+    "contacted": 0,
+    "responses": 0,
+    "qualified": 0,
+    "scheduled": 0,
+    "completed": 0
+  },
+  "commercial_gate": {
+    "required_completed_qualifying_sessions": 5,
+    "current_completed_qualifying_sessions": 0,
+    "status": "blocked"
+  }
+}
