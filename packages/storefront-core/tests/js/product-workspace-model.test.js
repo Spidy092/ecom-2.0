@@ -22,6 +22,39 @@ test( 'product search preserves WordPress plain-permalink rest_route endpoints',
 	assert.equal( url.searchParams.get( 'per_page' ), '12' );
 } );
 
+test( 'recovery uses one bounded three-character prefix query', () => {
+	assert.equal( model.recoveryPrefix( 'tomoto' ), 'tom' );
+	assert.equal( model.recoveryPrefix( 'fresh tomoto' ), 'tom' );
+	assert.equal( model.recoveryPrefix( 'egg' ), '' );
+
+	const url = new URL( model.buildRecoveryUrl(
+		'https://example.test/?rest_route=%2Fwc%2Fstore%2Fv1%2Fproducts',
+		'tomoto'
+	) );
+	assert.equal( url.searchParams.get( 'search' ), 'tom' );
+	assert.equal( url.searchParams.get( 'per_page' ), '12' );
+} );
+
+test( 'recovery suggests a conservative nearby product-name token', () => {
+	assert.equal( model.suggestSearchTerm( 'tomoto', [
+		{ name: 'Alpha Tomato' },
+		{ name: 'Tomatillo Fresh' },
+	] ), 'Tomato' );
+} );
+
+test( 'recovery never invents a distant or prefix-mismatched suggestion', () => {
+	assert.equal( model.suggestSearchTerm( 'tomoto', [
+		{ name: 'Tomorrow Cereal' },
+		{ name: 'Potato' },
+	] ), '' );
+	assert.equal( model.suggestSearchTerm( 'mlik', [ { name: 'Milk' } ] ), '' );
+} );
+
+test( 'search normalization handles case and diacritics before scoring', () => {
+	assert.equal( model.normalizeSearchText( '  CAFÉ  Milk ' ), 'cafe milk' );
+	assert.equal( model.editDistance( 'cafe', 'Café' ), 0 );
+} );
+
 test( 'only simple purchasable in-stock products direct-add', () => {
 	assert.equal( model.canDirectAdd( {
 		has_options: false,

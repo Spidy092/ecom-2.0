@@ -10,6 +10,38 @@
 
 	const MAX_RESULTS = 12;
 	const MIN_QUERY_LENGTH = 2;
+	const RECOVERY_PREFIX_LENGTH = 3;
+
+	function normalizeSearchText( value ) {
+		return String( value == null ? '' : value )
+			.normalize( 'NFKD' )
+			.replace( /\p{M}+/gu, '' )
+			.toLocaleLowerCase()
+			.replace( /[^\p{L}\p{N}]+/gu, ' ' )
+			.trim()
+			.replace( /\s+/g, ' ' );
+	}
+
+	function queryRecoveryToken( query ) {
+		const normalized = normalizeSearchText( query );
+		if ( ! normalized ) {
+			return '';
+		}
+
+		const tokens = normalized.split( ' ' );
+		return tokens[ tokens.length - 1 ] || '';
+	}
+
+	function recoveryPrefix( query ) {
+		const token = queryRecoveryToken( query );
+		const characters = Array.from( token );
+
+		if ( characters.length < 4 ) {
+			return '';
+		}
+
+		return characters.slice( 0, RECOVERY_PREFIX_LENGTH ).join( '' );
+	}
 
 	function buildProductsUrl( productsEndpoint, query ) {
 		const url = new URL( productsEndpoint );
@@ -17,6 +49,95 @@
 		url.searchParams.set( 'per_page', String( MAX_RESULTS ) );
 		url.searchParams.set( 'catalog_visibility', 'search' );
 		return url.toString();
+	}
+
+	function buildRecoveryUrl( productsEndpoint, query ) {
+		const prefix = recoveryPrefix( query );
+		return prefix ? buildProductsUrl( productsEndpoint, prefix ) : '';
+	}
+
+	function editDistance( left, right ) {
+		const a = Array.from( normalizeSearchText( left ) );
+		const b = Array.from( normalizeSearchText( right ) );
+
+		if ( ! a.length ) {
+			return b.length;
+		}
+		if ( ! b.length ) {
+			return a.length;
+		}
+
+		let previous = Array.from( { length: b.length + 1 }, function ( _, index ) {
+			return index;
+		} );
+
+		a.forEach( function ( leftCharacter, leftIndex ) {
+			const current = [ leftIndex + 1 ];
+
+			b.forEach( function ( rightCharacter, rightIndex ) {
+				const insertion = current[ rightIndex ] + 1;
+				const deletion = previous[ rightIndex + 1 ] + 1;
+				const substitution = previous[ rightIndex ] + ( leftCharacter === rightCharacter ? 0 : 1 );
+				current.push( Math.min( insertion, deletion, substitution ) );
+			} );
+
+			previous = current;
+		} );
+
+		return previous[ b.length ];
+	}
+
+	function suggestionDistanceLimit( token ) {
+		const length = Array.from( token ).length;
+		if ( length < 4 ) {
+			return 0;
+		}
+
+		return length <= 6 ? 1 : 2;
+	}
+
+	function productNameTokens( product ) {
+		return String( product && product.name ? product.name : '' )
+			.split( /[^\p{L}\p{N}]+/u )
+			.filter( Boolean )
+			.map( function ( original ) {
+				return {
+					original,
+					normalized: normalizeSearchText( original ),
+				};
+			} );
+	}
+
+	function suggestSearchTerm( query, candidateProducts ) {
+		const queryToken = queryRecoveryToken( query );
+		const prefix = recoveryPrefix( query );
+		const distanceLimit = suggestionDistanceLimit( queryToken );
+
+		if ( ! prefix || ! distanceLimit || ! Array.isArray( candidateProducts ) ) {
+			return '';
+		}
+
+		let best = null;
+
+		candidateProducts.slice( 0, MAX_RESULTS ).forEach( function ( product ) {
+			productNameTokens( product ).forEach( function ( token ) {
+				if ( ! token.normalized.startsWith( prefix ) || token.normalized === queryToken ) {
+					return;
+				}
+
+				const distance = editDistance( queryToken, token.normalized );
+				if ( distance > distanceLimit ) {
+					return;
+				}
+
+				const score = distance * 100 + Math.abs( token.normalized.length - queryToken.length );
+				if ( ! best || score < best.score ) {
+					best = { term: token.original, score };
+				}
+			} );
+		} );
+
+		return best ? best.term : '';
 	}
 
 	function canDirectAdd( product ) {
@@ -86,7 +207,13 @@
 	return {
 		MAX_RESULTS,
 		MIN_QUERY_LENGTH,
+		RECOVERY_PREFIX_LENGTH,
+		normalizeSearchText,
+		recoveryPrefix,
 		buildProductsUrl,
+		buildRecoveryUrl,
+		editDistance,
+		suggestSearchTerm,
 		canDirectAdd,
 		findCartItemForProduct,
 		formatMinorMoney,

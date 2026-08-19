@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Real WordPress + WooCommerce browser smoke for the first storefront slice."""
+"""Real WordPress + WooCommerce browser smoke for the storefront shopping slice."""
 
 from __future__ import annotations
 
@@ -83,6 +83,29 @@ def main() -> None:
         expect(tomato).to_be_visible()
         expect(tomato.locator(".bt-product-card__stock")).to_have_text("Out of stock")
         assert tomato.locator('button[data-action="add"]').count() == 0
+
+        # Direct participant evidence: `tomoto` should not look like proof that
+        # Tomato is unavailable. Recovery stays explicit and never auto-replaces.
+        search_for(page, "tomoto")
+        recovery = page.locator(".bt-search-recovery")
+        expect(recovery).to_be_visible()
+        expect(recovery.locator(".bt-search-recovery__message")).to_contain_text("tomoto")
+        suggestion = recovery.locator('button[data-action="search-suggestion"]')
+        expect(suggestion).to_have_text("Search Tomato")
+        expect(recovery.locator(".bt-search-recovery__browse")).to_have_text("Browse products")
+        suggestion.click()
+        expect(page.locator("[data-bt-search]")).to_have_value("Tomato")
+        expect(page.locator("[data-bt-search]")).to_be_focused()
+        expect(page.locator("[data-bt-status]")).to_have_text(re.compile(r"\d+ products? found\."), timeout=10_000)
+        expect(product_card(page, "Alpha Tomato")).to_be_visible()
+
+        # If the bounded prefix lookup cannot support a close suggestion, we
+        # provide Browse rather than inventing a fuzzy result.
+        search_for(page, "mlik")
+        recovery = page.locator(".bt-search-recovery")
+        expect(recovery).to_be_visible()
+        assert recovery.locator('button[data-action="search-suggestion"]').count() == 0
+        expect(recovery.locator(".bt-search-recovery__browse")).to_be_visible()
 
         context.close()
         browser.close()

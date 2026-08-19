@@ -12,8 +12,7 @@ on:
       - '.github/workflows/engineering-alpha-php.yml'
   push:
     branches:
-      - agent/grovia-alpha-skeleton
-      - agent/grovia-store-api-slice
+      - 'agent/grovia-*'
     paths:
       - 'packages/**/*.php'
       - 'packages/**/*.js'
