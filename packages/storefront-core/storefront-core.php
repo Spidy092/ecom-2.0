@@ -20,6 +20,7 @@ require_once __DIR__ . '/includes/mobile-shopping-nav.php';
 require_once __DIR__ . '/includes/saved-products.php';
 require_once __DIR__ . '/includes/serviceability.php';
 require_once __DIR__ . '/includes/starter-import-transaction.php';
+require_once __DIR__ . '/includes/starter-preflight.php';
 require_once __DIR__ . '/includes/setup-status.php';
 
 /**
