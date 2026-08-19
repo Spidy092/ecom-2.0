@@ -1,0 +1,16 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/wp-env.json",
+  "core": null,
+  "phpVersion": "8.3",
+  "plugins": [
+    "https://downloads.wordpress.org/plugin/woocommerce.11.0.0.zip",
+    "./packages/storefront-core"
+  ],
+  "themes": [
+    "./packages/storefront-theme"
+  ],
+  "config": {
+    "WP_DEBUG": true,
+    "SCRIPT_DEBUG": true
+  }
+}

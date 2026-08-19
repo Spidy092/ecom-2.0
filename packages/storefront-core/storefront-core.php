@@ -2,7 +2,7 @@
 /**
  * Plugin Name: BhaivaTech Storefront Core (Internal Alpha)
  * Description: Internal engineering-alpha core plugin for the grocery-first WooCommerce product. Not a public/final product name.
- * Version: 0.0.1-alpha
+ * Version: 0.0.2-alpha
  * Requires at least: 6.9
  * Requires PHP: 8.3
  * Requires Plugins: woocommerce
@@ -12,7 +12,10 @@
 
 defined( 'ABSPATH' ) || exit;
 
-const BHAIVATECH_STOREFRONT_CORE_VERSION = '0.0.1-alpha';
+const BHAIVATECH_STOREFRONT_CORE_VERSION = '0.0.2-alpha';
+const BHAIVATECH_STOREFRONT_CORE_FILE    = __FILE__;
+
+require_once __DIR__ . '/includes/product-workspace.php';
 
 /**
  * Show a clear admin notice when WooCommerce is not active.
@@ -36,9 +39,11 @@ function bhaivatech_storefront_core_bootstrap(): void {
 		return;
 	}
 
+	add_action( 'init', 'bhaivatech_storefront_register_product_workspace' );
+
 	/**
-	 * Engineering-alpha extension point. Feature services are intentionally not
-	 * registered until their issue-scoped implementation work begins.
+	 * Engineering-alpha extension point. Feature services are registered only
+	 * through issue-scoped implementation work.
 	 */
 	do_action( 'bhaivatech_storefront_core_loaded' );
 }
