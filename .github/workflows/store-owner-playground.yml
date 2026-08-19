@@ -30,6 +30,10 @@ jobs:
           node-version: '24'
           package-manager-cache: false
 
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.13'
+
       - name: Validate Blueprint JSON
         run: node -e "JSON.parse(require('fs').readFileSync('research/playground/store-owner-validation.blueprint.json','utf8'))"
 
@@ -41,6 +45,12 @@ jobs:
           curl -fsSL "$url" -o /tmp/public-blueprint.json
           cmp research/playground/store-owner-validation.blueprint.json /tmp/public-blueprint.json
           curl -fsSI "$url" | tr -d '\r' | grep -Ei '^access-control-allow-origin: \*$'
+
+      - name: Install Playwright Python library
+        run: python -m pip install --disable-pip-version-check playwright==1.62.0
+
+      - name: Verify preinstalled Google Chrome
+        run: google-chrome --version
 
       - name: Start pinned WordPress Playground CLI
         shell: bash
@@ -68,21 +78,10 @@ jobs:
             exit 1
           fi
 
-      - name: Verify tester landing page and seeded storefront
-        shell: bash
-        run: |
-          set -euo pipefail
-          curl -fsS -c /tmp/playground-cookies.txt -b /tmp/playground-cookies.txt -L \
-            'http://127.0.0.1:9400/wp-admin/admin.php?page=bhaivatech-storefront-personalize' \
-            -o /tmp/onboarding.html
-          grep -F 'Personalize your store' /tmp/onboarding.html
-          grep -F 'Choose a visual style' /tmp/onboarding.html
-          grep -F 'Replace demo products and images' /tmp/onboarding.html
-
-          curl -fsS -c /tmp/playground-cookies.txt -b /tmp/playground-cookies.txt -L \
-            'http://127.0.0.1:9400/' \
-            -o /tmp/storefront.html
-          grep -F 'Storefront' /tmp/storefront.html || grep -F 'Modern Grocery Validation' /tmp/storefront.html
+      - name: Exercise tester path in real Chrome
+        env:
+          BT_PLAYGROUND_BASE_URL: http://127.0.0.1:9400
+        run: python research/playground/store-owner-playground.spec.py
 
       - name: Show Playground log on failure
         if: failure()
