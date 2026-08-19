@@ -1,0 +1,77 @@
+name: Package contract
+
+on:
+  pull_request:
+    paths:
+      - 'packages/storefront-theme/**'
+      - 'packages/storefront-core/**'
+      - 'tools/release/**'
+      - 'docs/COMMERCIAL-PACKAGE-CONTRACT.md'
+      - 'docs/RELEASE.md'
+      - '.github/workflows/package-contract.yml'
+  push:
+    branches:
+      - 'agent/grovia-*'
+    paths:
+      - 'packages/storefront-theme/**'
+      - 'packages/storefront-core/**'
+      - 'tools/release/**'
+      - '.github/workflows/package-contract.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  build-package-contract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.13'
+
+      - name: Check package builder syntax
+        run: python -m py_compile tools/release/build_packages.py
+
+      - name: Build engineering-alpha artifacts twice
+        run: |
+          python tools/release/build_packages.py --output artifacts/release-a --source-commit "$GITHUB_SHA"
+          python tools/release/build_packages.py --output artifacts/release-b --source-commit "$GITHUB_SHA"
+
+      - name: Verify deterministic artifact hashes and manifest contract
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          first = json.loads(Path('artifacts/release-a/release-manifest.json').read_text())
+          second = json.loads(Path('artifacts/release-b/release-manifest.json').read_text())
+
+          assert first['schema'] == 1
+          assert first['status'] == 'engineering-alpha'
+          assert first['source_commit']
+          assert set(first['artifacts']) == {'theme', 'core'}
+
+          for key in ('theme', 'core'):
+              a = first['artifacts'][key]
+              b = second['artifacts'][key]
+              assert a['sha256'] == b['sha256'], (key, a['sha256'], b['sha256'])
+              assert a['bytes'] == b['bytes'], (key, a['bytes'], b['bytes'])
+              assert len(a['sha256']) == 64
+              assert a['bytes'] > 0
+
+              first_zip = Path('artifacts/release-a') / a['filename']
+              second_zip = Path('artifacts/release-b') / b['filename']
+              assert first_zip.read_bytes() == second_zip.read_bytes(), key
+
+          blockers = first['paid_release_blockers']
+          assert any('LICENSE' in item for item in blockers)
+          assert any('provider' in item for item in blockers)
+          assert any('install/activation' in item for item in blockers)
+          PY
+
+      - name: Show package manifest and checksums
+        run: |
+          cat artifacts/release-a/release-manifest.json
+          cat artifacts/release-a/SHA256SUMS
