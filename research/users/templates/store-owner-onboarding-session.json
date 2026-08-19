@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "participant_id": "O01",
+  "session_date": "YYYY-MM-DD",
+  "role": "store_owner",
+  "environment": {
+    "device_class": "desktop",
+    "viewport": "1280x900",
+    "wordpress_version": "7.0.2",
+    "woocommerce_version": "11.0.0",
+    "theme_version": "RECORD_ACTUAL",
+    "core_version": "RECORD_ACTUAL",
+    "site_editor_experience": "none"
+  },
+  "tasks": {
+    "T1": {"outcome": "not_run", "elapsed_seconds": 0, "interventions": 0, "confusion_codes": [], "note": ""},
+    "T2": {"outcome": "not_run", "elapsed_seconds": 0, "interventions": 0, "confusion_codes": [], "note": ""},
+    "T3": {"outcome": "not_run", "elapsed_seconds": 0, "interventions": 0, "confusion_codes": [], "note": ""},
+    "T4": {"outcome": "not_run", "elapsed_seconds": 0, "interventions": 0, "confusion_codes": [], "note": ""},
+    "T5": {"outcome": "not_run", "elapsed_seconds": 0, "interventions": 0, "confusion_codes": [], "note": ""},
+    "T6": {"outcome": "not_run", "elapsed_seconds": 0, "interventions": 0, "confusion_codes": [], "note": ""},
+    "T7": {"outcome": "not_run", "elapsed_seconds": 0, "interventions": 0, "confusion_codes": [], "note": ""}
+  },
+  "session_summary": {
+    "seconds_to_first_personalization": 0,
+    "tasks_passed_unassisted": 0,
+    "tasks_assisted": 0,
+    "tasks_failed": 0,
+    "understands_demo_content_replaceable": false,
+    "understands_commerce_ownership": false,
+    "understands_launch_not_certification": false,
+    "confidence": "low"
+  },
+  "post_task": {
+    "product_description": "",
+    "easiest_part": "",
+    "most_confusing_part": "",
+    "overwrite_concern": "",
+    "demo_content_understanding": "",
+    "elementor_expectation": "",
+    "real_store_blocker": "",
+    "before_paying_needed": ""
+  }
+}

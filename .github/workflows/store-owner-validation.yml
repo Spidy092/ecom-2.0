@@ -1,0 +1,46 @@
+name: Store-owner validation evidence
+
+on:
+  pull_request:
+    paths:
+      - 'research/users/store-owner-onboarding-round1.md'
+      - 'research/users/store-owner-recruitment.md'
+      - 'research/users/templates/store-owner-onboarding-session.json'
+      - 'research/users/results/store-owner-onboarding-round1/**'
+      - 'scripts/validate-store-owner-onboarding.py'
+      - '.github/workflows/store-owner-validation.yml'
+  push:
+    branches:
+      - 'agent/grovia-*'
+    paths:
+      - 'research/users/store-owner-onboarding-round1.md'
+      - 'research/users/store-owner-recruitment.md'
+      - 'research/users/templates/store-owner-onboarding-session.json'
+      - 'research/users/results/store-owner-onboarding-round1/**'
+      - 'scripts/validate-store-owner-onboarding.py'
+      - '.github/workflows/store-owner-validation.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  evidence-quality:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.13'
+      - name: Check validator syntax
+        run: python -m py_compile scripts/validate-store-owner-onboarding.py
+      - name: Validate committed de-identified session evidence
+        run: python scripts/validate-store-owner-onboarding.py
+      - name: Prove empty evidence cannot pass commercial gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          if python scripts/validate-store-owner-onboarding.py --commercial-gate; then
+            echo 'Commercial gate unexpectedly passed without five real participant records.' >&2
+            exit 1
+          fi
+          echo 'Commercial gate correctly remains closed until real participant evidence exists.'
