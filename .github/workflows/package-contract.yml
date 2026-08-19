@@ -11,6 +11,7 @@ on:
       - 'docs/COMMERCIAL-PACKAGE-CONTRACT.md'
       - 'docs/ASSET-LICENSING-GATE.md'
       - 'docs/VISUAL-ASSET-STRATEGY.md'
+      - 'docs/CUSTOMIZATION-CONTRACT.md'
       - 'docs/RELEASE.md'
       - '.wp-env.package.json'
       - '.github/workflows/package-contract.yml'
@@ -23,6 +24,7 @@ on:
       - 'tools/release/**'
       - 'release/third-party-assets.json'
       - 'release/demo-assets.json'
+      - 'docs/CUSTOMIZATION-CONTRACT.md'
       - '.wp-env.package.json'
       - '.github/workflows/package-contract.yml'
 
@@ -51,6 +53,10 @@ jobs:
           python -m py_compile tools/release/test_asset_inventory.py
           python -m py_compile tools/release/verify_demo_assets.py
           python -m py_compile tools/release/test_demo_assets.py
+          python -m py_compile tools/release/verify_theme_customization.py
+
+      - name: Verify native theme customization contract
+        run: python tools/release/verify_theme_customization.py
 
       - name: Exercise third-party asset licensing gate
         run: python tools/release/test_asset_inventory.py
