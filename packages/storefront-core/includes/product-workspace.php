@@ -31,6 +31,7 @@ function bhaivatech_storefront_register_product_workspace(): void {
 	);
 
 	$shop_url = function_exists( 'wc_get_page_permalink' ) ? wc_get_page_permalink( 'shop' ) : home_url( '/' );
+	$is_logged_in = is_user_logged_in();
 
 	$config = array(
 		'endpoints' => array(
@@ -39,6 +40,12 @@ function bhaivatech_storefront_register_product_workspace(): void {
 			'addItem'    => esc_url_raw( rest_url( 'wc/store/v1/cart/add-item' ) ),
 			'updateItem' => esc_url_raw( rest_url( 'wc/store/v1/cart/update-item' ) ),
 			'removeItem' => esc_url_raw( rest_url( 'wc/store/v1/cart/remove-item' ) ),
+		),
+		'saved'     => array(
+			'loggedIn'        => $is_logged_in,
+			'collection'      => esc_url_raw( rest_url( 'bhaivatech-storefront/v1/saved-products' ) ),
+			'productTemplate' => esc_url_raw( rest_url( 'bhaivatech-storefront/v1/saved-products/__PRODUCT_ID__' ) ),
+			'restNonce'       => $is_logged_in ? wp_create_nonce( 'wp_rest' ) : '',
 		),
 		'shopUrl'   => esc_url_raw( $shop_url ),
 		'nonce'     => wp_create_nonce( 'wc_store_api' ),
