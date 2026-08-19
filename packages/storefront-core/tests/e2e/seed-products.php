@@ -69,6 +69,7 @@ wp_set_object_terms( $milk->get_id(), array( $dairy ), 'product_cat' );
 
 $bread = new WC_Product_Simple();
 $bread->set_name( 'Alpha Bread' );
+$bread->set_sku( 'alpha-bread-e2e' );
 $bread->set_status( 'publish' );
 $bread->set_regular_price( '45.00' );
 $bread->set_manage_stock( true );
