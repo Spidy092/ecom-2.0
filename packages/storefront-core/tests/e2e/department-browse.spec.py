@@ -141,6 +141,59 @@ def main() -> None:
         expect(broken_product_page.locator("[data-bt-browse-fallback]")).to_be_visible()
         broken_products.close()
 
+        # If Woo reports more products than the bounded inline response, the UI
+        # communicates the real department total and exposes the full-shop route.
+        partial_products = browser.new_context(viewport={"width": 390, "height": 844})
+        partial_page = partial_products.new_page()
+
+        def inflate_product_total(route):
+            if "category=" not in route.request.url:
+                route.continue_()
+                return
+            response = route.fetch()
+            headers = dict(response.headers)
+            headers["x-wp-total"] = "13"
+            headers["x-wp-totalpages"] = "2"
+            route.fulfill(response=response, headers=headers)
+
+        partial_page.route(
+            re.compile(r"/wc/store/v1/products(?:\?|$)"),
+            inflate_product_total,
+        )
+        partial_page.goto(BASE_URL, wait_until="networkidle")
+        partial_page.locator("[data-bt-departments] button").filter(has_text="Produce").click()
+        expect(partial_page.locator("[data-bt-status]")).to_have_text(
+            "13 products in Produce.",
+            timeout=10_000,
+        )
+        expect(partial_page.locator("[data-bt-browse-fallback]")).to_be_visible()
+        partial_products.close()
+
+        # A taxonomy larger than the documented quick-browse bound must not be
+        # silently truncated. Keep the full-shop route instead.
+        overflow_categories = browser.new_context(viewport={"width": 390, "height": 844})
+        overflow_page = overflow_categories.new_page()
+
+        def inflate_category_total(route):
+            response = route.fetch()
+            headers = dict(response.headers)
+            headers["x-wp-total"] = "101"
+            headers["x-wp-totalpages"] = "2"
+            route.fulfill(response=response, headers=headers)
+
+        overflow_page.route(
+            re.compile(r"/wc/store/v1/products/categories(?:\?|$)"),
+            inflate_category_total,
+        )
+        overflow_page.goto(BASE_URL, wait_until="networkidle")
+        expect(overflow_page.locator("[data-bt-browse-state]")).to_have_text(
+            "Departments could not be loaded. Browse the full shop instead.",
+            timeout=10_000,
+        )
+        expect(overflow_page.locator("[data-bt-browse-fallback]")).to_be_visible()
+        assert overflow_page.locator("[data-bt-departments] button").count() == 0
+        overflow_categories.close()
+
         browser.close()
 
 
