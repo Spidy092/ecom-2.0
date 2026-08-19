@@ -1,19 +1,19 @@
 (() => {
   const variants = {
     A: {
-      label: 'Grocery-first WooCommerce product',
-      headline: 'Build the grocery store people can shop quickly.',
-      lede: 'A block-first WooCommerce theme + companion core plugin focused on fast basket building, repeat purchases, delivery certainty, and a smaller required stack.',
+      label: 'Grocery-first WooCommerce for multi-item shopping',
+      headline: 'Launch a grocery WooCommerce store built around the weekly basket.',
+      lede: 'A block-first theme + companion core plugin for multi-item grocery shopping, early delivery checks, Saved / Buy Again workflows, and a smaller required stack—without mandatory Elementor.',
     },
     B: {
-      label: 'A smaller stack for grocery WooCommerce',
-      headline: 'Launch a serious grocery store without assembling a plugin pile.',
-      lede: 'One focused WooCommerce theme + one companion core plugin for grocery shopping, repeat purchases, delivery certainty, and a guided store setup.',
+      label: 'A smaller required stack for grocery WooCommerce',
+      headline: 'Launch one focused grocery storefront without assembling a plugin pile.',
+      lede: 'WordPress + WooCommerce + one theme + one companion core plugin, with one Modern Grocery starter store and a guided setup path as the working V1 package.',
     },
     C: {
-      label: 'WooCommerce designed for the weekly basket',
-      headline: 'Make next week’s grocery order easier than this week’s.',
-      lede: 'A grocery-first WooCommerce theme + core plugin built around rapid multi-item shopping, Buy Again, household lists, delivery certainty, and mobile basket continuity.',
+      label: 'One focused grocery product',
+      headline: 'Start with a grocery storefront designed for shopping, setup, and maintenance.',
+      lede: 'The working offer combines a focused starter store, mobile grocery interactions, transparent compatibility, maintained updates, and standard support instead of competing on demo count alone.',
     },
   };
 
