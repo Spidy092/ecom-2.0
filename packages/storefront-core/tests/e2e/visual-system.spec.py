@@ -24,6 +24,38 @@ def product_card(page, name: str):
     return page.locator(".bt-product-card").filter(has_text=name)
 
 
+def assert_customization_shell(page, viewport_width: int, mobile: bool) -> None:
+    header = page.locator(".bt-site-header")
+    footer = page.locator(".bt-site-footer")
+    expect(header).to_be_visible()
+    expect(footer).to_be_visible()
+
+    # Brand identity stays on WordPress-native blocks. A Site Logo block may
+    # intentionally render nothing until the buyer sets a logo, so its presence
+    # in the shipped template is covered by the structural release verifier.
+    expect(header.locator(".wp-block-site-title")).to_be_visible()
+    expect(footer.locator(".wp-block-site-title")).to_be_visible()
+
+    # WordPress applies the wp-block-navigation class to both the semantic nav
+    # and its inner list in current markup. Anchor the browser contract to the
+    # semantic nav element so strict-mode assertions remain deterministic.
+    navigation = header.locator("nav.wp-block-navigation")
+    expect(navigation).to_be_visible()
+
+    if mobile:
+        expect(header.locator(".wp-block-navigation__responsive-container-open")).to_be_visible()
+    else:
+        # Desktop must expose the native navigation content without the mobile
+        # overlay trigger becoming the primary control.
+        expect(header.locator(".wp-block-navigation__responsive-container-open")).to_be_hidden()
+        expect(header.locator(".wp-block-page-list")).to_be_visible()
+
+    header_box = header.bounding_box()
+    footer_box = footer.bounding_box()
+    assert header_box and header_box["width"] <= viewport_width + 1.5, (viewport_width, header_box)
+    assert footer_box and footer_box["width"] <= viewport_width + 1.5, (viewport_width, footer_box)
+
+
 def assert_product_image(card, label: str, viewport_width: int) -> None:
     image_link = card.locator(".bt-product-card__image-link")
     image = image_link.locator("img")
@@ -82,6 +114,8 @@ def exercise_mobile(browser, width: int) -> None:
     page = context.new_page()
     page.goto(BASE_URL, wait_until="networkidle")
 
+    assert_customization_shell(page, width, mobile=True)
+
     workspace = page.locator("[data-bt-product-workspace]")
     expect(workspace).to_be_visible()
 
@@ -138,6 +172,8 @@ def exercise_desktop(browser) -> None:
     context = browser.new_context(viewport={"width": width, "height": 900})
     page = context.new_page()
     page.goto(BASE_URL, wait_until="networkidle")
+
+    assert_customization_shell(page, width, mobile=False)
 
     expect(page.locator("[data-bt-product-workspace]")).to_be_visible()
     expect(page.locator("[data-bt-mobile-shopping-nav]")).to_be_hidden()
