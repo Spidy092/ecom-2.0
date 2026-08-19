@@ -43,6 +43,7 @@ foreach ( $preflight['checks'] as $check ) {
 
 bhaivatech_storefront_reset_starter_import_state();
 $manifest = bhaivatech_storefront_modern_grocery_manifest();
+$digest   = bhaivatech_storefront_starter_manifest_digest( $manifest );
 
 bhaivatech_starter_import_assert( true === bhaivatech_storefront_validate_starter_manifest( $manifest ), 'Modern Grocery manifest should validate.' );
 
@@ -50,15 +51,46 @@ $invalid           = $manifest;
 $invalid['schema'] = 999;
 bhaivatech_starter_import_assert( is_wp_error( bhaivatech_storefront_validate_starter_manifest( $invalid ) ), 'Unsupported manifest schema should fail.' );
 
+// Atomic begin guard: even with idle transaction state, another owner of the
+// unique lock option must block a new begin request.
+add_option(
+	BHAIVATECH_STOREFRONT_STARTER_IMPORT_LOCK_OPTION,
+	array(
+		'manifest_digest' => $digest,
+		'acquired_at_utc' => gmdate( 'c' ),
+	),
+	'',
+	false
+);
+$locked_begin = bhaivatech_storefront_begin_starter_import( $manifest );
+bhaivatech_starter_import_assert( is_wp_error( $locked_begin ) && 'starter_import_lock_unavailable' === $locked_begin->get_error_code(), 'Atomic begin lock should reject a second owner.' );
+bhaivatech_storefront_release_starter_import_lock();
+
+// A failure at the first phase must still be treated as a retry even though no
+// phase has completed yet.
+$preflight_start = bhaivatech_storefront_begin_starter_import( $manifest );
+bhaivatech_starter_import_assert( ! is_wp_error( $preflight_start ) && bhaivatech_storefront_has_starter_import_lock(), 'First begin should own the transaction lock.' );
+$preflight_fail = bhaivatech_storefront_fail_starter_import( 'preflight', 'requirements-not-ready' );
+bhaivatech_starter_import_assert( ! is_wp_error( $preflight_fail ), 'Preflight failure should be recorded.' );
+bhaivatech_starter_import_assert( ! bhaivatech_storefront_has_starter_import_lock(), 'Failure should release the transaction lock.' );
+$preflight_retry = bhaivatech_storefront_begin_starter_import( $manifest );
+bhaivatech_starter_import_assert( ! is_wp_error( $preflight_retry ), 'Failed preflight should be retryable.' );
+bhaivatech_starter_import_assert( 'resumed' === $preflight_retry['result'], 'Failed first phase should resume rather than look like a fresh transaction.' );
+bhaivatech_starter_import_assert( 'preflight' === $preflight_retry['current_step'], 'Failed first phase should resume at preflight.' );
+bhaivatech_starter_import_assert( 2 === (int) $preflight_retry['attempts'], 'Failed first-phase retry should increment attempt count.' );
+bhaivatech_storefront_reset_starter_import_state();
+bhaivatech_starter_import_assert( ! bhaivatech_storefront_has_starter_import_lock(), 'Explicit reset should release any transaction lock.' );
+
 $started = bhaivatech_storefront_begin_starter_import( $manifest );
-bhaivatech_starter_import_assert( ! is_wp_error( $started ), 'First transaction should start.' );
+bhaivatech_starter_import_assert( ! is_wp_error( $started ), 'First clean transaction should start.' );
 bhaivatech_starter_import_assert( 'running' === $started['status'], 'Started transaction should be running.' );
 bhaivatech_starter_import_assert( 'preflight' === $started['current_step'], 'First transaction step should be preflight.' );
-bhaivatech_starter_import_assert( 1 === (int) $started['attempts'], 'First transaction should record one attempt.' );
-bhaivatech_starter_import_assert( 'started' === $started['result'], 'First transaction should report started.' );
+bhaivatech_starter_import_assert( 1 === (int) $started['attempts'], 'First clean transaction should record one attempt.' );
+bhaivatech_starter_import_assert( 'started' === $started['result'], 'First clean transaction should report started.' );
+bhaivatech_starter_import_assert( bhaivatech_storefront_has_starter_import_lock(), 'Running transaction should retain its atomic lock.' );
 
 $parallel = bhaivatech_storefront_begin_starter_import( $manifest );
-bhaivatech_starter_import_assert( is_wp_error( $parallel ) && 'starter_import_in_progress' === $parallel->get_error_code(), 'Parallel transaction should be blocked.' );
+bhaivatech_starter_import_assert( is_wp_error( $parallel ) && 'starter_import_in_progress' === $parallel->get_error_code(), 'Parallel transaction should be blocked by running state.' );
 
 $out_of_order = bhaivatech_storefront_complete_starter_import_step( 'configuration' );
 bhaivatech_starter_import_assert( is_wp_error( $out_of_order ) && 'starter_import_step_out_of_order' === $out_of_order->get_error_code(), 'Out-of-order phase completion should fail.' );
@@ -66,12 +98,14 @@ bhaivatech_starter_import_assert( is_wp_error( $out_of_order ) && 'starter_impor
 $after_preflight = bhaivatech_storefront_complete_starter_import_step( 'preflight' );
 bhaivatech_starter_import_assert( ! is_wp_error( $after_preflight ), 'Preflight should complete.' );
 bhaivatech_starter_import_assert( 'content' === $after_preflight['current_step'], 'Content should follow preflight.' );
+bhaivatech_starter_import_assert( bhaivatech_storefront_has_starter_import_lock(), 'Intermediate phase completion should retain the lock.' );
 
 $failed = bhaivatech_storefront_fail_starter_import( 'content', 'network-timeout' );
 bhaivatech_starter_import_assert( ! is_wp_error( $failed ), 'Current phase should be fail-able.' );
 bhaivatech_starter_import_assert( 'failed' === $failed['status'], 'Failure should persist failed status.' );
 bhaivatech_starter_import_assert( 'content' === $failed['failed_step'], 'Failure should persist the current phase only.' );
 bhaivatech_starter_import_assert( 'network-timeout' === $failed['last_error_code'], 'Failure should persist only a bounded error code.' );
+bhaivatech_starter_import_assert( ! bhaivatech_storefront_has_starter_import_lock(), 'Failure should release the transaction lock for a safe retry.' );
 
 $resumed = bhaivatech_storefront_begin_starter_import( $manifest );
 bhaivatech_starter_import_assert( ! is_wp_error( $resumed ), 'Same manifest should resume after failure.' );
@@ -80,6 +114,7 @@ bhaivatech_starter_import_assert( 'content' === $resumed['current_step'], 'Retry
 bhaivatech_starter_import_assert( 2 === (int) $resumed['attempts'], 'Retry should increment attempt count.' );
 bhaivatech_starter_import_assert( 'resumed' === $resumed['result'], 'Retry should report resumed.' );
 bhaivatech_starter_import_assert( array( 'preflight' ) === $resumed['completed_steps'], 'Retry should preserve completed phases.' );
+bhaivatech_starter_import_assert( bhaivatech_storefront_has_starter_import_lock(), 'Resumed transaction should reacquire the lock.' );
 
 foreach ( array( 'content', 'configuration', 'verification' ) as $step ) {
 	$result = bhaivatech_storefront_complete_starter_import_step( $step );
@@ -89,11 +124,13 @@ foreach ( array( 'content', 'configuration', 'verification' ) as $step ) {
 $complete = bhaivatech_storefront_get_starter_import_state();
 bhaivatech_starter_import_assert( 'complete' === $complete['status'], 'Verification should complete the transaction.' );
 bhaivatech_starter_import_assert( bhaivatech_storefront_starter_import_steps() === $complete['completed_steps'], 'All transaction phases should be recorded once.' );
+bhaivatech_starter_import_assert( ! bhaivatech_storefront_has_starter_import_lock(), 'Completed transaction should release the lock.' );
 
 $already_complete = bhaivatech_storefront_begin_starter_import( $manifest );
 bhaivatech_starter_import_assert( ! is_wp_error( $already_complete ), 'Rerun of completed identical manifest should be non-destructive.' );
 bhaivatech_starter_import_assert( 'complete' === $already_complete['status'], 'Completed rerun should stay complete.' );
 bhaivatech_starter_import_assert( 'already_complete' === $already_complete['result'], 'Completed rerun should report already complete.' );
+bhaivatech_starter_import_assert( ! bhaivatech_storefront_has_starter_import_lock(), 'Already-complete check should not retain a lock.' );
 
 $changed            = $manifest;
 $changed['version'] = '0.2.0-alpha';
@@ -102,5 +139,6 @@ bhaivatech_starter_import_assert( is_wp_error( $changed_result ) && 'starter_imp
 
 bhaivatech_storefront_reset_starter_import_state();
 bhaivatech_starter_import_assert( 'idle' === bhaivatech_storefront_get_starter_import_state()['status'], 'Transaction reset should restore idle state.' );
+bhaivatech_starter_import_assert( ! bhaivatech_storefront_has_starter_import_lock(), 'Transaction reset should leave no lock behind.' );
 
-WP_CLI::success( 'Starter preflight + transaction retry/idempotency contract passed.' );
+WP_CLI::success( 'Starter preflight + atomic transaction retry/idempotency contract passed.' );
