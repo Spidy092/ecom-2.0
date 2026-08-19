@@ -8,6 +8,7 @@ on:
       - 'tools/release/**'
       - 'docs/COMMERCIAL-PACKAGE-CONTRACT.md'
       - 'docs/RELEASE.md'
+      - '.wp-env.package.json'
       - '.github/workflows/package-contract.yml'
   push:
     branches:
@@ -16,6 +17,7 @@ on:
       - 'packages/storefront-theme/**'
       - 'packages/storefront-core/**'
       - 'tools/release/**'
+      - '.wp-env.package.json'
       - '.github/workflows/package-contract.yml'
 
 permissions:
@@ -30,6 +32,11 @@ jobs:
       - uses: actions/setup-python@v6
         with:
           python-version: '3.13'
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+          package-manager-cache: false
 
       - name: Check package builder syntax
         run: python -m py_compile tools/release/build_packages.py
@@ -71,7 +78,37 @@ jobs:
           assert any('install/activation' in item for item in blockers)
           PY
 
+      - name: Resolve generated package filenames
+        run: |
+          python - <<'PY' >> "$GITHUB_ENV"
+          import json
+          from pathlib import Path
+          manifest = json.loads(Path('artifacts/release-a/release-manifest.json').read_text())
+          print('THEME_PACKAGE=' + manifest['artifacts']['theme']['filename'])
+          print('CORE_PACKAGE=' + manifest['artifacts']['core']['filename'])
+          PY
+
+      - name: Start clean pinned WordPress package environment
+        run: npx -y @wordpress/env@10.39.0 start --config=.wp-env.package.json
+
+      - name: Install generated Core ZIP through WordPress
+        run: |
+          npx -y @wordpress/env@10.39.0 run cli --config=.wp-env.package.json wp plugin install "wp-content/package-artifacts/${CORE_PACKAGE}" --activate
+          npx -y @wordpress/env@10.39.0 run cli --config=.wp-env.package.json wp plugin status storefront-core
+
+      - name: Install generated Theme ZIP through WordPress
+        run: |
+          npx -y @wordpress/env@10.39.0 run cli --config=.wp-env.package.json wp theme install "wp-content/package-artifacts/${THEME_PACKAGE}" --activate
+          npx -y @wordpress/env@10.39.0 run cli --config=.wp-env.package.json wp theme status storefront-theme
+
+      - name: Verify WooCommerce dependency remains active
+        run: npx -y @wordpress/env@10.39.0 run cli --config=.wp-env.package.json wp plugin status woocommerce
+
       - name: Show package manifest and checksums
         run: |
           cat artifacts/release-a/release-manifest.json
           cat artifacts/release-a/SHA256SUMS
+
+      - name: Stop clean package environment
+        if: always()
+        run: npx -y @wordpress/env@10.39.0 stop --config=.wp-env.package.json
