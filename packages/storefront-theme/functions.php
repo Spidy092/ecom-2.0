@@ -32,6 +32,16 @@ function bhaivatech_grocery_alpha_register_block_styles(): void {
 	);
 
 	wp_enqueue_block_style(
+		'bhaivatech-storefront/product-workspace',
+		array(
+			'handle' => 'bhaivatech-grocery-alpha-department-browse',
+			'src'    => get_theme_file_uri( 'assets/css/department-browse.css' ),
+			'path'   => get_theme_file_path( 'assets/css/department-browse.css' ),
+			'ver'    => wp_get_theme()->get( 'Version' ),
+		)
+	);
+
+	wp_enqueue_block_style(
 		'bhaivatech-storefront/mobile-shopping-nav',
 		array(
 			'handle' => 'bhaivatech-grocery-alpha-mobile-shopping-nav',
