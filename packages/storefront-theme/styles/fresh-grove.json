@@ -1,0 +1,41 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/theme.json",
+  "version": 3,
+  "title": "Fresh Grove",
+  "settings": {
+    "color": {
+      "palette": [
+        { "name": "Paper", "slug": "paper", "color": "#F8FBF5" },
+        { "name": "Ink", "slug": "ink", "color": "#173126" },
+        { "name": "Surface", "slug": "surface", "color": "#FFFFFF" },
+        { "name": "Soft", "slug": "soft", "color": "#EEF4EA" },
+        { "name": "Muted", "slug": "muted", "color": "#5B6B60" },
+        { "name": "Line", "slug": "line", "color": "#D7E1D4" },
+        { "name": "Copper", "slug": "copper", "color": "#2F6B3E" },
+        { "name": "Copper Dark", "slug": "copper-dark", "color": "#245431" },
+        { "name": "Success", "slug": "success", "color": "#146C43" },
+        { "name": "Danger", "slug": "danger", "color": "#A32D2D" },
+        { "name": "Info", "slug": "info", "color": "#155E75" }
+      ]
+    }
+  },
+  "styles": {
+    "color": {
+      "background": "var:preset|color|paper",
+      "text": "var:preset|color|ink"
+    },
+    "elements": {
+      "heading": {
+        "typography": {
+          "fontFamily": "var:preset|font-family|system-serif",
+          "fontWeight": "700"
+        }
+      },
+      "link": {
+        "color": {
+          "text": "var:preset|color|copper"
+        }
+      }
+    }
+  }
+}
