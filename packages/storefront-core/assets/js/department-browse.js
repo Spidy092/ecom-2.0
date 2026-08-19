@@ -37,6 +37,10 @@
 			browseState.textContent = text || '';
 		}
 
+		function setBusy( busy ) {
+			browse.setAttribute( 'aria-busy', busy ? 'true' : 'false' );
+		}
+
 		async function readJson( url, controller ) {
 			const response = await fetch( url, {
 				method: 'GET',
@@ -90,6 +94,20 @@
 			} );
 		}
 
+		function restoreSelectionFocus() {
+			if ( presentation() === 'chooser' && selectedCategory && ! chooserOpen ) {
+				showDepartments.focus( { preventScroll: true } );
+				return;
+			}
+
+			if ( selectedCategory ) {
+				const selected = controls.querySelector( '[data-department-id="' + String( selectedCategory.id ) + '"]' );
+				if ( selected ) {
+					selected.focus( { preventScroll: true } );
+				}
+			}
+		}
+
 		function formatCountMessage( count, name ) {
 			return String( messages.browseProductsFound || '%d products in %s.' )
 				.replace( '%d', String( count ) )
@@ -108,12 +126,14 @@
 			selectedCategory = category;
 			chooserOpen = false;
 			renderCategories();
+			restoreSelectionFocus();
 
 			if ( productsController ) {
 				productsController.abort();
 			}
 			const controller = new AbortController();
 			productsController = controller;
+			setBusy( true );
 			const loadingMessage = String( messages.browseLoadingProducts || 'Loading %s…' ).replace( '%s', category.name );
 			dispatchWorkspace( 'bhaivatech:browse-loading', { message: loadingMessage } );
 
@@ -142,6 +162,7 @@
 			} finally {
 				if ( productsController === controller ) {
 					productsController = null;
+					setBusy( false );
 				}
 			}
 		}
@@ -184,6 +205,7 @@
 			}
 			const controller = new AbortController();
 			categoryController = controller;
+			setBusy( true );
 			setBrowseState( messages.browseLoadingDepartments || 'Loading departments…' );
 
 			try {
@@ -214,6 +236,7 @@
 			} finally {
 				if ( categoryController === controller ) {
 					categoryController = null;
+					setBusy( false );
 				}
 			}
 		}
