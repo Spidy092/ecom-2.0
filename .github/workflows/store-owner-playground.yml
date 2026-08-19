@@ -1,0 +1,58 @@
+name: Store-owner Playground smoke
+
+on:
+  pull_request:
+    paths:
+      - 'research/playground/**'
+      - '.github/workflows/store-owner-playground.yml'
+      - 'packages/storefront-core/**'
+      - 'packages/storefront-theme/**'
+  push:
+    branches:
+      - 'agent/grovia-*'
+    paths:
+      - 'research/playground/**'
+      - '.github/workflows/store-owner-playground.yml'
+      - 'packages/storefront-core/**'
+      - 'packages/storefront-theme/**'
+
+permissions:
+  contents: read
+
+jobs:
+  disposable-playground:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+          package-manager-cache: false
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.13'
+
+      - name: Validate Blueprint JSON
+        run: node -e "JSON.parse(require('fs').readFileSync('research/playground/store-owner-validation.blueprint.json','utf8'))"
+
+      - name: Verify public Blueprint URL and CORS
+        shell: bash
+        run: |
+          set -euo pipefail
+          url='https://raw.githubusercontent.com/Spidy092/ecom-2.0/agent/grovia-playground-validation/research/playground/store-owner-validation.blueprint.json'
+          curl -fsSL "$url" -o /tmp/public-blueprint.json
+          cmp research/playground/store-owner-validation.blueprint.json /tmp/public-blueprint.json
+          curl -fsSI "$url" | tr -d '\r' | grep -Ei '^access-control-allow-origin: \*$'
+
+      - name: Install pinned Playground CLI and Playwright
+        run: |
+          npm install --no-save --package-lock=false @wp-playground/cli@3.1.48
+          python -m pip install --disable-pip-version-check playwright==1.62.0
+
+      - name: Verify preinstalled Google Chrome
+        run: google-chrome --version
+
+      - name: Boot Blueprint and exercise tester path in real Chrome
+        run: node research/playground/run-store-owner-playground-smoke.mjs
