@@ -1,0 +1,41 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/theme.json",
+  "version": 3,
+  "title": "Minimal Market",
+  "settings": {
+    "color": {
+      "palette": [
+        { "name": "Paper", "slug": "paper", "color": "#FFFFFF" },
+        { "name": "Ink", "slug": "ink", "color": "#111827" },
+        { "name": "Surface", "slug": "surface", "color": "#FFFFFF" },
+        { "name": "Soft", "slug": "soft", "color": "#F4F6F8" },
+        { "name": "Muted", "slug": "muted", "color": "#5F6876" },
+        { "name": "Line", "slug": "line", "color": "#DDE2E8" },
+        { "name": "Copper", "slug": "copper", "color": "#245D57" },
+        { "name": "Copper Dark", "slug": "copper-dark", "color": "#194743" },
+        { "name": "Success", "slug": "success", "color": "#146C43" },
+        { "name": "Danger", "slug": "danger", "color": "#A32D2D" },
+        { "name": "Info", "slug": "info", "color": "#155E75" }
+      ]
+    }
+  },
+  "styles": {
+    "color": {
+      "background": "var:preset|color|paper",
+      "text": "var:preset|color|ink"
+    },
+    "elements": {
+      "heading": {
+        "typography": {
+          "fontFamily": "var:preset|font-family|system-sans",
+          "fontWeight": "720"
+        }
+      },
+      "link": {
+        "color": {
+          "text": "var:preset|color|copper"
+        }
+      }
+    }
+  }
+}
