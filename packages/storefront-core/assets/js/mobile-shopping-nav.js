@@ -10,18 +10,26 @@
 		return window.matchMedia && window.matchMedia( '(prefers-reduced-motion: reduce)' ).matches;
 	}
 
-	function focusSearch() {
-		const search = document.querySelector( '[data-bt-search]' );
-		if ( ! search ) {
+	function focusTarget( selector ) {
+		const target = document.querySelector( selector );
+		if ( ! target ) {
 			return false;
 		}
 
-		search.scrollIntoView( {
+		target.scrollIntoView( {
 			block: 'center',
 			behavior: prefersReducedMotion() ? 'auto' : 'smooth',
 		} );
-		search.focus( { preventScroll: true } );
+		target.focus( { preventScroll: true } );
 		return true;
+	}
+
+	function focusSearch() {
+		return focusTarget( '[data-bt-search]' );
+	}
+
+	function focusBrowse() {
+		return focusTarget( '[data-bt-browse]' );
 	}
 
 	function updateCartBadge( nav, count ) {
@@ -54,6 +62,18 @@
 			} );
 		}
 
+		const browseLink = nav.querySelector( '[data-bt-mobile-browse-link]' );
+		if ( browseLink ) {
+			browseLink.addEventListener( 'click', function ( event ) {
+				if ( focusBrowse() ) {
+					event.preventDefault();
+					if ( window.location.hash !== '#grocery-browse' ) {
+						window.history.replaceState( null, '', '#grocery-browse' );
+					}
+				}
+			} );
+		}
+
 		document.querySelectorAll( '[data-bt-product-workspace]' ).forEach( function ( workspace ) {
 			workspace.addEventListener( 'bhaivatech:cart-updated', function ( event ) {
 				const cart = event.detail && event.detail.cart ? event.detail.cart : null;
@@ -67,6 +87,12 @@
 	if ( window.location.hash === '#grocery-search' ) {
 		window.requestAnimationFrame( function () {
 			focusSearch();
+		} );
+	}
+
+	if ( window.location.hash === '#grocery-browse' ) {
+		window.requestAnimationFrame( function () {
+			focusBrowse();
 		} );
 	}
 } )();
