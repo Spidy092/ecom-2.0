@@ -72,6 +72,10 @@
       }
     },
     {
+      "step": "runPHP",
+      "code": "<?php\nrequire_once '/wordpress/wp-load.php';\nrequire_once ABSPATH . 'wp-admin/includes/plugin.php';\nglobal $wp_version;\n$errors = array();\nif ( '7.0.2' !== $wp_version ) { $errors[] = 'Expected WordPress 7.0.2, got ' . $wp_version; }\nif ( ! defined( 'WC_VERSION' ) || '11.0.0' !== WC_VERSION ) { $errors[] = 'Expected WooCommerce 11.0.0.'; }\nif ( ! is_plugin_active( 'storefront-core/storefront-core.php' ) ) { $errors[] = 'Storefront Core is not active.'; }\nif ( 'storefront-theme' !== get_stylesheet() ) { $errors[] = 'Storefront Theme is not active.'; }\n$products = wc_get_products( array( 'limit' => -1, 'return' => 'ids' ) );\nif ( count( $products ) < 6 ) { $errors[] = 'Expected at least six seeded grocery products.'; }\n$attachments = get_posts( array( 'post_type' => 'attachment', 'post_status' => 'inherit', 'posts_per_page' => -1, 'fields' => 'ids', 'meta_key' => '_bhaivatech_modern_grocery_asset_id' ) );\nif ( 6 !== count( $attachments ) ) { $errors[] = 'Expected exactly six canonical demo-image attachments.'; }\nif ( $errors ) { throw new RuntimeException( implode( ' ', $errors ) ); }\nupdate_option( 'bhaivatech_playground_validation_ready', array( 'wordpress' => $wp_version, 'woocommerce' => WC_VERSION, 'products' => count( $products ), 'demo_images' => count( $attachments ) ) );"
+    },
+    {
       "step": "login",
       "username": "admin",
       "password": "password"
