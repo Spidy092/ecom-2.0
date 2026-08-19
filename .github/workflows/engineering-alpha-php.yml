@@ -66,6 +66,8 @@ jobs:
         run: |
           node --check packages/storefront-core/assets/js/product-workspace-model.js
           node --check packages/storefront-core/assets/js/product-workspace.js
+          node --check packages/storefront-core/assets/js/product-filters-model.js
+          node --check packages/storefront-core/assets/js/product-filters.js
           node --check packages/storefront-core/assets/js/saved-products-model.js
           node --check packages/storefront-core/assets/js/saved-products.js
           node --check packages/storefront-core/assets/js/delivery-serviceability.js
@@ -101,6 +103,7 @@ jobs:
           npx -y @wordpress/env@10.39.0 run cli wp plugin status storefront-core
           npx -y @wordpress/env@10.39.0 run cli wp theme activate storefront-theme
           npx -y @wordpress/env@10.39.0 run cli wp eval-file wp-content/plugins/storefront-core/tests/e2e/seed-products.php
+          npx -y @wordpress/env@10.39.0 run cli wp eval-file wp-content/plugins/storefront-core/tests/e2e/seed-product-filters.php
       - name: Exercise real Store API session in Chrome
         run: python packages/storefront-core/tests/e2e/store-api-slice.spec.py
       - name: Exercise Saved auth and ownership boundaries in Chrome
@@ -111,6 +114,8 @@ jobs:
         run: python packages/storefront-core/tests/e2e/mobile-shopping-nav.spec.py
       - name: Exercise adaptive department rail in Chrome
         run: python packages/storefront-core/tests/e2e/department-browse.spec.py
+      - name: Exercise contextual grocery filters in Chrome
+        run: python packages/storefront-core/tests/e2e/product-filters.spec.py
       - name: Expand fixture to large department taxonomy
         run: npx -y @wordpress/env@10.39.0 run cli wp eval-file wp-content/plugins/storefront-core/tests/e2e/seed-department-overflow.php
       - name: Exercise adaptive department chooser in Chrome
