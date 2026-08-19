@@ -65,6 +65,13 @@ def main() -> None:
         expect(page.locator("[data-bt-search]")).to_be_focused()
         assert page.url.endswith("#grocery-search"), page.url
 
+        # Current-page Browse is also a focus action on the real department surface.
+        browse_link = nav.locator("[data-bt-mobile-browse-link]")
+        expect(browse_link).to_have_attribute("href", re.compile(r"#grocery-browse$"))
+        browse_link.click()
+        expect(page.locator("[data-bt-browse]")).to_be_focused()
+        assert page.url.endswith("#grocery-browse"), page.url
+
         # Cart badge follows the same authoritative cart response used by the
         # product workspace; no polling or duplicate cart model is involved.
         search_for(page, "Alpha Milk")
@@ -74,19 +81,21 @@ def main() -> None:
         expect(badge).to_have_text("1")
         expect(badge).to_have_attribute("aria-label", "1 item in cart")
 
-        # Browse is an honest link to Woo Shop. The persistent nav remains on
-        # the browsing surface, and Search can return/focus the grocery workspace.
-        browse_url = nav.locator(".bt-mobile-shopping-nav__item").filter(has_text="Browse").get_attribute("href")
-        assert browse_url
-        page.goto(browse_url, wait_until="networkidle")
-        browse_nav = page.locator("[data-bt-mobile-shopping-nav]")
-        expect(browse_nav).to_be_visible()
-        expect(browse_nav.locator(".bt-mobile-shopping-nav__item").filter(has_text="Browse")).to_have_attribute(
-            "aria-current", "page"
-        )
-        browse_nav.locator("[data-bt-mobile-search-link]").click()
-        page.wait_for_url(re.compile(r"#grocery-search$"), timeout=10_000)
-        expect(page.locator("[data-bt-search]")).to_be_focused(timeout=10_000)
+        # From another storefront surface, Browse follows the real Home fragment
+        # and focuses the same department workspace after navigation.
+        shop_url = page.locator("[data-bt-browse-fallback]").get_attribute("href")
+        assert shop_url
+        page.goto(shop_url, wait_until="networkidle")
+        shop_nav = page.locator("[data-bt-mobile-shopping-nav]")
+        expect(shop_nav).to_be_visible()
+        shop_nav.locator("[data-bt-mobile-browse-link]").click()
+        page.wait_for_url(re.compile(r"#grocery-browse$"), timeout=10_000)
+        expect(page.locator("[data-bt-browse]")).to_be_focused(timeout=10_000)
+
+        # Search still returns/focuses the exact-product workspace.
+        page.locator("[data-bt-mobile-search-link]").click()
+        expect(page.locator("[data-bt-search]")).to_be_focused()
+        assert page.url.endswith("#grocery-search"), page.url
 
         # Cart deliberately has no persistent shopping nav because the cart page
         # already owns the checkout transition and fixed Cart UI would duplicate it.
