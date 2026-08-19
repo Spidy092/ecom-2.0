@@ -1,0 +1,75 @@
+name: Buyer onboarding smoke
+
+on:
+  pull_request:
+    paths:
+      - 'packages/storefront-core/includes/buyer-onboarding.php'
+      - 'packages/storefront-core/storefront-core.php'
+      - 'packages/storefront-core/tests/e2e/buyer-onboarding*'
+      - 'docs/BUYER-ONBOARDING.md'
+      - '.github/workflows/buyer-onboarding.yml'
+  push:
+    branches:
+      - 'agent/grovia-*'
+    paths:
+      - 'packages/storefront-core/includes/buyer-onboarding.php'
+      - 'packages/storefront-core/storefront-core.php'
+      - 'packages/storefront-core/tests/e2e/buyer-onboarding*'
+      - 'docs/BUYER-ONBOARDING.md'
+      - '.github/workflows/buyer-onboarding.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  buyer-onboarding:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-php@v2
+        with:
+          php-version: '8.3'
+          coverage: none
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+          package-manager-cache: false
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.13'
+
+      - name: Lint onboarding PHP
+        run: |
+          php -l packages/storefront-core/includes/buyer-onboarding.php
+          php -l packages/storefront-core/tests/e2e/buyer-onboarding-contract.spec.php
+          php -l packages/storefront-core/storefront-core.php
+
+      - name: Install Playwright Python library
+        run: python -m pip install --disable-pip-version-check playwright==1.62.0
+
+      - name: Verify preinstalled Google Chrome
+        run: google-chrome --version
+
+      - name: Start WordPress + WooCommerce environment
+        run: npx -y @wordpress/env@10.39.0 start
+
+      - name: Activate theme and seed onboarding identities
+        run: |
+          npx -y @wordpress/env@10.39.0 run cli wp plugin status woocommerce
+          npx -y @wordpress/env@10.39.0 run cli wp plugin status storefront-core
+          npx -y @wordpress/env@10.39.0 run cli wp theme activate storefront-theme
+          npx -y @wordpress/env@10.39.0 run cli wp eval-file wp-content/plugins/storefront-core/tests/e2e/seed-products.php
+          npx -y @wordpress/env@10.39.0 run cli wp eval-file wp-content/plugins/storefront-core/tests/e2e/seed-setup-admin.php
+
+      - name: Verify non-destructive onboarding source contract
+        run: npx -y @wordpress/env@10.39.0 run cli wp eval-file wp-content/plugins/storefront-core/tests/e2e/buyer-onboarding-contract.spec.php
+
+      - name: Exercise buyer onboarding in Chrome
+        run: python packages/storefront-core/tests/e2e/buyer-onboarding.spec.py
+
+      - name: Stop wp-env
+        if: always()
+        run: npx -y @wordpress/env@10.39.0 stop
