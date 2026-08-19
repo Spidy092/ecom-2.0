@@ -42,7 +42,7 @@ This prototype now exercises the first grocery basket interaction against WooCom
 
 ## Validation note
 
-Static source review is complete, but the repository currently has no CI checks attached to this branch and this environment cannot execute the remote Playground interactively. Keep the PR in draft until the branch Playground is exercised on mobile and the cart/session behavior is confirmed end to end.
+Static source review is complete, but no automated CI checks are currently attached to this branch and this environment cannot execute the remote Playground interactively. Keep the PR in draft until the branch Playground is exercised on mobile and the cart/session behavior is confirmed end to end.
 
 ## Not implemented yet
 
