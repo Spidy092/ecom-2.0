@@ -4,6 +4,7 @@ on:
   pull_request:
     paths:
       - 'research/users/store-owner-onboarding-round1.md'
+      - 'research/users/store-owner-recruitment.md'
       - 'research/users/templates/store-owner-onboarding-session.json'
       - 'research/users/results/store-owner-onboarding-round1/**'
       - 'scripts/validate-store-owner-onboarding.py'
@@ -13,6 +14,7 @@ on:
       - 'agent/grovia-*'
     paths:
       - 'research/users/store-owner-onboarding-round1.md'
+      - 'research/users/store-owner-recruitment.md'
       - 'research/users/templates/store-owner-onboarding-session.json'
       - 'research/users/results/store-owner-onboarding-round1/**'
       - 'scripts/validate-store-owner-onboarding.py'
