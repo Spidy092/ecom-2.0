@@ -1,0 +1,98 @@
+name: Store-owner Playground smoke
+
+on:
+  pull_request:
+    paths:
+      - 'research/playground/**'
+      - '.github/workflows/store-owner-playground.yml'
+      - 'packages/storefront-core/**'
+      - 'packages/storefront-theme/**'
+  push:
+    branches:
+      - 'agent/grovia-*'
+    paths:
+      - 'research/playground/**'
+      - '.github/workflows/store-owner-playground.yml'
+      - 'packages/storefront-core/**'
+      - 'packages/storefront-theme/**'
+
+permissions:
+  contents: read
+
+jobs:
+  disposable-playground:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+          package-manager-cache: false
+
+      - name: Validate Blueprint JSON
+        run: node -e "JSON.parse(require('fs').readFileSync('research/playground/store-owner-validation.blueprint.json','utf8'))"
+
+      - name: Verify public Blueprint URL and CORS
+        shell: bash
+        run: |
+          set -euo pipefail
+          url='https://raw.githubusercontent.com/Spidy092/ecom-2.0/agent/grovia-playground-validation/research/playground/store-owner-validation.blueprint.json'
+          curl -fsSL "$url" -o /tmp/public-blueprint.json
+          cmp research/playground/store-owner-validation.blueprint.json /tmp/public-blueprint.json
+          curl -fsSI "$url" | tr -d '\r' | grep -Ei '^access-control-allow-origin: \*$'
+
+      - name: Start pinned WordPress Playground CLI
+        shell: bash
+        run: |
+          set -euo pipefail
+          npx -y @wp-playground/cli@3.1.48 server \
+            --blueprint=research/playground/store-owner-validation.blueprint.json \
+            --port=9400 \
+            --skip-browser \
+            --verbosity=normal \
+            > /tmp/store-owner-playground.log 2>&1 &
+          echo $! > /tmp/store-owner-playground.pid
+
+          ready=0
+          for attempt in $(seq 1 90); do
+            if curl -fsS http://127.0.0.1:9400/ >/dev/null 2>&1; then
+              ready=1
+              break
+            fi
+            sleep 2
+          done
+
+          if [[ "$ready" != '1' ]]; then
+            cat /tmp/store-owner-playground.log
+            echo 'Playground did not become ready.' >&2
+            exit 1
+          fi
+
+      - name: Verify tester landing page and seeded storefront
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -fsS -c /tmp/playground-cookies.txt -b /tmp/playground-cookies.txt -L \
+            'http://127.0.0.1:9400/wp-admin/admin.php?page=bhaivatech-storefront-personalize' \
+            -o /tmp/onboarding.html
+          grep -F 'Personalize your store' /tmp/onboarding.html
+          grep -F 'Choose a visual style' /tmp/onboarding.html
+          grep -F 'Replace demo products and images' /tmp/onboarding.html
+
+          curl -fsS -c /tmp/playground-cookies.txt -b /tmp/playground-cookies.txt -L \
+            'http://127.0.0.1:9400/' \
+            -o /tmp/storefront.html
+          grep -F 'Storefront' /tmp/storefront.html || grep -F 'Modern Grocery Validation' /tmp/storefront.html
+
+      - name: Show Playground log on failure
+        if: failure()
+        run: cat /tmp/store-owner-playground.log || true
+
+      - name: Stop Playground
+        if: always()
+        shell: bash
+        run: |
+          if [[ -f /tmp/store-owner-playground.pid ]]; then
+            kill "$(cat /tmp/store-owner-playground.pid)" || true
+          fi
