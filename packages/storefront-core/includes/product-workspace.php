@@ -11,8 +11,10 @@ defined( 'ABSPATH' ) || exit;
  * Register the internal product-workspace block and its client assets.
  */
 function bhaivatech_storefront_register_product_workspace(): void {
-	$model_handle = 'bhaivatech-storefront-product-workspace-model';
-	$view_handle  = 'bhaivatech-storefront-product-workspace';
+	$model_handle       = 'bhaivatech-storefront-product-workspace-model';
+	$view_handle        = 'bhaivatech-storefront-product-workspace';
+	$saved_model_handle = 'bhaivatech-storefront-saved-products-model';
+	$saved_view_handle  = 'bhaivatech-storefront-saved-products';
 
 	wp_register_script(
 		$model_handle,
@@ -30,7 +32,23 @@ function bhaivatech_storefront_register_product_workspace(): void {
 		true
 	);
 
-	$shop_url = function_exists( 'wc_get_page_permalink' ) ? wc_get_page_permalink( 'shop' ) : home_url( '/' );
+	wp_register_script(
+		$saved_model_handle,
+		plugins_url( 'assets/js/saved-products-model.js', BHAIVATECH_STOREFRONT_CORE_FILE ),
+		array(),
+		BHAIVATECH_STOREFRONT_CORE_VERSION,
+		true
+	);
+
+	wp_register_script(
+		$saved_view_handle,
+		plugins_url( 'assets/js/saved-products.js', BHAIVATECH_STOREFRONT_CORE_FILE ),
+		array( $view_handle, $saved_model_handle ),
+		BHAIVATECH_STOREFRONT_CORE_VERSION,
+		true
+	);
+
+	$shop_url     = function_exists( 'wc_get_page_permalink' ) ? wc_get_page_permalink( 'shop' ) : home_url( '/' );
 	$is_logged_in = is_user_logged_in();
 
 	$config = array(
@@ -43,6 +61,7 @@ function bhaivatech_storefront_register_product_workspace(): void {
 		),
 		'saved'     => array(
 			'loggedIn'        => $is_logged_in,
+			'accountMax'      => BHAIVATECH_STOREFRONT_SAVED_MAX,
 			'collection'      => esc_url_raw( rest_url( 'bhaivatech-storefront/v1/saved-products' ) ),
 			'productTemplate' => esc_url_raw( rest_url( 'bhaivatech-storefront/v1/saved-products/__PRODUCT_ID__' ) ),
 			'restNonce'       => $is_logged_in ? wp_create_nonce( 'wp_rest' ) : '',
@@ -50,28 +69,44 @@ function bhaivatech_storefront_register_product_workspace(): void {
 		'shopUrl'   => esc_url_raw( $shop_url ),
 		'nonce'     => wp_create_nonce( 'wc_store_api' ),
 		'messages'  => array(
-			'requestFailed'    => __( 'Something went wrong. Try again.', 'bhaivatech-storefront-alpha' ),
-			'cartUnavailable'  => __( 'Cart could not be loaded. Search is still available.', 'bhaivatech-storefront-alpha' ),
-			'searching'        => __( 'Searching groceries…', 'bhaivatech-storefront-alpha' ),
-			'keepTyping'       => __( 'Type at least 2 characters to search.', 'bhaivatech-storefront-alpha' ),
-			'noResults'        => __( 'No exact matches.', 'bhaivatech-storefront-alpha' ),
-			'noResultsFor'     => __( 'No products found for “%s”.', 'bhaivatech-storefront-alpha' ),
-			'didYouMean'       => __( 'Did you mean “%s”?', 'bhaivatech-storefront-alpha' ),
-			'searchSuggestion' => __( 'Search %s', 'bhaivatech-storefront-alpha' ),
-			'browseProducts'   => __( 'Browse products', 'bhaivatech-storefront-alpha' ),
-			'results'          => __( '%d products found.', 'bhaivatech-storefront-alpha' ),
-			'oneItem'          => __( '1 item', 'bhaivatech-storefront-alpha' ),
-			'manyItems'        => __( '%d items', 'bhaivatech-storefront-alpha' ),
-			'outOfStock'       => __( 'Out of stock', 'bhaivatech-storefront-alpha' ),
-			'unavailable'      => __( 'Unavailable', 'bhaivatech-storefront-alpha' ),
-			'chooseOptions'    => __( 'Choose options', 'bhaivatech-storefront-alpha' ),
-			'add'              => __( 'Add', 'bhaivatech-storefront-alpha' ),
-			'quantityFor'      => __( 'Quantity for %s', 'bhaivatech-storefront-alpha' ),
-			'decrease'         => __( 'Decrease %s quantity', 'bhaivatech-storefront-alpha' ),
-			'increase'         => __( 'Increase %s quantity', 'bhaivatech-storefront-alpha' ),
-			'added'            => __( 'Added to cart.', 'bhaivatech-storefront-alpha' ),
-			'removed'          => __( 'Removed from cart.', 'bhaivatech-storefront-alpha' ),
-			'cartUpdated'      => __( 'Cart updated.', 'bhaivatech-storefront-alpha' ),
+			'requestFailed'         => __( 'Something went wrong. Try again.', 'bhaivatech-storefront-alpha' ),
+			'cartUnavailable'       => __( 'Cart could not be loaded. Search is still available.', 'bhaivatech-storefront-alpha' ),
+			'searching'             => __( 'Searching groceries…', 'bhaivatech-storefront-alpha' ),
+			'keepTyping'            => __( 'Type at least 2 characters to search.', 'bhaivatech-storefront-alpha' ),
+			'noResults'             => __( 'No exact matches.', 'bhaivatech-storefront-alpha' ),
+			'noResultsFor'          => __( 'No products found for “%s”.', 'bhaivatech-storefront-alpha' ),
+			'didYouMean'            => __( 'Did you mean “%s”?', 'bhaivatech-storefront-alpha' ),
+			'searchSuggestion'      => __( 'Search %s', 'bhaivatech-storefront-alpha' ),
+			'browseProducts'        => __( 'Browse products', 'bhaivatech-storefront-alpha' ),
+			'results'               => __( '%d products found.', 'bhaivatech-storefront-alpha' ),
+			'oneItem'               => __( '1 item', 'bhaivatech-storefront-alpha' ),
+			'manyItems'             => __( '%d items', 'bhaivatech-storefront-alpha' ),
+			'outOfStock'            => __( 'Out of stock', 'bhaivatech-storefront-alpha' ),
+			'unavailable'           => __( 'Unavailable', 'bhaivatech-storefront-alpha' ),
+			'chooseOptions'         => __( 'Choose options', 'bhaivatech-storefront-alpha' ),
+			'add'                   => __( 'Add', 'bhaivatech-storefront-alpha' ),
+			'addToCart'             => __( 'Add to cart', 'bhaivatech-storefront-alpha' ),
+			'quantityFor'           => __( 'Quantity for %s', 'bhaivatech-storefront-alpha' ),
+			'decrease'              => __( 'Decrease %s quantity', 'bhaivatech-storefront-alpha' ),
+			'increase'              => __( 'Increase %s quantity', 'bhaivatech-storefront-alpha' ),
+			'added'                 => __( 'Added to cart.', 'bhaivatech-storefront-alpha' ),
+			'removed'               => __( 'Removed from cart.', 'bhaivatech-storefront-alpha' ),
+			'cartUpdated'           => __( 'Cart updated.', 'bhaivatech-storefront-alpha' ),
+			'saveForLater'          => __( 'Save for later', 'bhaivatech-storefront-alpha' ),
+			'saved'                 => __( 'Saved', 'bhaivatech-storefront-alpha' ),
+			'saveProduct'           => __( 'Save %s for later', 'bhaivatech-storefront-alpha' ),
+			'removeFromSaved'       => __( 'Remove from Saved', 'bhaivatech-storefront-alpha' ),
+			'removeSavedProduct'    => __( 'Remove %s from Saved', 'bhaivatech-storefront-alpha' ),
+			'savedAdded'            => __( 'Saved for later.', 'bhaivatech-storefront-alpha' ),
+			'savedRemoved'          => __( 'Removed from Saved.', 'bhaivatech-storefront-alpha' ),
+			'savedLoading'          => __( 'Loading Saved products…', 'bhaivatech-storefront-alpha' ),
+			'savedEmpty'            => __( 'No products saved yet.', 'bhaivatech-storefront-alpha' ),
+			'savedUnavailable'      => __( 'Saved could not be loaded. Try again.', 'bhaivatech-storefront-alpha' ),
+			'savedUnavailableCount' => __( '%d saved products are currently unavailable.', 'bhaivatech-storefront-alpha' ),
+			'savedSessionOnly'      => __( 'Saved for this session only because browser storage is unavailable.', 'bhaivatech-storefront-alpha' ),
+			'savedGuestLimit'       => __( 'You can save up to 50 products on this browser.', 'bhaivatech-storefront-alpha' ),
+			'savedAccountScope'     => __( 'Saved to your account.', 'bhaivatech-storefront-alpha' ),
+			'savedBrowserScope'     => __( 'Saved on this browser.', 'bhaivatech-storefront-alpha' ),
 		),
 	);
 

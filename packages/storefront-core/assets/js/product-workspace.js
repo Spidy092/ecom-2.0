@@ -119,6 +119,7 @@
 			cartTotal.textContent = summary.total;
 			renderProducts();
 			focusProductAction( focusProductId, focusAction );
+			root.dispatchEvent( new CustomEvent( 'bhaivatech:cart-updated', { detail: { cart } } ) );
 		}
 
 		function makeTextElement( tag, className, text ) {
@@ -239,6 +240,7 @@
 			const recoveryPanel = makeRecoveryPanel();
 			if ( recoveryPanel ) {
 				results.appendChild( recoveryPanel );
+				root.dispatchEvent( new CustomEvent( 'bhaivatech:products-rendered' ) );
 				return;
 			}
 
@@ -275,6 +277,8 @@
 				article.appendChild( body );
 				results.appendChild( article );
 			} );
+
+			root.dispatchEvent( new CustomEvent( 'bhaivatech:products-rendered' ) );
 		}
 
 		async function loadCart() {
@@ -475,6 +479,21 @@
 				config.messages.cartUpdated,
 				productId,
 				action
+			);
+		} );
+
+		root.addEventListener( 'bhaivatech:saved-add-to-cart', function ( event ) {
+			const product = event.detail && event.detail.product ? event.detail.product : null;
+			if ( mutationInFlight || ! model.canDirectAdd( product ) ) {
+				return;
+			}
+
+			mutateCart(
+				endpoints.addItem,
+				{ id: Number( product.id ), quantity: 1 },
+				config.messages.added,
+				null,
+				null
 			);
 		} );
 
