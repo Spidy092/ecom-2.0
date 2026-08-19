@@ -26,6 +26,9 @@ storefront-theme-<version>.zip
     ├── style.css
     ├── theme.json
     ├── functions.php
+    ├── LICENSE.txt
+    ├── NOTICE.md
+    ├── THIRD-PARTY-NOTICES.md
     ├── templates/
     ├── parts/
     └── assets/
@@ -33,6 +36,9 @@ storefront-theme-<version>.zip
 storefront-core-<version>.zip
 └── storefront-core/
     ├── storefront-core.php
+    ├── LICENSE.txt
+    ├── NOTICE.md
+    ├── THIRD-PARTY-NOTICES.md
     ├── blocks/
     ├── includes/
     └── assets/
@@ -45,28 +51,28 @@ The archive must not wrap the package in repository/build folders such as `packa
 Before CI can emit the theme ZIP it must prove:
 
 - `style.css` exists at the theme root;
-- the `Theme Name`, `Version`, `Requires at least`, `Requires PHP`, `License` and `Text Domain` headers exist;
+- the `Theme Name`, `Version`, `Requires at least`, `Requires PHP`, `License`, `License URI` and `Text Domain` headers exist;
+- the Theme code license resolves to GPL-2.0-or-later under the package-license contract;
 - `theme.json` parses as JSON;
 - the expected block-theme templates/parts required by the release exist;
 - no test suite, cache, repository metadata, credentials or development-only artifacts are shipped;
-- a reviewed `LICENSE` file exists before any paid/public artifact is published;
-- required third-party notices are included before any redistributed dependency/asset requires them.
+- reviewed `LICENSE.txt`, `NOTICE.md` and generated `THIRD-PARTY-NOTICES.md` are present in source and inside the built ZIP.
 
-The package builder may run during engineering alpha before `LICENSE` is finalized, but release publication remains blocked until the licensing gate is satisfied.
+The complete package-license policy is in `docs/PACKAGE-LICENSE-CONTRACT.md`.
 
 ## 4. Core plugin package requirements
 
 Before CI can emit the Core ZIP it must prove:
 
 - `storefront-core.php` exists at the plugin root;
-- `Plugin Name`, `Version`, `Requires at least`, `Requires PHP`, `Requires Plugins` and `License` headers exist;
+- `Plugin Name`, `Version`, `Requires at least`, `Requires PHP`, `Requires Plugins`, `License` and `License URI` headers exist;
+- the Core code license resolves to GPL-2.0-or-later under the package-license contract;
 - `Requires Plugins` includes `woocommerce` while WooCommerce remains the mandatory commerce dependency;
 - the PHP version constant matches the plugin header version;
 - only runtime-required source/assets are shipped;
 - `tests/` is not shipped;
 - seller API keys, webhook secrets, build credentials and real customer/license data are never shipped;
-- a reviewed `LICENSE` file exists before any paid/public artifact is published;
-- required third-party notices are included before any redistributed dependency/asset requires them.
+- reviewed `LICENSE.txt`, `NOTICE.md` and generated `THIRD-PARTY-NOTICES.md` are present in source and inside the built ZIP.
 
 ## 5. Explicit exclusions from customer ZIPs
 
@@ -117,6 +123,9 @@ Every automated package build emits a machine-readable `release-manifest.json` c
 - Theme artifact filename/version/SHA-256/size;
 - Core artifact filename/version/SHA-256/size;
 - package-root slug for each artifact;
+- normalized code license (`GPL-2.0-or-later`);
+- canonical license URI;
+- `LICENSE.txt`, `NOTICE.md` and `THIRD-PARTY-NOTICES.md` member names;
 - release status (`engineering-alpha` until explicitly promoted).
 
 The build also emits `SHA256SUMS` so support/release automation can verify package integrity without opening the archives.
@@ -133,12 +142,14 @@ If a later compiled asset pipeline introduces nondeterministic output, the relea
 
 ## 9. Paid-release gate
 
-Engineering-alpha package generation is allowed before branding/licensing/provider decisions are complete.
+Engineering-alpha package generation is allowed before branding/provider/legal decisions are complete, but the mechanical Theme/Core license files are no longer optional.
 
 A **paid/public** artifact remains blocked until all are true:
 
 - final package/product names are approved;
-- theme and plugin license files are reviewed;
+- package-license CI proves Theme/Core headers, full GPLv2 copies and notice surfaces are intact;
+- final legal copyright holder/entity is confirmed;
+- customer-facing license treatment of non-code starter/demo assets is confirmed;
 - third-party asset/dependency inventory is complete;
 - demo assets have redistribution rights recorded;
 - supported WordPress/WooCommerce/PHP matrix is recorded;
@@ -147,6 +158,8 @@ A **paid/public** artifact remains blocked until all are true:
 - #14 records the commercial entitlement/update provider decision;
 - checkout/download/update path is proven through the selected provider;
 - release notes/support/refund/update terms are customer-ready.
+
+A green package-license verifier is evidence of packaging consistency, not a claim of legal clearance.
 
 ## 10. Buyer UX contract
 
