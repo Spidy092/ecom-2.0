@@ -13,9 +13,9 @@ ROOT = Path(__file__).resolve().parent
 BASE = (ROOT / "index.html").as_uri()
 
 VARIANTS = {
-    "A": "Build the grocery store people can shop quickly.",
-    "B": "Launch a serious grocery store without assembling a plugin pile.",
-    "C": "Make next week’s grocery order easier than this week’s.",
+    "A": "Launch a grocery WooCommerce store built around the weekly basket.",
+    "B": "Launch one focused grocery storefront without assembling a plugin pile.",
+    "C": "Start with a grocery storefront designed for shopping, setup, and maintenance.",
 }
 
 
@@ -102,7 +102,7 @@ def run():
 
         browser.close()
 
-    print("Sales Page V0 research smoke checks passed for variants A/B/C")
+    print("Sales Page V0 research smoke checks passed for buyer-value variants A/B/C")
 
 
 if __name__ == "__main__":
