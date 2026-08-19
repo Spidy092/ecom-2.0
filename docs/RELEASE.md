@@ -32,6 +32,12 @@ PR
 
 The pipeline should fail fast on cheap checks and run slower browser tests after the basic build is valid.
 
+### Engineering-alpha compatibility lanes
+
+The engineering-alpha browser E2E lane is a **release-gating/reproducibility lane**. It must pin exact WordPress, WooCommerce and PHP versions in repository configuration and print those versions in CI before running shopper flows. A passing commit should therefore mean the same tested platform combination over time.
+
+A future **latest/forward-compatibility lane** may intentionally follow the newest supported WordPress/WooCommerce releases, but it must be separately named and non-release-gating until the new platform versions are explicitly adopted into the supported compatibility matrix. Do not use `core: null` in the release-gating wp-env configuration.
+
 ## 4. Release candidate flow
 
 ```text
