@@ -1,0 +1,179 @@
+body {
+	padding-bottom: 4.75rem;
+}
+
+.grovia-site-header {
+	position: sticky;
+	top: 0;
+	z-index: 20;
+	background: rgba(255, 255, 255, 0.96);
+	border-bottom: 1px solid var(--wp--preset--color--line);
+	backdrop-filter: blur(12px);
+}
+
+.grovia-shell {
+	padding-top: clamp(1rem, 4vw, 2rem);
+	padding-bottom: 2rem;
+}
+
+.grovia-context {
+	border: 1px solid var(--wp--preset--color--line);
+	border-radius: 0.85rem;
+	padding: 0.8rem 1rem;
+	background: var(--wp--preset--color--soft);
+}
+
+.grovia-context p {
+	margin: 0;
+}
+
+.grovia-kicker {
+	font-size: 0.78rem;
+	font-weight: 700;
+	letter-spacing: 0.06em;
+	text-transform: uppercase;
+}
+
+.grovia-search .wp-block-search__inside-wrapper {
+	min-height: 3.4rem;
+	border: 2px solid var(--wp--preset--color--ink);
+	border-radius: 0.9rem;
+	padding: 0.25rem;
+}
+
+.grovia-search .wp-block-search__input {
+	font-size: 1rem;
+	border: 0;
+}
+
+.grovia-aisle-rail {
+	display: flex;
+	gap: 0.6rem;
+	overflow-x: auto;
+	padding: 0.2rem 0 0.65rem;
+	scrollbar-width: thin;
+}
+
+.grovia-aisle-rail a {
+	display: inline-flex;
+	align-items: center;
+	min-height: 2.7rem;
+	padding: 0 0.85rem;
+	border: 1px solid var(--wp--preset--color--line);
+	border-radius: 999px;
+	white-space: nowrap;
+	text-decoration: none;
+	font-weight: 650;
+}
+
+.grovia-aisle-rail a:focus-visible,
+.grovia-bottom-navigation a:focus-visible,
+.woocommerce a.button:focus-visible,
+.woocommerce button.button:focus-visible {
+	outline: 3px solid var(--wp--preset--color--accent);
+	outline-offset: 3px;
+}
+
+.grovia-product-shelf ul.products {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 0.8rem;
+	margin: 0;
+}
+
+.grovia-product-shelf ul.products::before,
+.grovia-product-shelf ul.products::after {
+	display: none;
+}
+
+.grovia-product-shelf ul.products li.product {
+	width: auto;
+	margin: 0;
+	padding: 0.8rem;
+	border-top: 2px solid var(--wp--preset--color--ink);
+	background: var(--wp--preset--color--paper);
+}
+
+.grovia-product-shelf ul.products li.product img {
+	aspect-ratio: 1 / 1;
+	object-fit: cover;
+	margin-bottom: 0.7rem;
+	background: var(--wp--preset--color--soft);
+}
+
+.grovia-product-shelf ul.products li.product .woocommerce-loop-product__title {
+	font-size: 0.98rem;
+	line-height: 1.25;
+	padding: 0;
+	margin-bottom: 0.35rem;
+}
+
+.grovia-product-shelf ul.products li.product .price {
+	font-size: 0.95rem;
+	font-weight: 750;
+	color: var(--wp--preset--color--ink);
+}
+
+.grovia-product-shelf ul.products li.product .button {
+	width: 100%;
+	min-height: 2.8rem;
+	margin-top: 0.7rem;
+	border-radius: 0.7rem;
+	text-align: center;
+	background: var(--wp--preset--color--accent);
+	color: var(--wp--preset--color--paper);
+}
+
+.grovia-bottom-navigation {
+	position: fixed;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	z-index: 30;
+	background: var(--wp--preset--color--paper);
+	border-top: 1px solid var(--wp--preset--color--line);
+	padding: 0.4rem max(0.5rem, env(safe-area-inset-right)) max(0.4rem, env(safe-area-inset-bottom)) max(0.5rem, env(safe-area-inset-left));
+}
+
+.grovia-bottom-navigation .wp-block-navigation__container {
+	width: 100%;
+	justify-content: space-around;
+	gap: 0.2rem;
+}
+
+.grovia-bottom-navigation .wp-block-navigation-item__content {
+	min-height: 2.75rem;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	padding: 0.35rem 0.55rem;
+	font-size: 0.78rem;
+	font-weight: 700;
+	text-decoration: none;
+}
+
+@media (min-width: 760px) {
+	body {
+		padding-bottom: 0;
+	}
+
+	.grovia-product-shelf ul.products {
+		grid-template-columns: repeat(4, minmax(0, 1fr));
+		gap: 1rem;
+	}
+
+	.grovia-bottom-navigation {
+		display: none;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	*,
+	*::before,
+	*::after {
+		scroll-behavior: auto !important;
+		transition-duration: 0.01ms !important;
+		animation-duration: 0.01ms !important;
+		animation-iteration-count: 1 !important;
+	}
+}
