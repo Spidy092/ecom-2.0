@@ -11,10 +11,11 @@ defined( 'ABSPATH' ) || exit;
  * Register the internal product-workspace block and its client assets.
  */
 function bhaivatech_storefront_register_product_workspace(): void {
-	$model_handle       = 'bhaivatech-storefront-product-workspace-model';
-	$view_handle        = 'bhaivatech-storefront-product-workspace';
-	$saved_model_handle = 'bhaivatech-storefront-saved-products-model';
-	$saved_view_handle  = 'bhaivatech-storefront-saved-products';
+	$model_handle          = 'bhaivatech-storefront-product-workspace-model';
+	$view_handle           = 'bhaivatech-storefront-product-workspace';
+	$saved_model_handle    = 'bhaivatech-storefront-saved-products-model';
+	$saved_view_handle     = 'bhaivatech-storefront-saved-products';
+	$delivery_view_handle  = 'bhaivatech-storefront-delivery-serviceability';
 
 	wp_register_script(
 		$model_handle,
@@ -48,11 +49,20 @@ function bhaivatech_storefront_register_product_workspace(): void {
 		true
 	);
 
-	$shop_url     = function_exists( 'wc_get_page_permalink' ) ? wc_get_page_permalink( 'shop' ) : home_url( '/' );
-	$is_logged_in = is_user_logged_in();
+	wp_register_script(
+		$delivery_view_handle,
+		plugins_url( 'assets/js/delivery-serviceability.js', BHAIVATECH_STOREFRONT_CORE_FILE ),
+		array( $view_handle ),
+		BHAIVATECH_STOREFRONT_CORE_VERSION,
+		true
+	);
+
+	$shop_url              = function_exists( 'wc_get_page_permalink' ) ? wc_get_page_permalink( 'shop' ) : home_url( '/' );
+	$is_logged_in          = is_user_logged_in();
+	$serviceability_config = bhaivatech_storefront_serviceability_public_config();
 
 	$config = array(
-		'endpoints' => array(
+		'endpoints'      => array(
 			'products'       => esc_url_raw( rest_url( 'wc/store/v1/products' ) ),
 			'cart'           => esc_url_raw( rest_url( 'wc/store/v1/cart' ) ),
 			'addItem'        => esc_url_raw( rest_url( 'wc/store/v1/cart/add-item' ) ),
@@ -60,16 +70,17 @@ function bhaivatech_storefront_register_product_workspace(): void {
 			'removeItem'     => esc_url_raw( rest_url( 'wc/store/v1/cart/remove-item' ) ),
 			'serviceability' => esc_url_raw( rest_url( 'bhaivatech-storefront/v1/serviceability' ) ),
 		),
-		'saved'     => array(
+		'serviceability' => $serviceability_config,
+		'saved'          => array(
 			'loggedIn'        => $is_logged_in,
 			'accountMax'      => BHAIVATECH_STOREFRONT_SAVED_MAX,
 			'collection'      => esc_url_raw( rest_url( 'bhaivatech-storefront/v1/saved-products' ) ),
 			'productTemplate' => esc_url_raw( rest_url( 'bhaivatech-storefront/v1/saved-products/__PRODUCT_ID__' ) ),
 			'restNonce'       => $is_logged_in ? wp_create_nonce( 'wp_rest' ) : '',
 		),
-		'shopUrl'   => esc_url_raw( $shop_url ),
-		'nonce'     => wp_create_nonce( 'wc_store_api' ),
-		'messages'  => array(
+		'shopUrl'        => esc_url_raw( $shop_url ),
+		'nonce'          => wp_create_nonce( 'wc_store_api' ),
+		'messages'       => array(
 			'requestFailed'         => __( 'Something went wrong. Try again.', 'bhaivatech-storefront-alpha' ),
 			'cartUnavailable'       => __( 'Cart could not be loaded. Search is still available.', 'bhaivatech-storefront-alpha' ),
 			'searching'             => __( 'Searching groceries…', 'bhaivatech-storefront-alpha' ),
@@ -108,6 +119,16 @@ function bhaivatech_storefront_register_product_workspace(): void {
 			'savedGuestLimit'       => __( 'You can save up to 50 products on this browser.', 'bhaivatech-storefront-alpha' ),
 			'savedAccountScope'     => __( 'Saved to your account.', 'bhaivatech-storefront-alpha' ),
 			'savedBrowserScope'     => __( 'Saved on this browser.', 'bhaivatech-storefront-alpha' ),
+			'deliveryChecking'      => __( 'Checking delivery area…', 'bhaivatech-storefront-alpha' ),
+			'deliveryServed'        => __( 'We serve this area.', 'bhaivatech-storefront-alpha' ),
+			'deliveryServedDetail'  => __( 'Shipping options are confirmed at checkout.', 'bhaivatech-storefront-alpha' ),
+			'deliveryNotServed'     => __( 'We do not currently serve this area.', 'bhaivatech-storefront-alpha' ),
+			'deliveryNeedCountry'   => __( 'Choose a country or region to check delivery.', 'bhaivatech-storefront-alpha' ),
+			'deliveryNeedState'     => __( 'Choose a state or region to check this area.', 'bhaivatech-storefront-alpha' ),
+			'deliveryNeedPostcode'  => __( 'Enter a postcode to check delivery.', 'bhaivatech-storefront-alpha' ),
+			'deliveryUnknown'       => __( 'We could not check this area right now. Try again.', 'bhaivatech-storefront-alpha' ),
+			'deliveryCheck'         => __( 'Check area', 'bhaivatech-storefront-alpha' ),
+			'deliveryChooseState'   => __( 'Choose state or region', 'bhaivatech-storefront-alpha' ),
 		),
 	);
 

@@ -68,6 +68,7 @@ jobs:
           node --check packages/storefront-core/assets/js/product-workspace.js
           node --check packages/storefront-core/assets/js/saved-products-model.js
           node --check packages/storefront-core/assets/js/saved-products.js
+          node --check packages/storefront-core/assets/js/delivery-serviceability.js
       - name: Validate block metadata JSON
         run: node -e "JSON.parse(require('fs').readFileSync('packages/storefront-core/blocks/product-workspace/block.json','utf8'))"
       - name: Run storefront model tests
@@ -106,9 +107,11 @@ jobs:
         run: npx -y @wordpress/env@10.39.0 run cli wp eval-file wp-content/plugins/storefront-core/tests/e2e/seed-serviceability.php
       - name: Exercise multi-country serviceability API in Chrome
         run: python packages/storefront-core/tests/e2e/serviceability-api.spec.py
+      - name: Exercise multi-country delivery UI in Chrome
+        run: python packages/storefront-core/tests/e2e/serviceability-ui.spec.py
       - name: Switch fixture to one shipping country
         run: npx -y @wordpress/env@10.39.0 run cli wp eval "update_option( 'woocommerce_specific_ship_to_countries', array( 'IN' ) );"
-      - name: Exercise postcode-only single-country inference in Chrome
+      - name: Exercise postcode-only single-country inference and UI in Chrome
         run: python packages/storefront-core/tests/e2e/serviceability-single-country.spec.py
       - name: Disable WooCommerce shipping
         run: npx -y @wordpress/env@10.39.0 run cli wp eval "update_option( 'woocommerce_ship_to_countries', 'disabled' );"
