@@ -49,7 +49,6 @@ jobs:
           npx -y @wp-playground/cli@3.1.48 server \
             --blueprint=research/playground/store-owner-validation.blueprint.json \
             --port=9400 \
-            --skip-browser \
             --verbosity=normal \
             > /tmp/store-owner-playground.log 2>&1 &
           echo $! > /tmp/store-owner-playground.pid
