@@ -23,32 +23,37 @@
 		shell.className = 'bt-product-filters';
 		shell.dataset.btFilters = '';
 		shell.setAttribute( 'aria-busy', 'false' );
-
-		const panelId = 'bt-product-filters-panel-' + String( instance );
 		shell.innerHTML =
 			'<div class="bt-product-filters__toolbar">' +
-				'<button type="button" class="bt-product-filters__toggle" data-bt-filters-toggle disabled aria-expanded="false" aria-controls="' + panelId + '">' +
-					'<span>' + ( messages.filtersToggle || 'Filters' ) + '</span>' +
-					'<span class="bt-product-filters__count" data-bt-filters-count hidden></span>' +
-				'</button>' +
+				'<button type="button" class="bt-product-filters__toggle" data-bt-filters-toggle disabled aria-expanded="false"><span data-bt-filters-toggle-label></span><span class="bt-product-filters__count" data-bt-filters-count hidden></span></button>' +
 			'</div>' +
-			'<div id="' + panelId + '" class="bt-product-filters__panel" data-bt-filters-panel hidden>' +
+			'<div class="bt-product-filters__panel" data-bt-filters-panel hidden>' +
 				'<p class="bt-product-filters__state" role="status" aria-live="polite" data-bt-filters-state></p>' +
 				'<form class="bt-product-filters__form" data-bt-filters-form>' +
-					'<label class="bt-product-filters__stock"><input type="checkbox" data-bt-filter-stock><span>' + ( messages.filtersInStock || 'In stock only' ) + '</span></label>' +
-					'<fieldset class="bt-product-filters__price" data-bt-filter-price-group hidden><legend>' + ( messages.filtersPrice || 'Price' ) + '</legend>' +
+					'<label class="bt-product-filters__stock"><input type="checkbox" data-bt-filter-stock><span data-bt-filter-stock-label></span></label>' +
+					'<fieldset class="bt-product-filters__price" data-bt-filter-price-group hidden><legend data-bt-filter-price-label></legend>' +
 						'<div class="bt-product-filters__price-inputs">' +
-							'<label><span>' + ( messages.filtersMinPrice || 'Minimum price' ) + '</span><input type="number" min="0" inputmode="decimal" data-bt-filter-min-price></label>' +
-							'<label><span>' + ( messages.filtersMaxPrice || 'Maximum price' ) + '</span><input type="number" min="0" inputmode="decimal" data-bt-filter-max-price></label>' +
+							'<label><span data-bt-filter-min-label></span><input type="number" min="0" inputmode="decimal" data-bt-filter-min-price></label>' +
+							'<label><span data-bt-filter-max-label></span><input type="number" min="0" inputmode="decimal" data-bt-filter-max-price></label>' +
 						'</div>' +
 					'</fieldset>' +
 					'<div class="bt-product-filters__attributes" data-bt-filter-attributes></div>' +
-					'<div class="bt-product-filters__actions">' +
-						'<button type="submit" data-bt-filters-apply>' + ( messages.filtersApply || 'Apply filters' ) + '</button>' +
-						'<button type="button" data-bt-filters-clear disabled>' + ( messages.filtersClear || 'Clear filters' ) + '</button>' +
-					'</div>' +
+					'<div class="bt-product-filters__actions"><button type="submit" data-bt-filters-apply></button><button type="button" data-bt-filters-clear disabled></button></div>' +
 				'</form>' +
 			'</div>';
+
+		const panelId = 'bt-product-filters-panel-' + String( instance );
+		const toggle = shell.querySelector( '[data-bt-filters-toggle]' );
+		const panel = shell.querySelector( '[data-bt-filters-panel]' );
+		panel.id = panelId;
+		toggle.setAttribute( 'aria-controls', panelId );
+		shell.querySelector( '[data-bt-filters-toggle-label]' ).textContent = messages.filtersToggle || 'Filters';
+		shell.querySelector( '[data-bt-filter-stock-label]' ).textContent = messages.filtersInStock || 'In stock only';
+		shell.querySelector( '[data-bt-filter-price-label]' ).textContent = messages.filtersPrice || 'Price';
+		shell.querySelector( '[data-bt-filter-min-label]' ).textContent = messages.filtersMinPrice || 'Minimum price';
+		shell.querySelector( '[data-bt-filter-max-label]' ).textContent = messages.filtersMaxPrice || 'Maximum price';
+		shell.querySelector( '[data-bt-filters-apply]' ).textContent = messages.filtersApply || 'Apply filters';
+		shell.querySelector( '[data-bt-filters-clear]' ).textContent = messages.filtersClear || 'Clear filters';
 		results.before( shell );
 		return shell;
 	}
