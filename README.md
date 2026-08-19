@@ -8,9 +8,9 @@ The first objective is deliberately small: create one exceptional grocery-first 
 
 ## Current phase
 
-**Phase 0 — research, product and business definition.**
+**Phase 0 — research, product and business definition, with a branch-only interaction prototype now under validation.**
 
-No production theme implementation should begin until the relevant market/customer research, V1 requirements, UX thesis, technical boundaries, security baseline, licensing approach, and release process are reviewed.
+Production implementation should not broaden beyond reviewed market/customer research, V1 requirements, UX thesis, technical boundaries, security baseline, licensing approach, and release process. The current `feat/aisleflow-foundation` branch is intentionally a prototype of the already-researched critical grocery flow, not a declaration that V1 implementation is complete.
 
 ## Non-generic rule
 
