@@ -21,18 +21,10 @@ if ( function_exists( 'is_cart' ) && is_cart() ) {
 
 $home_url    = home_url( '/' );
 $search_url  = $home_url . '#grocery-search';
-$browse_url  = function_exists( 'wc_get_page_permalink' ) ? wc_get_page_permalink( 'shop' ) : $home_url;
+$browse_url  = $home_url . '#grocery-browse';
 $cart_url    = function_exists( 'wc_get_cart_url' ) ? wc_get_cart_url() : $home_url;
 $account_url = function_exists( 'wc_get_page_permalink' ) ? wc_get_page_permalink( 'myaccount' ) : $home_url;
 $cart_count  = WC()->cart ? (int) WC()->cart->get_cart_contents_count() : 0;
-
-$is_browse_current = function_exists( 'is_shop' ) && (
-	is_shop() ||
-	( function_exists( 'is_product_category' ) && is_product_category() ) ||
-	( function_exists( 'is_product_tag' ) && is_product_tag() ) ||
-	( function_exists( 'is_product' ) && is_product() )
-);
-
 $is_account_current = function_exists( 'is_account_page' ) && is_account_page();
 ?>
 <nav class="bt-mobile-shopping-nav" aria-label="<?php echo esc_attr_x( 'Shopping', 'mobile storefront navigation label', 'bhaivatech-storefront-alpha' ); ?>" data-bt-mobile-shopping-nav>
@@ -44,7 +36,7 @@ $is_account_current = function_exists( 'is_account_page' ) && is_account_page();
 		<span><?php esc_html_e( 'Search', 'bhaivatech-storefront-alpha' ); ?></span>
 	</a>
 
-	<a class="bt-mobile-shopping-nav__item" href="<?php echo esc_url( $browse_url ); ?>"<?php echo $is_browse_current ? ' aria-current="page"' : ''; ?>>
+	<a class="bt-mobile-shopping-nav__item" href="<?php echo esc_url( $browse_url ); ?>" data-bt-mobile-browse-link>
 		<span><?php esc_html_e( 'Browse', 'bhaivatech-storefront-alpha' ); ?></span>
 	</a>
 
@@ -53,6 +45,8 @@ $is_account_current = function_exists( 'is_account_page' ) && is_account_page();
 		<span
 			class="bt-mobile-shopping-nav__badge"
 			data-bt-mobile-cart-count
+			data-label-one="<?php echo esc_attr__( '1 item in cart', 'bhaivatech-storefront-alpha' ); ?>"
+			data-label-many="<?php echo esc_attr__( '%d items in cart', 'bhaivatech-storefront-alpha' ); ?>"
 			aria-label="<?php echo esc_attr( sprintf( _n( '%d item in cart', '%d items in cart', $cart_count, 'bhaivatech-storefront-alpha' ), $cart_count ) ); ?>"
 		>
 			<?php echo esc_html( (string) $cart_count ); ?>

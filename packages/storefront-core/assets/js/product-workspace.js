@@ -138,7 +138,6 @@
 
 			const panel = document.createElement( 'div' );
 			panel.className = 'bt-search-recovery';
-
 			panel.appendChild(
 				makeTextElement(
 					'p',
@@ -166,10 +165,9 @@
 
 			const browse = document.createElement( 'a' );
 			browse.className = 'bt-search-recovery__browse';
-			browse.href = config.shopUrl || '/';
+			browse.href = '#grocery-browse';
 			browse.textContent = config.messages.browseProducts;
 			panel.appendChild( browse );
-
 			return panel;
 		}
 
@@ -281,6 +279,38 @@
 			root.dispatchEvent( new CustomEvent( 'bhaivatech:products-rendered' ) );
 		}
 
+		function stopSearchForBrowse() {
+			window.clearTimeout( searchTimer );
+			if ( searchController ) {
+				searchController.abort();
+				searchController = null;
+			}
+			searchInput.value = '';
+			lastSearchQuery = '';
+			recoverySuggestion = '';
+		}
+
+		root.addEventListener( 'bhaivatech:browse-loading', function ( event ) {
+			stopSearchForBrowse();
+			products = [];
+			renderProducts();
+			setStatus( event.detail && event.detail.message ? event.detail.message : config.messages.requestFailed );
+		} );
+
+		root.addEventListener( 'bhaivatech:browse-products', function ( event ) {
+			stopSearchForBrowse();
+			products = event.detail && Array.isArray( event.detail.products ) ? event.detail.products : [];
+			renderProducts();
+			setStatus( event.detail && event.detail.message ? event.detail.message : config.messages.browseChooseDepartment );
+		} );
+
+		root.addEventListener( 'bhaivatech:browse-error', function ( event ) {
+			stopSearchForBrowse();
+			products = [];
+			renderProducts();
+			setStatus( event.detail && event.detail.message ? event.detail.message : config.messages.requestFailed );
+		} );
+
 		async function loadCart() {
 			beginBusy();
 			try {
@@ -308,9 +338,6 @@
 				if ( error.name === 'AbortError' ) {
 					throw error;
 				}
-
-				// Recovery is optional. A failed suggestion lookup must not turn a
-				// successful exact zero-result search into a generic error state.
 				return '';
 			}
 		}
@@ -385,8 +412,6 @@
 				if ( error.cart ) {
 					reconcileCart( error.cart, focusProductId, focusAction );
 				} else {
-					// The clicked control is disabled before the request. Re-rendering
-					// from the last authoritative cart state restores an operable UI.
 					renderProducts();
 					focusProductAction( focusProductId, focusAction );
 				}
@@ -400,6 +425,7 @@
 		searchInput.addEventListener( 'input', function () {
 			window.clearTimeout( searchTimer );
 			const query = searchInput.value.trim();
+			root.dispatchEvent( new CustomEvent( 'bhaivatech:search-activated' ) );
 
 			if ( query.length < model.MIN_QUERY_LENGTH ) {
 				if ( searchController ) {
@@ -431,6 +457,7 @@
 				if ( suggestedQuery ) {
 					searchInput.value = suggestedQuery;
 					searchInput.focus();
+					root.dispatchEvent( new CustomEvent( 'bhaivatech:search-activated' ) );
 					search( suggestedQuery );
 				}
 				return;

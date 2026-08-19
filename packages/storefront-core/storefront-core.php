@@ -16,6 +16,7 @@ const BHAIVATECH_STOREFRONT_CORE_VERSION = '0.0.4-alpha';
 const BHAIVATECH_STOREFRONT_CORE_FILE    = __FILE__;
 
 require_once __DIR__ . '/includes/product-workspace.php';
+require_once __DIR__ . '/includes/mobile-shopping-nav.php';
 require_once __DIR__ . '/includes/saved-products.php';
 require_once __DIR__ . '/includes/serviceability.php';
 
@@ -42,6 +43,7 @@ function bhaivatech_storefront_core_bootstrap(): void {
 	}
 
 	add_action( 'init', 'bhaivatech_storefront_register_product_workspace' );
+	add_action( 'init', 'bhaivatech_storefront_register_mobile_shopping_nav' );
 	add_action( 'rest_api_init', 'bhaivatech_storefront_register_saved_routes' );
 	add_action( 'rest_api_init', 'bhaivatech_storefront_register_serviceability_route' );
 

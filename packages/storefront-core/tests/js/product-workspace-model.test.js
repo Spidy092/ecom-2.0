@@ -22,6 +22,37 @@ test( 'product search preserves WordPress plain-permalink rest_route endpoints',
 	assert.equal( url.searchParams.get( 'per_page' ), '12' );
 } );
 
+test( 'department categories query requests only bounded non-empty top-level terms', () => {
+	const url = new URL( model.buildTopCategoriesUrl(
+		'https://example.test/?rest_route=%2Fwc%2Fstore%2Fv1%2Fproducts%2Fcategories'
+	) );
+	assert.equal( url.searchParams.get( 'rest_route' ), '/wc/store/v1/products/categories' );
+	assert.equal( url.searchParams.get( 'parent' ), '0' );
+	assert.equal( url.searchParams.get( 'hide_empty' ), 'true' );
+	assert.equal( url.searchParams.get( 'per_page' ), '100' );
+	assert.equal( url.searchParams.get( 'orderby' ), 'name' );
+	assert.equal( url.searchParams.get( 'order' ), 'asc' );
+} );
+
+test( 'department product query is bounded and catalog-scoped', () => {
+	const url = new URL( model.buildDepartmentProductsUrl(
+		'https://example.test/wp-json/wc/store/v1/products',
+		{ id: 44, slug: 'produce' }
+	) );
+	assert.equal( url.searchParams.get( 'category' ), '44' );
+	assert.equal( url.searchParams.get( 'per_page' ), '12' );
+	assert.equal( url.searchParams.get( 'catalog_visibility' ), 'catalog' );
+	assert.equal( model.buildDepartmentProductsUrl( 'https://example.test/wp-json/wc/store/v1/products', null ), '' );
+} );
+
+test( 'adaptive department presentation switches after eight top-level categories', () => {
+	assert.equal( model.departmentPresentation( 2 ), 'rail' );
+	assert.equal( model.departmentPresentation( 8 ), 'rail' );
+	assert.equal( model.departmentPresentation( 9 ), 'chooser' );
+	assert.equal( model.departmentPresentation( 25 ), 'chooser' );
+	assert.equal( model.departmentPresentation( 1 ), 'chooser' );
+} );
+
 test( 'Saved product query uses supported include ordering and remains bounded', () => {
 	const ids = [ 9, '7', 9, 3, 0, -1 ];
 	const url = new URL( model.buildProductsByIdsUrl(
