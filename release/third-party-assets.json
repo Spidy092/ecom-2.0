@@ -35,9 +35,37 @@
       "vendors"
     ]
   },
-  "items": [],
+  "items": [
+    {
+      "id": "modern-grocery-first-party-product-images-v1",
+      "name": "Modern Grocery first-party product image set",
+      "version": "1",
+      "type": "image",
+      "author": "Modern Grocery product team",
+      "source_url": "https://github.com/Spidy092/ecom-2.0/issues/60",
+      "license": "First-party controlled commercial product assets",
+      "evidence": "Per-file generation references, rights review, fixture mapping and approval are recorded in release/demo-assets.json. These WebPs are optimized derivatives of images generated specifically for this starter and contain no identifiable people, third-party logos or readable branded packaging.",
+      "paths": [
+        "packages/storefront-core/starter-assets/modern-grocery/milk.webp",
+        "packages/storefront-core/starter-assets/modern-grocery/bread.webp",
+        "packages/storefront-core/starter-assets/modern-grocery/tomato.webp",
+        "packages/storefront-core/starter-assets/modern-grocery/apple.webp",
+        "packages/storefront-core/starter-assets/modern-grocery/lentils.webp",
+        "packages/storefront-core/starter-assets/modern-grocery/rice-pack.webp"
+      ],
+      "surfaces": [
+        "core",
+        "starter-demo",
+        "sales-demo"
+      ],
+      "modified": true,
+      "notice_required": false,
+      "redistribution_status": "approved",
+      "reviewer": "Product engineering review",
+      "reviewed_on": "2026-08-19"
+    }
+  ],
   "paid_release_blockers": [
-    "first canonical demo image batch created and reviewed",
     "theme and core LICENSE files reviewed",
     "all redistributed third-party entries approved with evidence",
     "human review completed for ambiguous or proprietary asset licenses"
@@ -45,7 +73,7 @@
   "notes": [
     "No third-party font, photo, illustration, icon pack or vendored runtime library is currently approved for redistribution in the engineering-alpha Theme/Core packages.",
     "V1 typography uses system fonts and the product icon direction is first-party minimal SVG; see docs/VISUAL-ASSET-STRATEGY.md.",
-    "Canonical first-party demo imagery is governed separately by release/demo-assets.json so product-owned/generated images are not misrepresented as third-party dependencies.",
-    "An empty items array remains intentional until a real third-party dependency is introduced."
+    "Canonical first-party demo imagery is governed in detail by release/demo-assets.json. The package inventory records the same exact binary paths because every license-sensitive customer-package file must be explicitly owned; this does not classify the images as a third-party dependency.",
+    "Future third-party dependencies still require their own evidence-backed inventory entries and notices where applicable."
   ]
 }

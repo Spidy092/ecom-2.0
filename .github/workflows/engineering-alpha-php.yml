@@ -8,6 +8,7 @@ on:
       - 'packages/**/*.json'
       - 'packages/**/*.css'
       - 'packages/**/*.py'
+      - 'packages/**/*.webp'
       - '.wp-env.json'
       - '.github/workflows/engineering-alpha-php.yml'
   push:
@@ -19,6 +20,7 @@ on:
       - 'packages/**/*.json'
       - 'packages/**/*.css'
       - 'packages/**/*.py'
+      - 'packages/**/*.webp'
       - '.wp-env.json'
       - '.github/workflows/engineering-alpha-php.yml'
 
@@ -76,6 +78,7 @@ jobs:
           node -e "JSON.parse(require('fs').readFileSync('packages/storefront-theme/theme.json','utf8'))"
           node -e "JSON.parse(require('fs').readFileSync('packages/storefront-core/blocks/product-workspace/block.json','utf8'))"
           node -e "JSON.parse(require('fs').readFileSync('packages/storefront-core/blocks/mobile-shopping-nav/block.json','utf8'))"
+          node -e "JSON.parse(require('fs').readFileSync('packages/storefront-core/starter-assets/modern-grocery/manifest.json','utf8'))"
       - name: Run storefront model tests
         run: node --test packages/storefront-core/tests/js/*.test.js
 
@@ -96,12 +99,16 @@ jobs:
         run: google-chrome --version
       - name: Start pinned WordPress + WooCommerce environment
         run: npx -y @wordpress/env@10.39.0 start
-      - name: Activate alpha theme and seed deterministic products
+      - name: Activate alpha theme and seed deterministic products twice
         run: |
           npx -y @wordpress/env@10.39.0 run cli wp plugin status woocommerce
           npx -y @wordpress/env@10.39.0 run cli wp plugin status storefront-core
           npx -y @wordpress/env@10.39.0 run cli wp theme activate storefront-theme
           npx -y @wordpress/env@10.39.0 run cli wp eval-file wp-content/plugins/storefront-core/tests/e2e/seed-products.php
+          # Repeat once: stable asset ownership must reuse Media attachments rather than duplicate them.
+          npx -y @wordpress/env@10.39.0 run cli wp eval-file wp-content/plugins/storefront-core/tests/e2e/seed-products.php
+      - name: Verify deterministic product image ownership after retry
+        run: npx -y @wordpress/env@10.39.0 run cli wp eval-file wp-content/plugins/storefront-core/tests/e2e/demo-product-assets.spec.php
       - name: Exercise real Store API session in Chrome
         run: python packages/storefront-core/tests/e2e/store-api-slice.spec.py
       - name: Exercise Saved auth and ownership boundaries in Chrome
@@ -112,7 +119,7 @@ jobs:
         run: python packages/storefront-core/tests/e2e/mobile-shopping-nav.spec.py
       - name: Exercise adaptive department rail in Chrome
         run: python packages/storefront-core/tests/e2e/department-browse.spec.py
-      - name: Exercise visual system at target viewports
+      - name: Exercise visual system and product image crops at target viewports
         run: python packages/storefront-core/tests/e2e/visual-system.spec.py
       - name: Expand fixture to large department taxonomy
         run: npx -y @wordpress/env@10.39.0 run cli wp eval-file wp-content/plugins/storefront-core/tests/e2e/seed-department-overflow.php

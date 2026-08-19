@@ -1,0 +1,42 @@
+{
+  "schema": 1,
+  "starter": "modern-grocery",
+  "assets": [
+    {
+      "id": "modern-grocery.product.milk",
+      "fixture": "Alpha Milk",
+      "file": "milk.webp",
+      "alt": "Unbranded bottle of milk."
+    },
+    {
+      "id": "modern-grocery.product.bread",
+      "fixture": "Alpha Bread",
+      "file": "bread.webp",
+      "alt": "Unbranded fresh bread loaf."
+    },
+    {
+      "id": "modern-grocery.product.tomato",
+      "fixture": "Alpha Tomato",
+      "file": "tomato.webp",
+      "alt": "Fresh red tomatoes."
+    },
+    {
+      "id": "modern-grocery.product.apple",
+      "fixture": "Alpha Apple",
+      "file": "apple.webp",
+      "alt": "Red and yellow apples."
+    },
+    {
+      "id": "modern-grocery.product.lentils",
+      "fixture": "Alpha Lentils",
+      "file": "lentils.webp",
+      "alt": "Unbranded pouch of lentils."
+    },
+    {
+      "id": "modern-grocery.product.rice-pack",
+      "fixture": "Alpha Rice Pack",
+      "file": "rice-pack.webp",
+      "alt": "Unbranded clear pack of white rice."
+    }
+  ]
+}
