@@ -1,275 +1,417 @@
 # Lemon Squeezy WordPress Commercial Stack Spike
 
-**Status:** Stage A complete from official documentation; account-dependent sandbox tests pending  
+**Status:** Stage A refreshed from current official documentation; account-dependent Stage B pending  
 **Issue:** #14  
-**Date:** 2026-08-18
+**Account-dependent subtask:** #51  
+**Research refreshed:** 2026-08-19
 
 ## 1. Purpose
 
-Determine whether Lemon Squeezy is reliable enough to be the V1 Merchant of Record + subscription + license + WordPress-update platform for one commercial theme and companion plugin.
+Determine whether Lemon Squeezy is reliable enough to be the V1 Merchant of Record + subscription + license + WordPress-update platform for one commercial WordPress theme and companion Core plugin.
 
-This spike must test the entire lifecycle, not merely whether checkout renders.
+The business decision is not “which provider has the lowest headline percentage?” It is:
 
-## 2. Stage A — what official documentation already proves
+> Which provider gives the first paid product the lowest total cost of fees + engineering + release operations + support + failure risk while preserving our privacy and architecture boundaries?
+
+No provider is selected by this document alone.
+
+## 2. Current working product hypothesis
+
+For comparison only; not a public price promise:
+
+- one annual 1-production-site product;
+- working price hypothesis: US$59/year;
+- Theme + Core are one customer product relationship;
+- already-installed GPL-compatible code keeps functioning after maintenance entitlement expires;
+- annual entitlement controls maintained downloads, automatic updates and standard support, not the ability of the live storefront to render.
+
+## 3. Stage A — current official evidence for Lemon Squeezy
+
+### Merchant of Record / pricing
+
+Current official pricing:
+
+- base ecommerce fee: **5% + US$0.50 per transaction**;
+- no monthly ecommerce charge;
+- documented possible additions include:
+  - +1.5% international transaction;
+  - +1.5% PayPal transaction;
+  - +0.5% subscription payment.
+
+Sources:
+- https://www.lemonsqueezy.com/pricing
+- https://docs.lemonsqueezy.com/help/getting-started/fees
+
+Illustrative fee-only calculation at the US$59/year hypothesis:
+
+```text
+US card subscription:
+5% + 0.5% subscription + $0.50
+= about $3.75 platform fee on $59
+
+International card subscription:
+5% + 1.5% international + 0.5% subscription + $0.50
+= about $4.63 platform fee on $59
+```
+
+This excludes payout-specific effects and is not the provider decision by itself.
 
 ### Test environment exists
 
-Lemon Squeezy stores start in **Test mode**. Official documentation says Test mode supports:
+Lemon Squeezy Test mode officially supports:
+
 - checkout;
-- products/discounts;
 - subscriptions;
 - license keys;
 - webhooks;
 - API integrations.
 
-Test and live data/keys are separated.
+Test/live keys and data are separate.
 
 Source:
 - https://docs.lemonsqueezy.com/help/getting-started/test-mode
-- https://docs.lemonsqueezy.com/guides/developer-guide/testing-going-live
 
-### Important test-mode limitation
+### Critical test-mode limitation
 
-Official documentation states:
-
-> File downloads are disabled for all test mode purchases.
+Official documentation states that **file downloads are disabled for Test-mode purchases**.
 
 Implication:
-- we can safely validate checkout, subscription, license activation/validation/deactivation and webhooks in Test mode;
-- we should **not claim a complete WordPress update-download test from sandbox alone**;
-- the final package-download/update entitlement path may need a controlled post-activation/live-mode test or vendor-confirmed testing method.
 
-This is a real integration risk because update reliability is critical to the commercial product.
+- checkout/subscription/license/webhook lifecycle can be proven in Test mode;
+- a complete entitled WordPress package-download/update test cannot be claimed from Test mode alone;
+- final update-delivery validation requires a vendor-supported controlled path after account activation or explicit vendor guidance.
 
-### WordPress theme/plugin update path exists
+This remains the most important Lemon Squeezy spike risk because maintained WordPress updates are core commercial infrastructure.
 
-Official Lemon Squeezy WordPress documentation says premium themes/plugins can receive automatic upgrades using:
+### WordPress update path exists
+
+Official Lemon Squeezy WordPress documentation supports automatic updates for premium themes/plugins using:
+
 - Lemon Squeezy license keys;
 - versioned product files;
-- its WordPress integration/plugin;
-- updater code added to the distributed theme/plugin.
+- Lemon Squeezy WordPress integration;
+- updater code in the distributed theme/plugin.
 
-A valid license can receive updates through normal WordPress dashboard update behavior.
+Customers with a valid license can receive updates through normal WordPress dashboard behavior.
 
 Source:
 - https://docs.lemonsqueezy.com/help/wordpress/theme-plugin-updates
+- https://docs.lemonsqueezy.com/help/products/managing-file-versions
 
-### License activation model fits a 1-site product
+### File URLs are not permanent public package URLs
 
-Official License API guidance supports:
-- activation limits;
-- activation creates a unique instance ID;
-- validation using license key + instance ID;
-- deactivation removes that instance and decreases activation usage;
-- product/store/variant IDs should be validated so keys issued for another product cannot activate ours.
+The File API documents signed download URLs that expire after one hour and are rate-limited.
 
 Source:
-- https://docs.lemonsqueezy.com/guides/tutorials/license-keys
+- https://docs.lemonsqueezy.com/api/files/the-file-object
+
+This is directionally compatible with premium update delivery, but the exact WordPress updater flow still requires real entitlement testing.
+
+### License model
+
+The public License API supports:
+
+- activate;
+- validate;
+- deactivate;
+- activation limits;
+- instance IDs;
+- expired/disabled status.
+
+Subscription license keys are tied to subscription lifecycle and become expired when the subscription expires.
+
+Sources:
+- https://docs.lemonsqueezy.com/api/license-api
+- https://docs.lemonsqueezy.com/api/license-api/activate-license-key
+- https://docs.lemonsqueezy.com/api/license-api/validate-license-key
 - https://docs.lemonsqueezy.com/api/license-api/deactivate-license-key
+- https://docs.lemonsqueezy.com/help/licensing/license-keys-subscriptions
 
-This maps cleanly to a 1-production-site entitlement if we define a robust normalized site-instance naming/identity rule.
+This is sufficient for a 1-production-site entitlement model if we define and test our own staging/dev policy safely.
 
-### Secret API keys should not ship to customer WordPress sites
+### Subscription lifecycle
 
-The public License API operates with the customer's license key and instance ID for activation/validation/deactivation. Store-wide API keys are used for privileged management APIs and belong only in trusted server/CI infrastructure.
+Official subscription docs distinguish states including cancelled and expired. Cancellation remains valid until the current billing period ends; access should be retained until expiry.
 
-Architecture implication:
-- customer package may contain public product/store/variant identifiers;
-- customer package may handle the buyer-provided license key/instance ID;
-- **seller API keys and webhook secrets never ship in the theme/plugin ZIP**.
+Sources:
+- https://docs.lemonsqueezy.com/help/products/subscriptions
+- https://docs.lemonsqueezy.com/guides/developer-guide/managing-subscriptions
 
-## 3. Proposed commercial boundary
+This aligns with our product principle that cancellation-at-period-end should not immediately break maintenance entitlement.
+
+### Customer portal
+
+The Customer Portal supports subscription cancellation/resume, payment-method management and billing information. Signed portal URLs are also available through API objects.
+
+Sources:
+- https://docs.lemonsqueezy.com/help/online-store/customer-portal
+- https://docs.lemonsqueezy.com/guides/developer-guide/customer-portal
+
+Therefore V1 does not need to build its own billing/subscription-management portal.
+
+### Webhook security/testing
+
+Lemon Squeezy signs webhook payloads using an HMAC SHA-256 digest sent in `X-Signature`. Test mode can simulate subscription events and refunded orders.
+
+Sources:
+- https://docs.lemonsqueezy.com/help/webhooks/signing-requests
+- https://docs.lemonsqueezy.com/help/webhooks/simulate-webhook-events
+
+Our webhook consumer must verify the raw request body before trusting the event and must process retries idempotently.
+
+### Seller API secrets do not belong in customer packages
+
+Privileged Lemon Squeezy API operations use bearer API keys. Customer WordPress license activation/validation/deactivation can use the public License API with customer license/instance data.
+
+Source:
+- https://docs.lemonsqueezy.com/guides/developer-guide/getting-started
+
+Architecture rule:
+
+- seller API key + webhook secret: trusted seller/CI/server infrastructure only;
+- customer ZIP: no privileged seller API key;
+- support export: never expose full customer license key.
+
+## 4. India seller operations — current evidence
+
+Lemon Squeezy currently lists India among supported bank-payout countries, but its official supported-countries documentation notes that new Stripe accounts in India are invite-only and merchants without an approved Stripe account may need PayPal for payouts.
+
+Sources:
+- https://docs.lemonsqueezy.com/help/getting-started/supported-countries
+- https://docs.lemonsqueezy.com/help/getting-started/getting-paid
+
+This means the actual seller onboarding/payout path must be proven for the legal/business account before selecting Lemon Squeezy.
+
+Do not assume a bank payout path merely because India appears in the country list.
+
+## 5. Freemius comparison — current official evidence
+
+### Pricing
+
+Freemius currently documents:
+
+- 4.7% base software revenue share;
+- +2.3% for the WordPress & Templates solution;
+- therefore **7.0% WordPress platform share + gateway processing fees**;
+- official documentation currently states an average effective gateway rate of about 3.5%.
+
+Sources:
+- https://freemius.com/pricing/
+- https://freemius.com/help/documentation/getting-started/our-pricing/
+- https://freemius.com/help/documentation/getting-started/saas-vs-wordpress-pricing/
+
+Illustrative fee-only comparison using 7% + the documented 3.5% average gateway rate:
 
 ```text
-Customer WordPress
-  |
-  +--> Commercial Entitlement Adapter
-         |
-         +--> activate/validate/deactivate license instance
-         +--> ask update service for entitled update metadata
-         |
-         v
-Seller update site / Lemon Squeezy integration
-         |
-         +--> Lemon Squeezy License API
-         +--> versioned release file metadata
-         |
-         v
-Lemon Squeezy
-  - checkout
-  - subscription
-  - Merchant of Record
-  - license issuance
-  - customer portal
+$59 × 10.5% ≈ $6.20
 ```
 
-Core product modules do not know which commercial provider is used.
+Actual gateway cost varies, so this is a comparison input, not a quoted guaranteed fee.
 
-```text
-Grocery UX / Shopping List / Delivery / Setup
-                       X
-                       X  no direct dependency
-                       X
-Commercial Entitlement Adapter
-```
+### WordPress operational depth
 
-## 4. Product-side interface hypothesis
+Official Freemius documentation provides materially deeper WordPress-specific infrastructure, including:
 
-This is a research-level contract, not production code yet.
-
-```text
-CommercialEntitlement
-- activate(licenseKey, siteInstance)
-- deactivate()
-- refresh()
-- status()
-- canReceiveMaintainedUpdates()
-```
-
-Possible states:
-- unlicensed;
-- active;
-- expired;
-- over_limit;
-- revoked/refunded;
-- temporarily_unreachable.
-
-Important rule:
-`temporarily_unreachable` must not break the already-installed store/theme experience. Network failure in the licensing service is not permission to take a customer's live store offline.
-
-## 5. Commercial expiry policy hypothesis
-
-For a GPL-compatible annual product:
-- expiry/cancellation does **not** disable already-installed theme/plugin functionality;
-- it ends maintained premium updates/download entitlement and standard support after the paid period;
-- the UI should clearly say what expired and how to renew;
-- no artificial storefront failure should be introduced to coerce renewal.
-
-This policy must be tested against the selected provider's lifecycle events and final terms.
-
-## 6. Site identity / staging question
-
-Lemon Squeezy exposes activation limits and instances, but the official license model does not by itself define our product's policy for production vs staging/local environments.
-
-We need to decide and test an application-level rule such as:
-- production URL consumes a site activation;
-- recognized localhost/local development does not permanently consume a production seat, if the provider/integration allows us to implement that reliably;
-- staging domains should have a documented treatment rather than forcing customers to constantly deactivate production.
-
-Do not invent loose hostname bypasses that can trivially be abused. Research/test before coding.
-
-## 7. Update lifecycle questions still open
-
-Account/live-mode evidence required for:
-- one license granting coordinated entitlement to both theme and companion plugin;
-- whether theme + plugin should be separate Lemon products/variants/files or one commercial entitlement with two update channels;
-- update metadata cache behavior;
-- package URL lifetime/signing;
-- update behavior if license API is temporarily unavailable;
-- emergency rollback;
-- old customer release availability;
-- CI upload/release automation;
-- update entitlement immediately after renewal/refund/cancellation;
-- test/live transition without hard-coded test IDs.
-
-## 8. Privacy/security review — initial
-
-### Allowed minimum data
-
-For licensing/update entitlement, expect only what is required such as:
-- license key;
-- instance identifier/name;
-- public product/store/variant identifiers;
-- current product version and WordPress update request context as strictly needed by the updater.
-
-### Explicitly not part of commercial entitlement
-
-Do not send:
-- product searches;
-- grocery basket/customer orders;
-- WooCommerce shopper identity;
-- delivery postcodes;
-- Shopping List contents;
-- store revenue/order data;
-- plugin/theme inventory for marketing analytics;
-- arbitrary admin usage events.
-
-### Storage
-
-Treat license keys as credentials:
-- do not print full keys in logs;
-- mask them in support exports;
-- protect state-changing license operations with WordPress capabilities/nonces where applicable;
-- never expose privileged seller API credentials in the client.
-
-## 9. Comparison pressure from Freemius
-
-Lemon Squeezy only wins if the simpler/lower-cost commercial platform does not force us to reinvent expensive WordPress release operations.
-
-Freemius already advertises:
-- multisite licensing;
+- software licensing;
 - automatic updates;
 - release management;
 - beta versions;
 - staged rollouts;
-- WordPress-native commercial SDK tooling.
+- multisite licensing;
+- explicit local/staging/dev handling;
+- customer/account tooling in WordPress admin.
 
-If we end up building most of those ourselves just to save transaction percentage, the V1 decision is wrong.
+Sources:
+- https://freemius.com/help/documentation/getting-started/saas-vs-wordpress-pricing/
+- https://freemius.com/help/documentation/wordpress/software-updates-distribution/
+- https://freemius.com/help/documentation/wordpress/license-utilization/
 
-## 10. Account-dependent Stage B tests
+Freemius explicitly documents that recognized localhost/staging/dev sites can avoid consuming production activation limits under its default/recommended configuration. This is a significant support/UX advantage unless we can prove an equally customer-friendly Lemon Squeezy policy with low custom engineering.
 
-Pending access to a Lemon Squeezy test store:
+### SDK surface / privacy
+
+Freemius WordPress requires its SDK in the product for its WordPress-native feature set.
+
+Official documentation exposes optional opt-in/usage/analytics functionality and supports an `anonymous_mode` that simulates skipping the opt-in flow.
+
+Sources:
+- https://freemius.com/help/documentation/wordpress/integration-with-sdk/
+- https://freemius.com/help/documentation/wordpress-sdk/integration/integration-snippet/
+
+If Freemius wins, our integration must explicitly preserve the no-usage-telemetry-by-default product policy.
+
+### Payout operations
+
+Freemius currently documents payout options including PayPal, Payoneer, wire and Wise for makers across many countries.
+
+Sources:
+- https://freemius.com/help/documentation/selling-with-freemius/your-earnings/
+- https://freemius.com/help/documentation/selling-with-freemius/supported-countries/
+
+This broader payout-tooling surface is a practical comparison point for an India-based business.
+
+## 6. Current comparison matrix
+
+| Requirement | Lemon Squeezy | Freemius WordPress | Current interpretation |
+| --- | --- | --- | --- |
+| Merchant of Record | Yes | Yes/reseller model | Both viable |
+| Annual subscription | Yes | Yes | Both viable |
+| License activation | Yes | Yes | Both viable |
+| 1-site limit | Yes | Yes | Both viable |
+| Test checkout | Test mode | Sandbox checkout | Both viable |
+| Customer portal | Yes | Yes | Both viable |
+| WP theme/plugin updates | Yes, documented | Yes, built into WP SDK | Both viable; Lemon delivery must be proven |
+| Test-mode package download | **Disabled for test purchases** | Sandbox/deployment tooling is deeper | Lemon risk |
+| Staging/dev handling | Product policy/custom work to prove | Explicit built-in handling | Freemius advantage |
+| Multisite | Custom policy/work to prove | Built-in WP support | Freemius advantage |
+| Beta/staged rollouts | Custom/release work to prove | Built-in | Freemius advantage |
+| Product SDK footprint | Smaller potential surface | Broader WP SDK required | Lemon advantage for lean/privacy surface |
+| Usage analytics surface | Not required for licensing | Available; must deliberately skip/disable | Lemon simpler for our default privacy posture |
+| Indicative early fees | Lower in common $59 cases | Higher | Lemon advantage |
+| India payout options | Bank may depend on Stripe approval; PayPal fallback documented | PayPal/Payoneer/wire/Wise | Freemius operational advantage until LS account proven |
+
+## 7. Commercial adapter boundary
+
+Source of truth:
+
+`docs/COMMERCIAL-ENTITLEMENT-ADAPTER.md`
+
+Provider-specific code may implement:
+
+```text
+activate
+refresh/validate
+deactivate
+normalized entitlement status
+maintained-update eligibility
+billing portal URL
+```
+
+It must not own grocery/storefront behavior.
+
+No Lemon Squeezy/Freemius runtime SDK is added during this research spike.
+
+## 8. Theme + Core packaging question
+
+A single paid customer relationship must cover both artifacts without forcing the buyer to manage two unrelated subscriptions.
+
+Stage B must prove the best provider-supported model:
+
+- one product/entitlement with two files/update channels;
+- a bundle of theme + Core products under one purchase/license relationship;
+- another supported structure.
+
+Required outcome regardless of provider:
+
+- Theme and Core may version/release independently;
+- one purchase/renewal relationship;
+- updates remain normal WordPress updates;
+- support can understand entitlement without asking for two unrelated keys.
+
+## 9. Expiry/refund product policy to prove
+
+Working rule:
+
+- cancelled but not yet expired: maintenance entitlement continues through paid period;
+- expired: installed Theme/Core continue functioning; maintained premium updates/new downloads/standard support stop;
+- refunded/revoked: exact maintained-download/update policy must be documented, but installed customer storefront must not be remotely sabotaged;
+- temporary provider outage: never treat as a reason to disable the live store.
+
+This policy is provider-independent and should remain true if we migrate vendors.
+
+## 10. Account-dependent Stage B
+
+Tracked separately in **#51** so documentation research cannot be mistaken for real commercial evidence.
+
+Required groups:
 
 ### Checkout/subscription
-- [ ] Create disposable annual 1-site subscription product.
-- [ ] Enable license keys with activation limit 1.
-- [ ] Complete test checkout with dummy data.
-- [ ] Verify test order/subscription/license issuance.
-- [ ] Inspect customer portal lifecycle.
+- [ ] disposable annual 1-site subscription product;
+- [ ] Test-mode checkout;
+- [ ] subscription created;
+- [ ] license key issued;
+- [ ] customer portal behavior observed.
 
 ### License API
-- [ ] Activate instance.
-- [ ] Validate correct instance.
-- [ ] Reject wrong product/variant scope in our adapter.
-- [ ] Reject second activation when limit reached.
-- [ ] Deactivate and verify activation usage is released.
-- [ ] Exercise invalid/expired/disabled cases.
+- [ ] activate;
+- [ ] validate;
+- [ ] second activation rejected at site limit;
+- [ ] deactivate frees site;
+- [ ] expired/disabled behavior;
+- [ ] wrong-product/variant key rejected by our adapter.
 
 ### Webhooks
-- [ ] Create test webhook.
-- [ ] Verify signature/authenticity according to vendor docs.
-- [ ] Simulate subscription lifecycle events.
-- [ ] Verify idempotent event processing design.
+- [ ] signature verified using raw body + signing secret;
+- [ ] subscription create/cancel/resume/expire simulated;
+- [ ] refund event simulated;
+- [ ] duplicate delivery handling proven idempotent.
 
 ### WordPress updater
-- [ ] Configure seller-side WordPress integration.
-- [ ] Configure disposable theme updater.
-- [ ] Configure disposable companion-plugin updater.
-- [ ] Prove update detection in a test WordPress install.
-- [ ] Determine how package download can be tested given sandbox file-download limitation.
-- [ ] Complete controlled entitled download/update test only through a supported vendor path.
+- [ ] disposable Theme detects update;
+- [ ] disposable Core plugin detects update;
+- [ ] entitled package delivery proven through a supported path;
+- [ ] expired/revoked entitlement stops maintained update access without breaking installed software;
+- [ ] release process can publish versions without manual customer-ZIP surgery.
 
-## 11. Exit criteria
+### Seller operations
+- [ ] actual merchant account can be activated;
+- [ ] actual India payout method is viable;
+- [ ] payout timing/fees/currency implications are recorded.
 
-### Choose Lemon Squeezy if
-- updater works reliably for theme + plugin;
-- manual release operations are small and automatable;
-- staging/activation behavior is customer-friendly;
-- privacy boundary stays narrow;
-- no critical live-mode-only testing trap remains;
-- migration/export path is acceptable.
+## 11. Evidence discipline
 
-### Choose Freemius instead if
-- coordinated releases/update entitlement require significant custom services;
-- staging/multisite handling becomes a recurring support burden;
-- staged/beta releases become necessary for safe WooCommerce compatibility updates;
-- total engineering/support burden overtakes the fee difference.
+Statuses used by this spike:
 
-### Research again if
-Neither provider can meet reliability/privacy/distribution requirements cleanly.
+```text
+DOC-PROVEN     official documentation confirms platform capability
+TEST-PROVEN    we executed it in sandbox/test environment
+LIVE-CONTROLLED controlled live-mode evidence where sandbox cannot test it
+UNVERIFIED     not yet proven
+FAILED         tested and did not meet requirement
+```
 
-## 12. Current recommendation
+No Stage B checkbox may be marked complete from documentation alone.
 
-**Continue the Lemon Squeezy spike. Do not commit production architecture yet.**
+Do not use screenshots/blog posts/marketing claims as substitutes for actual account behavior when an acceptance criterion requires execution.
 
-Public documentation is strong enough to justify account-level testing, but the test-mode file-download limitation means automatic update delivery must be proven separately before final provider selection.
+## 12. Current recommendation — 2026-08-19
+
+**Continue testing Lemon Squeezy; do not select it yet.**
+
+Why it remains the lead candidate:
+
+1. lower/simpler early transaction economics in common cases;
+2. Merchant of Record;
+3. subscription + license + portal are sufficient on paper;
+4. documented WordPress update path exists;
+5. potentially smaller runtime/vendor surface than Freemius.
+
+Why the decision is still open:
+
+1. Test-mode purchases cannot prove file download/update delivery;
+2. staging/dev activation policy is not as turnkey as Freemius;
+3. Theme + Core coordinated release model still needs proof;
+4. India seller onboarding/payout path needs account-level proof;
+5. Freemius' staging/multisite/release-management tooling may save enough support/release work to justify the additional fee.
+
+### Decision thresholds
+
+Choose **LEMON SQUEEZY** only if #51 proves the missing account/update lifecycle with low recurring manual work.
+
+Choose **FREEMIUS** if Lemon Squeezy requires us to build/operate substantial staging, release, update-entitlement or support tooling that Freemius already provides reliably.
+
+Choose **RESEARCH AGAIN** if neither provider meets update reliability, privacy, payout, migration or customer-support requirements.
+
+## 13. Final gate
+
+Do not add vendor SDK/runtime integration to production until:
+
+- #51 is completed with evidence;
+- controlled maintained-update delivery is proven;
+- Theme + Core entitlement model is decided;
+- staging/dev/multisite policy is explicit;
+- seller payout/onboarding path is viable;
+- privacy/security review passes;
+- migration/export path is acceptable;
+- #14 records a final recommendation;
+- `docs/DECISIONS.md` records the accepted provider and rationale.
