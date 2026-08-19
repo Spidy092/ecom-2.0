@@ -4,7 +4,11 @@
     "title": "ecom-2.0 Elementor Compatibility Playground",
     "description": "Optional WooCommerce + Elementor compatibility environment for ecom-2.0. Elementor is not a V1 runtime requirement.",
     "author": "Spidy092",
-    "categories": ["WooCommerce", "Elementor", "Development"]
+    "categories": [
+      "WooCommerce",
+      "Elementor",
+      "Development"
+    ]
   },
   "preferredVersions": {
     "php": "8.3",
@@ -14,8 +18,19 @@
     "networking": true
   },
   "login": true,
-  "landingPage": "/",
+  "landingPage": "/playground-ready/",
   "steps": [
+    {
+      "step": "setSiteOptions",
+      "options": {
+        "blogname": "ecom-2.0 Elementor Compatibility Playground",
+        "blogdescription": "Optional Elementor compatibility lab — Elementor is not mandatory for V1."
+      }
+    },
+    {
+      "step": "runPHP",
+      "code": "<?php\nrequire_once '/wordpress/wp-load.php';\n\n$existing = get_page_by_path( 'playground-ready' );\n\nif ( $existing ) {\n    $page_id = $existing->ID;\n} else {\n    $page_id = wp_insert_post(\n        array(\n            'post_title'   => 'ecom-2.0 Elementor Compatibility Lab',\n            'post_name'    => 'playground-ready',\n            'post_status'  => 'publish',\n            'post_type'    => 'page',\n            'post_content' => '<!-- wp:group {\"layout\":{\"type\":\"constrained\"}} --><div class=\"wp-block-group\"><!-- wp:heading {\"level\":1} --><h1 class=\"wp-block-heading\">Elementor compatibility environment is ready</h1><!-- /wp:heading --><!-- wp:paragraph --><p>WordPress, WooCommerce, and Elementor are installed for compatibility testing.</p><!-- /wp:paragraph --><!-- wp:paragraph --><p><strong>Important:</strong> ecom-2.0 remains block-first. Elementor is optional and is not a required V1 dependency.</p><!-- /wp:paragraph --><!-- wp:paragraph --><p>The actual ecom-2.0 theme and core plugin are not implemented yet.</p><!-- /wp:paragraph --></div><!-- /wp:group -->',\n        ),\n        true\n    );\n\n    if ( is_wp_error( $page_id ) ) {\n        throw new RuntimeException( $page_id->get_error_message() );\n    }\n}\n\n$sample = get_page_by_path( 'sample-page' );\nif ( $sample ) {\n    wp_delete_post( $sample->ID, true );\n}\n\nupdate_option( 'show_on_front', 'page' );\nupdate_option( 'page_on_front', (int) $page_id );\n"
+    },
     {
       "step": "installPlugin",
       "pluginData": {
@@ -35,17 +50,6 @@
       "options": {
         "activate": true
       }
-    },
-    {
-      "step": "setSiteOptions",
-      "options": {
-        "blogname": "ecom-2.0 Elementor Compatibility Playground",
-        "blogdescription": "Optional Elementor compatibility lab — Elementor is not mandatory for V1."
-      }
-    },
-    {
-      "step": "runPHP",
-      "code": "<?php\nrequire_once '/wordpress/wp-load.php';\n\n$existing = get_page_by_path( 'playground-ready' );\nif ( $existing ) {\n    $page_id = $existing->ID;\n} else {\n    $page_id = wp_insert_post( array(\n        'post_title'   => 'ecom-2.0 Elementor Compatibility Lab',\n        'post_name'    => 'playground-ready',\n        'post_status'  => 'publish',\n        'post_type'    => 'page',\n        'post_content' => '<!-- wp:group {\\\"layout\\\":{\\\"type\\\":\\\"constrained\\\"}} --><div class=\\\"wp-block-group\\\"><!-- wp:heading {\\\"level\\\":1} --><h1 class=\\\"wp-block-heading\\\">Elementor compatibility environment is ready</h1><!-- /wp:heading --><!-- wp:paragraph --><p>WordPress, WooCommerce, and Elementor are installed for compatibility testing.</p><!-- /wp:paragraph --><!-- wp:paragraph --><p><strong>Important:</strong> the ecom-2.0 project remains block-first. Elementor is optional and is not a required V1 dependency.</p><!-- /wp:paragraph --><!-- wp:paragraph --><p>The actual ecom-2.0 theme and core plugin are not in the repository yet. They will be wired into this Playground after the first implementation artifacts exist.</p><!-- /wp:paragraph --></div><!-- /wp:group -->'\n    ), true );\n\n    if ( is_wp_error( $page_id ) ) {\n        throw new RuntimeException( $page_id->get_error_message() );\n    }\n}\n\nupdate_option( 'show_on_front', 'page' );\nupdate_option( 'page_on_front', (int) $page_id );\n"
     }
   ]
 }
