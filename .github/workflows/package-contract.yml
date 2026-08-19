@@ -128,4 +128,4 @@ jobs:
 
       - name: Stop clean package environment
         if: always()
-        run: npx -y @wordpress/env@10.39.0 stop --config=.wp-env.package.json
+        run: npx -y @wordpress/env@10.39.0 stop --config=.wp-env.package.json || true
