@@ -1,13 +1,10 @@
 {
   "$schema": "https://playground.wordpress.net/blueprint-schema.json",
   "meta": {
-    "title": "ecom-2.0 V1 Playground",
-    "description": "WooCommerce baseline for the ecom-2.0/Grovia Phase 0 repository. The product theme and core plugin are not implemented yet.",
+    "title": "ecom-2.0 AisleFlow Prototype",
+    "description": "First real Modern Grocery storefront slice: WooCommerce + Grovia Core + block theme + demo grocery fixtures.",
     "author": "Spidy092",
-    "categories": [
-      "WooCommerce",
-      "Development"
-    ]
+    "categories": ["WooCommerce", "Theme", "Development"]
   },
   "preferredVersions": {
     "php": "8.3",
@@ -17,18 +14,14 @@
     "networking": true
   },
   "login": true,
-  "landingPage": "/playground-ready/",
+  "landingPage": "/",
   "steps": [
     {
       "step": "setSiteOptions",
       "options": {
-        "blogname": "ecom-2.0 V1 Playground",
-        "blogdescription": "WooCommerce baseline — product theme and core plugin are not implemented yet."
+        "blogname": "Modern Grocery · AisleFlow Prototype",
+        "blogdescription": "A grocery shopping workspace prototype for ecom-2.0."
       }
-    },
-    {
-      "step": "runPHP",
-      "code": "<?php\nrequire_once '/wordpress/wp-load.php';\n\n$existing = get_page_by_path( 'playground-ready' );\n\nif ( $existing ) {\n    $page_id = $existing->ID;\n} else {\n    $page_id = wp_insert_post(\n        array(\n            'post_title'   => 'ecom-2.0 Playground Ready',\n            'post_name'    => 'playground-ready',\n            'post_status'  => 'publish',\n            'post_type'    => 'page',\n            'post_content' => '<!-- wp:group {\"layout\":{\"type\":\"constrained\"}} --><div class=\"wp-block-group\"><!-- wp:heading {\"level\":1} --><h1 class=\"wp-block-heading\">ecom-2.0 Playground is ready</h1><!-- /wp:heading --><!-- wp:paragraph --><p>WordPress and WooCommerce are loaded from the repository Playground blueprint.</p><!-- /wp:paragraph --><!-- wp:paragraph --><p><strong>Current repository status:</strong> the commercial theme and Grovia Core plugin are not implemented yet, so this is an engineering baseline rather than the finished storefront.</p><!-- /wp:paragraph --></div><!-- /wp:group -->',\n        ),\n        true\n    );\n\n    if ( is_wp_error( $page_id ) ) {\n        throw new RuntimeException( $page_id->get_error_message() );\n    }\n}\n\n$sample = get_page_by_path( 'sample-page' );\nif ( $sample ) {\n    wp_delete_post( $sample->ID, true );\n}\n\nupdate_option( 'show_on_front', 'page' );\nupdate_option( 'page_on_front', (int) $page_id );\n"
     },
     {
       "step": "installPlugin",
@@ -39,6 +32,38 @@
       "options": {
         "activate": true
       }
+    },
+    {
+      "step": "installPlugin",
+      "pluginData": {
+        "resource": "git:directory",
+        "url": "https://github.com/Spidy092/ecom-2.0",
+        "ref": "feat/aisleflow-foundation",
+        "refType": "branch",
+        "path": "packages/grovia-core"
+      },
+      "options": {
+        "activate": true,
+        "targetFolderName": "grovia-core"
+      }
+    },
+    {
+      "step": "installTheme",
+      "themeData": {
+        "resource": "git:directory",
+        "url": "https://github.com/Spidy092/ecom-2.0",
+        "ref": "feat/aisleflow-foundation",
+        "refType": "branch",
+        "path": "packages/grovia-theme"
+      },
+      "options": {
+        "activate": true,
+        "targetFolderName": "grovia"
+      }
+    },
+    {
+      "step": "runPHP",
+      "code": "<?php\nrequire_once '/wordpress/wp-load.php';\n\nif ( ! class_exists( 'WC_Product_Simple' ) ) {\n    throw new RuntimeException( 'WooCommerce product classes are unavailable.' );\n}\n\n$home = get_page_by_path( 'home' );\nif ( $home ) {\n    $home_id = $home->ID;\n} else {\n    $home_id = wp_insert_post(\n        array(\n            'post_title'  => 'Home',\n            'post_name'   => 'home',\n            'post_status' => 'publish',\n            'post_type'   => 'page',\n        ),\n        true\n    );\n\n    if ( is_wp_error( $home_id ) ) {\n        throw new RuntimeException( $home_id->get_error_message() );\n    }\n}\n\nupdate_option( 'show_on_front', 'page' );\nupdate_option( 'page_on_front', (int) $home_id );\n\n$sample = get_page_by_path( 'sample-page' );\nif ( $sample ) {\n    wp_delete_post( $sample->ID, true );\n}\n\n$category_names = array( 'Produce', 'Dairy', 'Pantry', 'Bakery' );\n$category_ids   = array();\n\nforeach ( $category_names as $category_name ) {\n    $slug = sanitize_title( $category_name );\n    $term = get_term_by( 'slug', $slug, 'product_cat' );\n\n    if ( ! $term ) {\n        $created = wp_insert_term( $category_name, 'product_cat', array( 'slug' => $slug ) );\n        if ( is_wp_error( $created ) ) {\n            throw new RuntimeException( $created->get_error_message() );\n        }\n        $category_ids[ $slug ] = (int) $created['term_id'];\n    } else {\n        $category_ids[ $slug ] = (int) $term->term_id;\n    }\n}\n\n$fixtures = array(\n    array( 'sku' => 'grovia-demo-milk', 'name' => 'Whole Milk · 1 L', 'price' => '3.20', 'category' => 'dairy' ),\n    array( 'sku' => 'grovia-demo-eggs', 'name' => 'Free Range Eggs · 6', 'price' => '4.40', 'category' => 'dairy' ),\n    array( 'sku' => 'grovia-demo-tomatoes', 'name' => 'Tomatoes · 1 kg', 'price' => '2.90', 'category' => 'produce' ),\n    array( 'sku' => 'grovia-demo-bananas', 'name' => 'Bananas · 1 kg', 'price' => '2.50', 'category' => 'produce' ),\n    array( 'sku' => 'grovia-demo-rice', 'name' => 'Everyday Rice · 2 kg', 'price' => '7.80', 'category' => 'pantry' ),\n    array( 'sku' => 'grovia-demo-lentils', 'name' => 'Red Lentils · 1 kg', 'price' => '5.60', 'category' => 'pantry' ),\n    array( 'sku' => 'grovia-demo-bread', 'name' => 'Wholegrain Bread · 500 g', 'price' => '3.70', 'category' => 'bakery' ),\n    array( 'sku' => 'grovia-demo-rolls', 'name' => 'Breakfast Rolls · 4', 'price' => '3.10', 'category' => 'bakery' )\n);\n\nforeach ( $fixtures as $index => $fixture ) {\n    $existing_id = wc_get_product_id_by_sku( $fixture['sku'] );\n    $product     = $existing_id ? wc_get_product( $existing_id ) : new WC_Product_Simple();\n\n    if ( ! $product ) {\n        continue;\n    }\n\n    $product->set_name( $fixture['name'] );\n    $product->set_status( 'publish' );\n    $product->set_catalog_visibility( 'visible' );\n    $product->set_regular_price( $fixture['price'] );\n    $product->set_sku( $fixture['sku'] );\n    $product->set_stock_status( 'instock' );\n    $product->set_menu_order( $index );\n    $product->set_category_ids( array( $category_ids[ $fixture['category'] ] ) );\n    $product->save();\n}\n"
     }
   ]
 }
