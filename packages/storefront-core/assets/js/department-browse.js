@@ -41,23 +41,38 @@
 			browse.setAttribute( 'aria-busy', busy ? 'true' : 'false' );
 		}
 
-		async function readJson( url, controller ) {
+		function responseTotal( response, fallbackCount ) {
+			const header = Number( response.headers.get( 'X-WP-Total' ) );
+			return Number.isSafeInteger( header ) && header >= 0 ? header : fallbackCount;
+		}
+
+		async function readCollection( url, controller ) {
 			const response = await fetch( url, {
 				method: 'GET',
 				credentials: 'same-origin',
 				headers: { Accept: 'application/json' },
 				signal: controller.signal,
 			} );
-			let payload = [];
-			try {
-				payload = await response.json();
-			} catch ( error ) {
-				payload = [];
-			}
+
 			if ( ! response.ok ) {
 				throw new Error( messages.requestFailed || 'Request failed.' );
 			}
-			return payload;
+
+			let payload;
+			try {
+				payload = await response.json();
+			} catch ( error ) {
+				throw new Error( messages.requestFailed || 'Request failed.' );
+			}
+
+			if ( ! Array.isArray( payload ) ) {
+				throw new Error( messages.requestFailed || 'Request failed.' );
+			}
+
+			return {
+				items: payload,
+				total: responseTotal( response, payload.length ),
+			};
 		}
 
 		function presentation() {
@@ -144,13 +159,19 @@
 
 			try {
 				const url = model.buildDepartmentProductsUrl( endpoints.products, category );
-				const products = await readJson( url, controller );
+				const collection = await readCollection( url, controller );
 				if ( productsController !== controller ) {
 					return;
 				}
 
+				const products = collection.items;
+				const total = Math.max( collection.total, products.length );
+				if ( fallback ) {
+					fallback.hidden = total <= products.length;
+				}
+
 				const message = products.length
-					? formatCountMessage( products.length, category.name )
+					? formatCountMessage( total, category.name )
 					: String( messages.browseEmptyDepartment || 'No products are available in %s right now.' ).replace( '%s', category.name );
 
 				dispatchWorkspace( 'bhaivatech:browse-products', {
@@ -160,9 +181,12 @@
 				} );
 			} catch ( error ) {
 				if ( error.name !== 'AbortError' && productsController === controller ) {
+					if ( fallback ) {
+						fallback.hidden = false;
+					}
 					dispatchWorkspace( 'bhaivatech:browse-error', {
-					message: String( messages.browseProductsUnavailable || 'Products in %s could not be loaded. Try again.' ).replace( '%s', category.name ),
-				} );
+						message: String( messages.browseProductsUnavailable || 'Products in %s could not be loaded. Try again.' ).replace( '%s', category.name ),
+					} );
 				}
 			} finally {
 				if ( productsController === controller ) {
@@ -201,6 +225,9 @@
 			chooserOpen = true;
 			if ( categories.length ) {
 				renderCategories();
+				if ( fallback ) {
+					fallback.hidden = true;
+				}
 			}
 		} );
 
@@ -214,15 +241,20 @@
 			setBrowseState( messages.browseLoadingDepartments || 'Loading departments…' );
 
 			try {
-				const payload = await readJson( model.buildTopCategoriesUrl( endpoints.categories ), controller );
+				const collection = await readCollection( model.buildTopCategoriesUrl( endpoints.categories ), controller );
 				if ( categoryController !== controller ) {
 					return;
 				}
-				categories = Array.isArray( payload )
-					? payload.filter( function ( category ) {
-						return Number( category.parent || 0 ) === 0 && Number( category.count || 0 ) > 0;
-					} )
-					: [];
+
+				if ( collection.total > model.MAX_DEPARTMENT_CATEGORIES ) {
+					categories = [];
+					setBrowseState( messages.browseDepartmentsUnavailable || 'Departments could not be loaded. Browse the full shop instead.' );
+					return;
+				}
+
+				categories = collection.items.filter( function ( category ) {
+					return Number( category.parent || 0 ) === 0 && Number( category.count || 0 ) > 0;
+				} );
 
 				if ( ! categories.length ) {
 					setBrowseState( messages.browseNoDepartments || 'No grocery departments are available yet.' );
@@ -236,6 +268,9 @@
 				setBrowseState( messages.browseChooseDepartment || 'Choose a department.' );
 			} catch ( error ) {
 				if ( error.name !== 'AbortError' && categoryController === controller ) {
+					if ( fallback ) {
+						fallback.hidden = false;
+					}
 					setBrowseState( messages.browseDepartmentsUnavailable || 'Departments could not be loaded. Browse the full shop instead.' );
 				}
 			} finally {
