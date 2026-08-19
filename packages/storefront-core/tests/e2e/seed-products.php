@@ -157,5 +157,4 @@ foreach ( array( 'alpha-saved-a', 'alpha-saved-b' ) as $login ) {
 	delete_user_meta( (int) $user_id, BHAIVATECH_STOREFRONT_SAVED_META_KEY );
 }
 
-wc_delete_shop_order_transients();
 WP_CLI::success( 'Seeded grocery products, four top-level departments, one child department, and isolated Saved shoppers.' );
