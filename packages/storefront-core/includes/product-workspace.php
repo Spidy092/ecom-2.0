@@ -13,6 +13,8 @@ defined( 'ABSPATH' ) || exit;
 function bhaivatech_storefront_register_product_workspace(): void {
 	$model_handle          = 'bhaivatech-storefront-product-workspace-model';
 	$view_handle           = 'bhaivatech-storefront-product-workspace';
+	$filter_model_handle   = 'bhaivatech-storefront-product-filters-model';
+	$filter_view_handle    = 'bhaivatech-storefront-product-filters';
 	$saved_model_handle    = 'bhaivatech-storefront-saved-products-model';
 	$saved_view_handle     = 'bhaivatech-storefront-saved-products';
 	$delivery_view_handle  = 'bhaivatech-storefront-delivery-serviceability';
@@ -30,6 +32,22 @@ function bhaivatech_storefront_register_product_workspace(): void {
 		$view_handle,
 		plugins_url( 'assets/js/product-workspace.js', BHAIVATECH_STOREFRONT_CORE_FILE ),
 		array( $model_handle ),
+		BHAIVATECH_STOREFRONT_CORE_VERSION,
+		true
+	);
+
+	wp_register_script(
+		$filter_model_handle,
+		plugins_url( 'assets/js/product-filters-model.js', BHAIVATECH_STOREFRONT_CORE_FILE ),
+		array(),
+		BHAIVATECH_STOREFRONT_CORE_VERSION,
+		true
+	);
+
+	wp_register_script(
+		$filter_view_handle,
+		plugins_url( 'assets/js/product-filters.js', BHAIVATECH_STOREFRONT_CORE_FILE ),
+		array( $view_handle, $filter_model_handle ),
 		BHAIVATECH_STOREFRONT_CORE_VERSION,
 		true
 	);
@@ -61,7 +79,7 @@ function bhaivatech_storefront_register_product_workspace(): void {
 	wp_register_script(
 		$browse_view_handle,
 		plugins_url( 'assets/js/department-browse.js', BHAIVATECH_STOREFRONT_CORE_FILE ),
-		array( $view_handle, $model_handle ),
+		array( $view_handle, $model_handle, $filter_view_handle ),
 		BHAIVATECH_STOREFRONT_CORE_VERSION,
 		true
 	);
@@ -72,13 +90,16 @@ function bhaivatech_storefront_register_product_workspace(): void {
 
 	$config = array(
 		'endpoints'      => array(
-			'products'       => esc_url_raw( rest_url( 'wc/store/v1/products' ) ),
-			'categories'     => esc_url_raw( rest_url( 'wc/store/v1/products/categories' ) ),
-			'cart'           => esc_url_raw( rest_url( 'wc/store/v1/cart' ) ),
-			'addItem'        => esc_url_raw( rest_url( 'wc/store/v1/cart/add-item' ) ),
-			'updateItem'     => esc_url_raw( rest_url( 'wc/store/v1/cart/update-item' ) ),
-			'removeItem'     => esc_url_raw( rest_url( 'wc/store/v1/cart/remove-item' ) ),
-			'serviceability' => esc_url_raw( rest_url( 'bhaivatech-storefront/v1/serviceability' ) ),
+			'products'               => esc_url_raw( rest_url( 'wc/store/v1/products' ) ),
+			'collectionData'         => esc_url_raw( rest_url( 'wc/store/v1/products/collection-data' ) ),
+			'attributes'             => esc_url_raw( rest_url( 'wc/store/v1/products/attributes' ) ),
+			'attributeTermsTemplate' => esc_url_raw( rest_url( 'wc/store/v1/products/attributes/__ATTRIBUTE_ID__/terms' ) ),
+			'categories'             => esc_url_raw( rest_url( 'wc/store/v1/products/categories' ) ),
+			'cart'                   => esc_url_raw( rest_url( 'wc/store/v1/cart' ) ),
+			'addItem'                => esc_url_raw( rest_url( 'wc/store/v1/cart/add-item' ) ),
+			'updateItem'             => esc_url_raw( rest_url( 'wc/store/v1/cart/update-item' ) ),
+			'removeItem'             => esc_url_raw( rest_url( 'wc/store/v1/cart/remove-item' ) ),
+			'serviceability'         => esc_url_raw( rest_url( 'bhaivatech-storefront/v1/serviceability' ) ),
 		),
 		'serviceability' => $serviceability_config,
 		'saved'          => array(
@@ -110,6 +131,26 @@ function bhaivatech_storefront_register_product_workspace(): void {
 			'browseEmptyDepartment'        => __( 'No products are available in %s right now.', 'bhaivatech-storefront-alpha' ),
 			'browseProductsUnavailable'    => __( 'Products in %s could not be loaded. Try again.', 'bhaivatech-storefront-alpha' ),
 			'browseDepartments'            => __( 'Departments', 'bhaivatech-storefront-alpha' ),
+			'filtersToggle'                => __( 'Filters', 'bhaivatech-storefront-alpha' ),
+			'filtersToggleActive'          => __( 'Filters, %d active', 'bhaivatech-storefront-alpha' ),
+			'filtersChooseContext'         => __( 'Search or choose a department to use filters.', 'bhaivatech-storefront-alpha' ),
+			'filtersWaitingForResults'     => __( 'Waiting for search results…', 'bhaivatech-storefront-alpha' ),
+			'filtersLoading'               => __( 'Loading filters…', 'bhaivatech-storefront-alpha' ),
+			'filtersReady'                 => __( 'Filters ready.', 'bhaivatech-storefront-alpha' ),
+			'filtersNoAdditional'          => __( 'Availability is the only filter for this selection.', 'bhaivatech-storefront-alpha' ),
+			'filtersUnavailable'           => __( 'Filters could not be loaded. Shopping is still available.', 'bhaivatech-storefront-alpha' ),
+			'filtersInStock'               => __( 'In stock only', 'bhaivatech-storefront-alpha' ),
+			'filtersPrice'                 => __( 'Price', 'bhaivatech-storefront-alpha' ),
+			'filtersMinPrice'              => __( 'Minimum price', 'bhaivatech-storefront-alpha' ),
+			'filtersMaxPrice'              => __( 'Maximum price', 'bhaivatech-storefront-alpha' ),
+			'filtersApply'                 => __( 'Apply filters', 'bhaivatech-storefront-alpha' ),
+			'filtersClear'                 => __( 'Clear filters', 'bhaivatech-storefront-alpha' ),
+			'filtersApplying'              => __( 'Applying filters…', 'bhaivatech-storefront-alpha' ),
+			'filtersClearing'              => __( 'Clearing filters…', 'bhaivatech-storefront-alpha' ),
+			'filtersProductsShown'         => __( 'Showing %d filtered products.', 'bhaivatech-storefront-alpha' ),
+			'filtersCleared'               => __( 'Filters cleared. Showing %d products.', 'bhaivatech-storefront-alpha' ),
+			'filtersNoResults'             => __( 'No products match these filters.', 'bhaivatech-storefront-alpha' ),
+			'filtersApplyFailed'           => __( 'Filters could not be applied. Try again.', 'bhaivatech-storefront-alpha' ),
 			'results'                      => __( '%d products found.', 'bhaivatech-storefront-alpha' ),
 			'oneItem'                      => __( '1 item', 'bhaivatech-storefront-alpha' ),
 			'manyItems'                    => __( '%d items', 'bhaivatech-storefront-alpha' ),
