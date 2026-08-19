@@ -36,7 +36,10 @@ def assert_customization_shell(page, viewport_width: int, mobile: bool) -> None:
     expect(header.locator(".wp-block-site-title")).to_be_visible()
     expect(footer.locator(".wp-block-site-title")).to_be_visible()
 
-    navigation = header.locator(".wp-block-navigation")
+    # WordPress applies the wp-block-navigation class to both the semantic nav
+    # and its inner list in current markup. Anchor the browser contract to the
+    # semantic nav element so strict-mode assertions remain deterministic.
+    navigation = header.locator("nav.wp-block-navigation")
     expect(navigation).to_be_visible()
 
     if mobile:
