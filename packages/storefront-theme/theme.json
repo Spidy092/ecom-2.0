@@ -115,5 +115,17 @@
         }
       }
     }
-  }
+  },
+  "templateParts": [
+    {
+      "area": "header",
+      "name": "header",
+      "title": "Store Header"
+    },
+    {
+      "area": "footer",
+      "name": "footer",
+      "title": "Store Footer"
+    }
+  ]
 }
