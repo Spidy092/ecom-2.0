@@ -53,11 +53,12 @@ function bhaivatech_storefront_register_product_workspace(): void {
 
 	$config = array(
 		'endpoints' => array(
-			'products'   => esc_url_raw( rest_url( 'wc/store/v1/products' ) ),
-			'cart'       => esc_url_raw( rest_url( 'wc/store/v1/cart' ) ),
-			'addItem'    => esc_url_raw( rest_url( 'wc/store/v1/cart/add-item' ) ),
-			'updateItem' => esc_url_raw( rest_url( 'wc/store/v1/cart/update-item' ) ),
-			'removeItem' => esc_url_raw( rest_url( 'wc/store/v1/cart/remove-item' ) ),
+			'products'       => esc_url_raw( rest_url( 'wc/store/v1/products' ) ),
+			'cart'           => esc_url_raw( rest_url( 'wc/store/v1/cart' ) ),
+			'addItem'        => esc_url_raw( rest_url( 'wc/store/v1/cart/add-item' ) ),
+			'updateItem'     => esc_url_raw( rest_url( 'wc/store/v1/cart/update-item' ) ),
+			'removeItem'     => esc_url_raw( rest_url( 'wc/store/v1/cart/remove-item' ) ),
+			'serviceability' => esc_url_raw( rest_url( 'bhaivatech-storefront/v1/serviceability' ) ),
 		),
 		'saved'     => array(
 			'loggedIn'        => $is_logged_in,

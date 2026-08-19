@@ -42,13 +42,30 @@ def close_saved(page) -> None:
     expect(page.locator("[data-bt-saved-toggle]")).to_be_focused()
 
 
+def has_logged_in_cookie(page) -> bool:
+    return any(
+        cookie["name"].startswith("wordpress_logged_in_")
+        for cookie in page.context.cookies(BASE_URL)
+    )
+
+
 def login(page, username: str) -> None:
-    page.goto(f"{BASE_URL}/wp-login.php", wait_until="domcontentloaded")
-    page.locator("#user_login").fill(username)
-    page.locator("#user_pass").fill(PASSWORD)
-    page.locator("#wp-submit").click()
-    page.wait_for_load_state("domcontentloaded")
-    page.goto(BASE_URL, wait_until="networkidle")
+    for attempt in range(2):
+        page.goto(f"{BASE_URL}/wp-login.php", wait_until="domcontentloaded")
+        page.locator("#user_login").fill(username)
+        page.locator("#user_pass").fill(PASSWORD)
+        page.locator("#wp-submit").click()
+        page.wait_for_load_state("networkidle")
+
+        if has_logged_in_cookie(page):
+            page.goto(BASE_URL, wait_until="networkidle")
+            assert page.evaluate("() => Boolean(window.BhaivaTechStorefrontConfig?.saved?.loggedIn)")
+            return
+
+        if attempt == 0:
+            page.context.clear_cookies()
+
+    raise AssertionError(f"WordPress login cookie was not established for {username}.")
 
 
 def main() -> None:
