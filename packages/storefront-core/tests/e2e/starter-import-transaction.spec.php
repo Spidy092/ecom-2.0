@@ -1,6 +1,6 @@
 <?php
 /**
- * Deterministic transaction-state checks for the provider-independent starter importer.
+ * Deterministic transaction-state and verification-preflight checks for the provider-independent starter importer.
  */
 
 /**
@@ -12,6 +12,32 @@
 function bhaivatech_starter_import_assert( bool $condition, string $message ): void {
 	if ( ! $condition ) {
 		WP_CLI::error( $message );
+	}
+}
+
+$resources = bhaivatech_storefront_modern_grocery_required_resources();
+bhaivatech_starter_import_assert( true === bhaivatech_storefront_validate_required_resources( $resources ), 'Starter required-resource manifest should validate.' );
+bhaivatech_starter_import_assert( 8 === count( $resources ), 'Starter required-resource manifest should have eight current verification targets.' );
+
+$resource_keys = array_column( $resources, 'key' );
+bhaivatech_starter_import_assert( count( $resource_keys ) === count( array_unique( $resource_keys ) ), 'Starter resource keys should be unique.' );
+
+$duplicate_resources   = $resources;
+$duplicate_resources[] = $resources[0];
+$duplicate_result      = bhaivatech_storefront_validate_required_resources( $duplicate_resources );
+bhaivatech_starter_import_assert( is_wp_error( $duplicate_result ) && 'starter_resource_key_duplicate' === $duplicate_result->get_error_code(), 'Duplicate starter resource identity should fail validation.' );
+
+$preflight = bhaivatech_storefront_run_starter_resource_preflight();
+bhaivatech_starter_import_assert( ! is_wp_error( $preflight ), 'Starter verification preflight should run.' );
+bhaivatech_starter_import_assert( 8 === $preflight['total'], 'Starter preflight should report all verification targets.' );
+bhaivatech_starter_import_assert( count( $preflight['checks'] ) === $preflight['total'], 'Starter preflight checks should match total.' );
+
+foreach ( $preflight['checks'] as $check ) {
+	bhaivatech_starter_import_assert( str_starts_with( $check['key'], 'modern-grocery/' ), 'Starter preflight key should remain namespaced.' );
+	bhaivatech_starter_import_assert( in_array( $check['code'], array( 'ready', 'woocommerce_page_missing', 'theme_resource_missing', 'block_not_registered' ), true ), 'Starter preflight should expose only bounded result codes.' );
+
+	if ( in_array( $check['type'], array( 'theme_file', 'block' ), true ) ) {
+		bhaivatech_starter_import_assert( true === $check['ready'], 'Active product theme/Core verification target should be ready: ' . $check['key'] );
 	}
 }
 
@@ -77,4 +103,4 @@ bhaivatech_starter_import_assert( is_wp_error( $changed_result ) && 'starter_imp
 bhaivatech_storefront_reset_starter_import_state();
 bhaivatech_starter_import_assert( 'idle' === bhaivatech_storefront_get_starter_import_state()['status'], 'Transaction reset should restore idle state.' );
 
-WP_CLI::success( 'Starter import transaction retry/idempotency contract passed.' );
+WP_CLI::success( 'Starter preflight + transaction retry/idempotency contract passed.' );
