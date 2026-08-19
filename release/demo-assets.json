@@ -1,0 +1,102 @@
+{
+  "schema": 1,
+  "status": "engineering-alpha",
+  "policy": {
+    "distribution_root": "packages/storefront-core/starter-assets/modern-grocery",
+    "allowed_provenance": [
+      "first-party-generated",
+      "first-party-created",
+      "third-party-licensed"
+    ],
+    "allowed_roles": [
+      "product",
+      "department",
+      "campaign",
+      "placeholder"
+    ],
+    "allowed_extensions": [
+      ".avif",
+      ".png",
+      ".webp"
+    ],
+    "allowed_surfaces": [
+      "starter",
+      "live-demo",
+      "sales-screenshot"
+    ],
+    "canonical_first_party_must_exclude": [
+      "identifiable_people",
+      "third_party_logos",
+      "readable_branded_packaging"
+    ],
+    "max_bytes_by_role": {
+      "product": 200000,
+      "department": 300000,
+      "campaign": 400000,
+      "placeholder": 100000
+    }
+  },
+  "planned_assets": [
+    {
+      "id": "modern-grocery.product.milk",
+      "role": "product",
+      "fixture": "Alpha Milk",
+      "target_width": 960,
+      "target_height": 960,
+      "notes": "Neutral dairy product image; no branded carton copy or logo."
+    },
+    {
+      "id": "modern-grocery.product.bread",
+      "role": "product",
+      "fixture": "Alpha Bread",
+      "target_width": 960,
+      "target_height": 960,
+      "notes": "Fresh bakery loaf; no branded wrapper."
+    },
+    {
+      "id": "modern-grocery.product.tomato",
+      "role": "product",
+      "fixture": "Alpha Tomato",
+      "target_width": 960,
+      "target_height": 960,
+      "notes": "Tomato produce image suitable for both in-stock and out-of-stock UI states."
+    },
+    {
+      "id": "modern-grocery.product.apple",
+      "role": "product",
+      "fixture": "Alpha Apple",
+      "target_width": 960,
+      "target_height": 960,
+      "notes": "Apple produce image with enough crop-safe negative space."
+    },
+    {
+      "id": "modern-grocery.product.lentils",
+      "role": "product",
+      "fixture": "Alpha Lentils",
+      "target_width": 960,
+      "target_height": 960,
+      "notes": "Loose/bowl lentils or neutral unbranded pantry presentation."
+    },
+    {
+      "id": "modern-grocery.product.rice-pack",
+      "role": "product",
+      "fixture": "Alpha Rice Pack",
+      "target_width": 960,
+      "target_height": 960,
+      "notes": "Unbranded rice presentation that does not imply a specific package size."
+    }
+  ],
+  "items": [],
+  "commercial_blockers": [
+    "first six canonical product images created",
+    "first six canonical product images reviewed for trademarks, people and misleading claims",
+    "optimized packaged derivatives reviewed at mobile and desktop crop sizes",
+    "starter import and live demo use the same approved canonical asset IDs",
+    "target-buyer visual review completed"
+  ],
+  "notes": [
+    "The empty items array is intentional until real image files are created and reviewed.",
+    "System fonts and first-party SVG UI icons are governed by docs/VISUAL-ASSET-STRATEGY.md and are not demo photography entries.",
+    "A third-party-licensed demo image must also link to an approved item in release/third-party-assets.json."
+  ]
+}

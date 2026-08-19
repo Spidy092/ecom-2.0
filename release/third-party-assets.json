@@ -37,15 +37,15 @@
   },
   "items": [],
   "paid_release_blockers": [
-    "final demo image/illustration providers selected and reviewed",
-    "font and icon strategy approved",
+    "first canonical demo image batch created and reviewed",
     "theme and core LICENSE files reviewed",
     "all redistributed third-party entries approved with evidence",
     "human review completed for ambiguous or proprietary asset licenses"
   ],
   "notes": [
     "No third-party font, photo, illustration, icon pack or vendored runtime library is currently approved for redistribution in the engineering-alpha Theme/Core packages.",
-    "An empty items array is intentional until a real third-party dependency or redistributable demo asset is introduced.",
-    "Public demo/starter asset roots must be added explicitly before those assets can be treated as redistributable product content."
+    "V1 typography uses system fonts and the product icon direction is first-party minimal SVG; see docs/VISUAL-ASSET-STRATEGY.md.",
+    "Canonical first-party demo imagery is governed separately by release/demo-assets.json so product-owned/generated images are not misrepresented as third-party dependencies.",
+    "An empty items array remains intentional until a real third-party dependency is introduced."
   ]
 }
