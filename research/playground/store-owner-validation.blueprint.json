@@ -1,0 +1,80 @@
+{
+  "$schema": "https://playground.wordpress.net/blueprint-schema.json",
+  "landingPage": "/wp-admin/admin.php?page=bhaivatech-storefront-personalize",
+  "preferredVersions": {
+    "php": "8.3",
+    "wp": "7.0.2"
+  },
+  "features": {
+    "networking": true
+  },
+  "extraLibraries": [
+    "wp-cli"
+  ],
+  "siteOptions": {
+    "blogname": "Modern Grocery Validation",
+    "blogdescription": "Disposable store-owner onboarding research environment"
+  },
+  "steps": [
+    {
+      "step": "installPlugin",
+      "pluginData": {
+        "resource": "url",
+        "url": "https://downloads.wordpress.org/plugin/woocommerce.11.0.0.zip"
+      },
+      "options": {
+        "activate": true,
+        "targetFolderName": "woocommerce"
+      },
+      "progress": {
+        "caption": "Installing WooCommerce 11.0.0"
+      }
+    },
+    {
+      "step": "installPlugin",
+      "pluginData": {
+        "resource": "git:directory",
+        "url": "https://github.com/Spidy092/ecom-2.0",
+        "ref": "agent/grovia-playground-validation",
+        "refType": "branch",
+        "path": "packages/storefront-core"
+      },
+      "options": {
+        "activate": true,
+        "targetFolderName": "storefront-core"
+      },
+      "progress": {
+        "caption": "Installing Storefront Core"
+      }
+    },
+    {
+      "step": "installTheme",
+      "themeData": {
+        "resource": "git:directory",
+        "url": "https://github.com/Spidy092/ecom-2.0",
+        "ref": "agent/grovia-playground-validation",
+        "refType": "branch",
+        "path": "packages/storefront-theme"
+      },
+      "options": {
+        "activate": true,
+        "targetFolderName": "storefront-theme"
+      },
+      "progress": {
+        "caption": "Installing Storefront Theme"
+      }
+    },
+    {
+      "step": "wp-cli",
+      "command": "wp eval-file wp-content/plugins/storefront-core/tests/e2e/seed-products.php",
+      "progress": {
+        "caption": "Preparing grocery demo products and images"
+      }
+    },
+    {
+      "step": "login",
+      "username": "admin",
+      "password": "password"
+    }
+  ]
+}
