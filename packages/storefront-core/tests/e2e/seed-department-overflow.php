@@ -7,18 +7,11 @@ if ( ! class_exists( 'WooCommerce' ) ) {
 	WP_CLI::error( 'WooCommerce must be active before seeding department overflow.' );
 }
 
-$bread = wc_get_products(
-	array(
-		'limit'  => 1,
-		'search' => 'Alpha Bread',
-	)
-);
-
-if ( ! $bread || ! $bread[0] instanceof WC_Product ) {
+$bread_id = (int) wc_get_product_id_by_sku( 'alpha-bread-e2e' );
+if ( $bread_id <= 0 || ! wc_get_product( $bread_id ) instanceof WC_Product ) {
 	WP_CLI::error( 'Alpha Bread fixture is required before department overflow.' );
 }
 
-$bread_id = $bread[0]->get_id();
 $extra_departments = array(
 	'Frozen'        => 'alpha-frozen',
 	'Drinks'        => 'alpha-drinks',
@@ -44,4 +37,4 @@ foreach ( $extra_departments as $name => $slug ) {
 
 wp_set_object_terms( $bread_id, $term_ids, 'product_cat', true );
 wp_update_term_count( $term_ids, 'product_cat' );
-WP_CLI::success( 'Expanded grocery fixture to nine non-empty top-level departments.' );
+WP_CLI::success( 'Expanded grocery fixture to nine non-empty top-level departments using Alpha Bread.' );
