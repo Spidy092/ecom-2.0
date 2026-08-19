@@ -1,6 +1,6 @@
 <?php
 /**
- * Seed deterministic WooCommerce product and shopper fixtures for alpha E2E.
+ * Seed deterministic WooCommerce product, department and shopper fixtures.
  */
 
 if ( ! class_exists( 'WooCommerce' ) ) {
@@ -18,6 +18,45 @@ foreach ( $existing as $product_id ) {
 	wp_delete_post( $product_id, true );
 }
 
+/**
+ * Return a stable product category term ID.
+ *
+ * @param string $name Category name.
+ * @param string $slug Category slug.
+ * @param int    $parent Parent term ID.
+ * @return int
+ */
+function bhaivatech_alpha_category( string $name, string $slug, int $parent = 0 ): int {
+	$existing_term = term_exists( $slug, 'product_cat' );
+	if ( is_array( $existing_term ) && isset( $existing_term['term_id'] ) ) {
+		return (int) $existing_term['term_id'];
+	}
+	if ( is_int( $existing_term ) ) {
+		return $existing_term;
+	}
+
+	$created = wp_insert_term(
+		$name,
+		'product_cat',
+		array(
+			'slug'   => $slug,
+			'parent' => $parent,
+		)
+	);
+
+	if ( is_wp_error( $created ) ) {
+		WP_CLI::error( 'Could not create department ' . $name . ': ' . $created->get_error_message() );
+	}
+
+	return (int) $created['term_id'];
+}
+
+$produce = bhaivatech_alpha_category( 'Produce', 'alpha-produce' );
+$dairy   = bhaivatech_alpha_category( 'Dairy', 'alpha-dairy' );
+$pantry  = bhaivatech_alpha_category( 'Pantry', 'alpha-pantry' );
+$bakery  = bhaivatech_alpha_category( 'Bakery', 'alpha-bakery' );
+$leafy   = bhaivatech_alpha_category( 'Leafy Greens', 'alpha-leafy-greens', $produce );
+
 $milk = new WC_Product_Simple();
 $milk->set_name( 'Alpha Milk' );
 $milk->set_status( 'publish' );
@@ -26,6 +65,7 @@ $milk->set_manage_stock( true );
 $milk->set_stock_quantity( 50 );
 $milk->set_stock_status( 'instock' );
 $milk->save();
+wp_set_object_terms( $milk->get_id(), array( $dairy ), 'product_cat' );
 
 $bread = new WC_Product_Simple();
 $bread->set_name( 'Alpha Bread' );
@@ -35,6 +75,7 @@ $bread->set_manage_stock( true );
 $bread->set_stock_quantity( 25 );
 $bread->set_stock_status( 'instock' );
 $bread->save();
+wp_set_object_terms( $bread->get_id(), array( $bakery ), 'product_cat' );
 
 $tomato = new WC_Product_Simple();
 $tomato->set_name( 'Alpha Tomato' );
@@ -44,6 +85,27 @@ $tomato->set_manage_stock( true );
 $tomato->set_stock_quantity( 0 );
 $tomato->set_stock_status( 'outofstock' );
 $tomato->save();
+wp_set_object_terms( $tomato->get_id(), array( $produce ), 'product_cat' );
+
+$apple = new WC_Product_Simple();
+$apple->set_name( 'Alpha Apple' );
+$apple->set_status( 'publish' );
+$apple->set_regular_price( '80.00' );
+$apple->set_manage_stock( true );
+$apple->set_stock_quantity( 30 );
+$apple->set_stock_status( 'instock' );
+$apple->save();
+wp_set_object_terms( $apple->get_id(), array( $produce, $leafy ), 'product_cat' );
+
+$lentils = new WC_Product_Simple();
+$lentils->set_name( 'Alpha Lentils' );
+$lentils->set_status( 'publish' );
+$lentils->set_regular_price( '120.00' );
+$lentils->set_manage_stock( true );
+$lentils->set_stock_quantity( 20 );
+$lentils->set_stock_status( 'instock' );
+$lentils->save();
+wp_set_object_terms( $lentils->get_id(), array( $pantry ), 'product_cat' );
 
 $rice = new WC_Product_Variable();
 $rice->set_name( 'Alpha Rice Pack' );
@@ -56,6 +118,7 @@ $pack->set_visible( true );
 $pack->set_variation( true );
 $rice->set_attributes( array( $pack ) );
 $rice->save();
+wp_set_object_terms( $rice->get_id(), array( $pantry ), 'product_cat' );
 
 $rice_variations = array(
 	'1 kg' => '199.00',
@@ -94,4 +157,5 @@ foreach ( array( 'alpha-saved-a', 'alpha-saved-b' ) as $login ) {
 	delete_user_meta( (int) $user_id, BHAIVATECH_STOREFRONT_SAVED_META_KEY );
 }
 
-WP_CLI::success( 'Seeded products plus isolated Saved shoppers alpha-saved-a and alpha-saved-b.' );
+wc_delete_shop_order_transients();
+WP_CLI::success( 'Seeded grocery products, four top-level departments, one child department, and isolated Saved shoppers.' );
