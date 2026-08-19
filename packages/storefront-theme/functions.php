@@ -18,6 +18,19 @@ function bhaivatech_grocery_alpha_setup(): void {
 add_action( 'after_setup_theme', 'bhaivatech_grocery_alpha_setup' );
 
 /**
+ * Load the small storefront shell shared by theme templates.
+ */
+function bhaivatech_grocery_alpha_enqueue_shell_style(): void {
+	wp_enqueue_style(
+		'bhaivatech-grocery-alpha-storefront-shell',
+		get_theme_file_uri( 'assets/css/storefront-shell.css' ),
+		array(),
+		wp_get_theme()->get( 'Version' )
+	);
+}
+add_action( 'wp_enqueue_scripts', 'bhaivatech_grocery_alpha_enqueue_shell_style' );
+
+/**
  * Attach theme-owned presentation styles to Storefront Core blocks.
  */
 function bhaivatech_grocery_alpha_register_block_styles(): void {

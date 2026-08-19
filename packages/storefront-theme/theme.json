@@ -4,16 +4,116 @@
   "settings": {
     "appearanceTools": true,
     "layout": {
-      "contentSize": "720px",
-      "wideSize": "1200px"
+      "contentSize": "760px",
+      "wideSize": "1240px"
+    },
+    "color": {
+      "custom": true,
+      "customDuotone": false,
+      "customGradient": false,
+      "defaultGradients": false,
+      "defaultPalette": false,
+      "palette": [
+        { "name": "Paper", "slug": "paper", "color": "#FCFBF7" },
+        { "name": "Ink", "slug": "ink", "color": "#17201F" },
+        { "name": "Surface", "slug": "surface", "color": "#FFFFFF" },
+        { "name": "Soft", "slug": "soft", "color": "#F3F0E9" },
+        { "name": "Muted", "slug": "muted", "color": "#596463" },
+        { "name": "Line", "slug": "line", "color": "#D9DEDB" },
+        { "name": "Copper", "slug": "copper", "color": "#9A3412" },
+        { "name": "Copper Dark", "slug": "copper-dark", "color": "#7C2D12" },
+        { "name": "Success", "slug": "success", "color": "#146C43" },
+        { "name": "Danger", "slug": "danger", "color": "#A32D2D" },
+        { "name": "Info", "slug": "info", "color": "#155E75" }
+      ]
     },
     "spacing": {
-      "units": ["px", "rem", "%", "vw"]
+      "units": ["px", "rem", "%", "vw"],
+      "spacingSizes": [
+        { "name": "2XS", "slug": "10", "size": "0.25rem" },
+        { "name": "XS", "slug": "20", "size": "0.5rem" },
+        { "name": "S", "slug": "30", "size": "0.75rem" },
+        { "name": "M", "slug": "40", "size": "1rem" },
+        { "name": "L", "slug": "50", "size": "1.5rem" },
+        { "name": "XL", "slug": "60", "size": "2rem" },
+        { "name": "2XL", "slug": "70", "size": "3rem" },
+        { "name": "3XL", "slug": "80", "size": "4rem" }
+      ]
+    },
+    "typography": {
+      "customFontSize": false,
+      "dropCap": false,
+      "fluid": true,
+      "fontFamilies": [
+        {
+          "name": "System Sans",
+          "slug": "system-sans",
+          "fontFamily": "system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif"
+        },
+        {
+          "name": "System Serif",
+          "slug": "system-serif",
+          "fontFamily": "Iowan Old Style, Baskerville, Times New Roman, serif"
+        }
+      ],
+      "fontSizes": [
+        { "name": "Extra Small", "slug": "xs", "size": "0.8125rem" },
+        { "name": "Small", "slug": "sm", "size": "0.875rem" },
+        { "name": "Body", "slug": "body", "size": "1rem" },
+        { "name": "Lead", "slug": "lead", "size": "1.125rem" },
+        { "name": "Heading 3", "slug": "h3", "size": "1.25rem" },
+        { "name": "Heading 2", "slug": "h2", "size": "1.55rem" },
+        { "name": "Heading 1", "slug": "h1", "size": "clamp(1.8rem, 4vw, 2.4rem)" }
+      ]
+    },
+    "shadow": {
+      "defaultPresets": false,
+      "presets": [
+        {
+          "name": "Raised",
+          "slug": "raised",
+          "shadow": "0 0.5rem 1.5rem rgb(23 32 31 / 0.10)"
+        },
+        {
+          "name": "Floating",
+          "slug": "floating",
+          "shadow": "0 0.75rem 2rem rgb(23 32 31 / 0.16)"
+        }
+      ]
     }
   },
   "styles": {
+    "color": {
+      "background": "var:preset|color|paper",
+      "text": "var:preset|color|ink"
+    },
     "spacing": {
-      "blockGap": "1.25rem"
+      "blockGap": "var:preset|spacing|40"
+    },
+    "typography": {
+      "fontFamily": "var:preset|font-family|system-sans",
+      "fontSize": "var:preset|font-size|body",
+      "lineHeight": "1.5"
+    },
+    "elements": {
+      "heading": {
+        "color": {
+          "text": "var:preset|color|ink"
+        },
+        "typography": {
+          "fontFamily": "var:preset|font-family|system-sans",
+          "fontWeight": "760",
+          "lineHeight": "1.15"
+        }
+      },
+      "link": {
+        "color": {
+          "text": "var:preset|color|copper"
+        },
+        "typography": {
+          "textDecoration": "underline"
+        }
+      }
     }
   }
 }
