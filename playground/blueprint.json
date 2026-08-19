@@ -1,0 +1,41 @@
+{
+  "$schema": "https://playground.wordpress.net/blueprint-schema.json",
+  "meta": {
+    "title": "ecom-2.0 V1 Playground",
+    "description": "WooCommerce baseline for the ecom-2.0/Grovia Phase 0 repository. The product theme and core plugin are not implemented yet.",
+    "author": "Spidy092",
+    "categories": ["WooCommerce", "Development"]
+  },
+  "preferredVersions": {
+    "php": "8.3",
+    "wp": "latest"
+  },
+  "features": {
+    "networking": true
+  },
+  "login": true,
+  "landingPage": "/",
+  "steps": [
+    {
+      "step": "installPlugin",
+      "pluginData": {
+        "resource": "wordpress.org/plugins",
+        "slug": "woocommerce"
+      },
+      "options": {
+        "activate": true
+      }
+    },
+    {
+      "step": "setSiteOptions",
+      "options": {
+        "blogname": "ecom-2.0 V1 Playground",
+        "blogdescription": "WooCommerce baseline — product theme and core plugin are not implemented yet."
+      }
+    },
+    {
+      "step": "runPHP",
+      "code": "<?php\nrequire_once '/wordpress/wp-load.php';\n\n$existing = get_page_by_path( 'playground-ready' );\nif ( $existing ) {\n    $page_id = $existing->ID;\n} else {\n    $page_id = wp_insert_post( array(\n        'post_title'   => 'ecom-2.0 Playground Ready',\n        'post_name'    => 'playground-ready',\n        'post_status'  => 'publish',\n        'post_type'    => 'page',\n        'post_content' => '<!-- wp:group {\\\"layout\\\":{\\\"type\\\":\\\"constrained\\\"}} --><div class=\\\"wp-block-group\\\"><!-- wp:heading {\\\"level\\\":1} --><h1 class=\\\"wp-block-heading\\\">ecom-2.0 Playground is ready</h1><!-- /wp:heading --><!-- wp:paragraph --><p>WordPress and WooCommerce are loaded successfully from the repository Playground blueprint.</p><!-- /wp:paragraph --><!-- wp:paragraph --><p><strong>Current repository status:</strong> Phase 0 research/product definition. The commercial theme and Grovia Core plugin have not been implemented yet, so this is an engineering baseline rather than the finished storefront demo.</p><!-- /wp:paragraph --><!-- wp:paragraph --><p>When the first theme and core-plugin build artifacts exist, this same blueprint will install them automatically and open the real starter store.</p><!-- /wp:paragraph --></div><!-- /wp:group -->'\n    ), true );\n\n    if ( is_wp_error( $page_id ) ) {\n        throw new RuntimeException( $page_id->get_error_message() );\n    }\n}\n\nupdate_option( 'show_on_front', 'page' );\nupdate_option( 'page_on_front', (int) $page_id );\n"
+    }
+  ]
+}
