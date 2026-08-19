@@ -71,9 +71,10 @@ def main() -> None:
         expect(admin.get_by_role("heading", name="Plugin compatibility")).to_be_visible()
         expect(admin.get_by_role("heading", name="Support report")).to_be_visible()
 
-        # The alpha deliberately exposes preflight/status before destructive import.
+        # The alpha exposes readiness and transaction safety before destructive import.
         expect(admin.get_by_text("Modern Grocery starter store", exact=False)).to_be_visible()
-        expect(admin.get_by_text("import is intentionally disabled in this alpha", exact=False)).to_be_visible()
+        expect(admin.get_by_text("transaction/retry contract now exists internally", exact=False)).to_be_visible()
+        expect(admin.get_by_text("content import remains disabled", exact=False)).to_be_visible()
         assert admin.get_by_role("button", name="Import").count() == 0
         assert admin.get_by_role("button", name="Install starter store").count() == 0
 
@@ -94,6 +95,7 @@ def main() -> None:
             "WP-Cron",
             "WordPress memory limit",
             "Woo template overrides",
+            "Starter import transaction",
         ]:
             assert required in page_text, required
 
@@ -113,6 +115,17 @@ def main() -> None:
         assert report["platform"]["php_version"]
         assert isinstance(report["active_plugins"], list)
         assert isinstance(report["template_overrides"], list)
+        assert report["starter_import"]["status"] == "idle"
+        assert report["starter_import"]["attempts"] == 0
+        assert set(report["starter_import"]) == {
+            "status",
+            "manifest_id",
+            "manifest_version",
+            "attempts",
+            "current_step",
+            "failed_step",
+            "last_error_code",
+        }
 
         # Export keys must remain technical and privacy-bounded.
         keys = collect_keys(report)
