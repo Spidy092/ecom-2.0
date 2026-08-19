@@ -1,0 +1,41 @@
+name: Engineering alpha PHP smoke
+
+on:
+  pull_request:
+    paths:
+      - 'packages/**/*.php'
+      - '.github/workflows/engineering-alpha-php.yml'
+  push:
+    branches:
+      - agent/grovia-alpha-skeleton
+    paths:
+      - 'packages/**/*.php'
+      - '.github/workflows/engineering-alpha-php.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  php-syntax:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php: ['8.3', '8.4']
+    steps:
+      - uses: actions/checkout@v6
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          coverage: none
+      - name: Lint package PHP files
+        shell: bash
+        run: |
+          set -euo pipefail
+          mapfile -t files < <(find packages -type f -name '*.php' -print)
+          if (( ${#files[@]} == 0 )); then
+            echo 'No PHP files found.'
+            exit 1
+          fi
+          for file in "${files[@]}"; do
+            php -l "$file"
+          done
