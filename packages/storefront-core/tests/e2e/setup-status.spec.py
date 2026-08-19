@@ -73,7 +73,7 @@ def main() -> None:
 
         # The alpha exposes readiness and transaction safety before destructive import.
         expect(admin.get_by_text("Modern Grocery starter store", exact=False)).to_be_visible()
-        expect(admin.get_by_text("transaction/retry contract now exists internally", exact=False)).to_be_visible()
+        expect(admin.get_by_text("transaction/retry contract and verification-only resource preflight", exact=False)).to_be_visible()
         expect(admin.get_by_text("content import remains disabled", exact=False)).to_be_visible()
         assert admin.get_by_role("button", name="Import").count() == 0
         assert admin.get_by_role("button", name="Install starter store").count() == 0
@@ -95,6 +95,7 @@ def main() -> None:
             "WP-Cron",
             "WordPress memory limit",
             "Woo template overrides",
+            "Starter resource preflight",
             "Starter import transaction",
         ]:
             assert required in page_text, required
@@ -126,6 +127,18 @@ def main() -> None:
             "failed_step",
             "last_error_code",
         }
+
+        preflight = report["starter_preflight"]
+        assert preflight["total"] == 8
+        assert 0 <= preflight["ready"] <= preflight["total"]
+        assert preflight["all_ready"] == (preflight["ready"] == preflight["total"])
+        assert len(preflight["checks"]) == preflight["total"]
+        assert len({check["key"] for check in preflight["checks"]}) == preflight["total"]
+        for check in preflight["checks"]:
+            assert check["key"].startswith("modern-grocery/")
+            assert check["type"] in {"woocommerce_page", "theme_file", "block"}
+            assert isinstance(check["ready"], bool)
+            assert check["code"]
 
         # Export keys must remain technical and privacy-bounded.
         keys = collect_keys(report)
