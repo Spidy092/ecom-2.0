@@ -55,6 +55,12 @@
   white-space: nowrap;
 }
 
+.bt-department-browse__heading-row a[hidden],
+.bt-department-browse__selected[hidden],
+.bt-department-browse__departments[hidden] {
+  display: none;
+}
+
 .bt-department-browse__departments {
   gap: 0.5rem;
 }
@@ -89,11 +95,6 @@
   gap: 0.75rem;
   border-block: 1px solid color-mix(in srgb, currentColor 16%, transparent);
   padding-block: 0.625rem;
-}
-
-.bt-department-browse__selected[hidden],
-.bt-department-browse__departments[hidden] {
-  display: none;
 }
 
 @media (max-width: 520px) {
