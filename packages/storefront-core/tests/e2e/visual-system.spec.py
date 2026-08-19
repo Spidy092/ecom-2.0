@@ -24,6 +24,59 @@ def product_card(page, name: str):
     return page.locator(".bt-product-card").filter(has_text=name)
 
 
+def assert_product_image(card, label: str, viewport_width: int) -> None:
+    image_link = card.locator(".bt-product-card__image-link")
+    image = image_link.locator("img")
+    expect(image_link).to_be_visible()
+    expect(image).to_be_visible()
+
+    image.wait_for(state="visible")
+    loaded = image.evaluate(
+        "(img) => ({ complete: img.complete, naturalWidth: img.naturalWidth, naturalHeight: img.naturalHeight })"
+    )
+    assert loaded["complete"], (label, viewport_width, loaded)
+    assert loaded["naturalWidth"] > 0 and loaded["naturalHeight"] > 0, (
+        label,
+        viewport_width,
+        loaded,
+    )
+
+    link_box = image_link.bounding_box()
+    image_box = image.bounding_box()
+    card_box = card.bounding_box()
+    assert link_box and image_box and card_box, (label, viewport_width)
+
+    # Canonical product assets are square and the storefront must preserve a
+    # square crop without leaking beyond the card at any commercial target.
+    assert abs(link_box["width"] - link_box["height"]) <= 1.5, (
+        label,
+        viewport_width,
+        link_box,
+    )
+    assert abs(image_box["width"] - image_box["height"]) <= 1.5, (
+        label,
+        viewport_width,
+        image_box,
+    )
+    assert css(image, "object-fit") == "cover", (label, viewport_width, css(image, "object-fit"))
+
+    epsilon = 1.5
+    assert image_box["x"] >= card_box["x"] - epsilon, (label, viewport_width, image_box, card_box)
+    assert image_box["y"] >= card_box["y"] - epsilon, (label, viewport_width, image_box, card_box)
+    assert image_box["x"] + image_box["width"] <= card_box["x"] + card_box["width"] + epsilon, (
+        label,
+        viewport_width,
+        image_box,
+        card_box,
+    )
+    assert image_box["y"] + image_box["height"] <= card_box["y"] + card_box["height"] + epsilon, (
+        label,
+        viewport_width,
+        image_box,
+        card_box,
+    )
+
+
 def exercise_mobile(browser, width: int) -> None:
     context = browser.new_context(viewport={"width": width, "height": 844})
     page = context.new_page()
@@ -55,9 +108,12 @@ def exercise_mobile(browser, width: int) -> None:
     assert css(dairy, "background-color") == COPPER, (width, css(dairy, "background-color"))
     assert css(dairy, "color") == WHITE, (width, css(dairy, "color"))
 
-    # Product Add and Cart use one deliberate primary hierarchy.
+    # Product imagery uses the same canonical local asset at every mobile target.
     milk = product_card(page, "Alpha Milk")
     expect(milk).to_be_visible()
+    assert_product_image(milk, "Alpha Milk", width)
+
+    # Product Add and Cart use one deliberate primary hierarchy.
     add = milk.locator('button[data-action="add"]')
     assert css(add, "background-color") == COPPER, (width, css(add, "background-color"))
     assert css(add, "color") == WHITE, (width, css(add, "color"))
@@ -78,7 +134,8 @@ def exercise_mobile(browser, width: int) -> None:
 
 
 def exercise_desktop(browser) -> None:
-    context = browser.new_context(viewport={"width": 1200, "height": 900})
+    width = 1200
+    context = browser.new_context(viewport={"width": width, "height": 900})
     page = context.new_page()
     page.goto(BASE_URL, wait_until="networkidle")
 
@@ -89,6 +146,17 @@ def exercise_desktop(browser) -> None:
         "() => document.documentElement.scrollWidth - document.documentElement.clientWidth"
     )
     assert overflow <= 1, overflow
+
+    produce = page.locator("[data-bt-departments] button").filter(has_text="Produce")
+    produce.click()
+    expect(produce).to_have_attribute("aria-pressed", "true")
+
+    apple = product_card(page, "Alpha Apple")
+    tomato = product_card(page, "Alpha Tomato")
+    expect(apple).to_be_visible()
+    expect(tomato).to_be_visible()
+    assert_product_image(apple, "Alpha Apple", width)
+    assert_product_image(tomato, "Alpha Tomato", width)
 
     context.close()
 
