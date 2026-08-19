@@ -12,18 +12,21 @@ defined( 'ABSPATH' ) || exit;
 
 wp_enqueue_script( 'bhaivatech-storefront-saved-products' );
 wp_enqueue_script( 'bhaivatech-storefront-delivery-serviceability' );
+wp_enqueue_script( 'bhaivatech-storefront-department-browse' );
 
-$cart_url              = function_exists( 'wc_get_cart_url' ) ? wc_get_cart_url() : '#';
-$search_id             = wp_unique_id( 'bt-product-search-' );
-$saved_panel_id        = wp_unique_id( 'bt-saved-panel-' );
-$delivery_country_id   = wp_unique_id( 'bt-delivery-country-' );
-$delivery_state_id     = wp_unique_id( 'bt-delivery-state-' );
+$cart_url               = function_exists( 'wc_get_cart_url' ) ? wc_get_cart_url() : '#';
+$shop_url               = function_exists( 'wc_get_page_permalink' ) ? wc_get_page_permalink( 'shop' ) : home_url( '/' );
+$search_id              = wp_unique_id( 'bt-product-search-' );
+$saved_panel_id         = wp_unique_id( 'bt-saved-panel-' );
+$browse_heading_id      = wp_unique_id( 'bt-browse-heading-' );
+$delivery_country_id    = wp_unique_id( 'bt-delivery-country-' );
+$delivery_state_id      = wp_unique_id( 'bt-delivery-state-' );
 $delivery_state_text_id = wp_unique_id( 'bt-delivery-state-text-' );
-$delivery_postcode_id  = wp_unique_id( 'bt-delivery-postcode-' );
-$delivery_config       = bhaivatech_storefront_serviceability_public_config();
-$delivery_countries    = $delivery_config['countries'] ?? array();
-$single_country        = $delivery_config['singleCountry'] ?? '';
-$single_country_label  = '';
+$delivery_postcode_id   = wp_unique_id( 'bt-delivery-postcode-' );
+$delivery_config        = bhaivatech_storefront_serviceability_public_config();
+$delivery_countries     = $delivery_config['countries'] ?? array();
+$single_country         = $delivery_config['singleCountry'] ?? '';
+$single_country_label   = '';
 
 foreach ( $delivery_countries as $delivery_country ) {
 	if ( $single_country === ( $delivery_country['code'] ?? '' ) ) {
@@ -112,7 +115,7 @@ foreach ( $delivery_countries as $delivery_country ) {
 		</form>
 	</section>
 
-	<div class="bt-product-workspace__search">
+	<div class="bt-product-workspace__search" id="grocery-search">
 		<label for="<?php echo esc_attr( $search_id ); ?>">
 			<?php esc_html_e( 'Search groceries', 'bhaivatech-storefront-alpha' ); ?>
 		</label>
@@ -130,8 +133,38 @@ foreach ( $delivery_countries as $delivery_country ) {
 	</div>
 
 	<p class="bt-product-workspace__status" role="status" aria-live="polite" aria-atomic="true" data-bt-status>
-		<?php esc_html_e( 'Ready to search.', 'bhaivatech-storefront-alpha' ); ?>
+		<?php esc_html_e( 'Ready to search or browse.', 'bhaivatech-storefront-alpha' ); ?>
 	</p>
+
+	<section
+		id="grocery-browse"
+		class="bt-department-browse"
+		tabindex="-1"
+		aria-labelledby="<?php echo esc_attr( $browse_heading_id ); ?>"
+		data-bt-browse
+	>
+		<div class="bt-department-browse__heading-row">
+			<div>
+				<h2 id="<?php echo esc_attr( $browse_heading_id ); ?>"><?php esc_html_e( 'Browse', 'bhaivatech-storefront-alpha' ); ?></h2>
+				<p><?php esc_html_e( 'Move between grocery departments without leaving your cart.', 'bhaivatech-storefront-alpha' ); ?></p>
+			</div>
+			<a href="<?php echo esc_url( $shop_url ); ?>" data-bt-browse-fallback>
+				<?php esc_html_e( 'Browse full shop', 'bhaivatech-storefront-alpha' ); ?>
+			</a>
+		</div>
+
+		<div class="bt-department-browse__selected" hidden data-bt-selected-department>
+			<strong data-bt-selected-department-name></strong>
+			<button type="button" data-bt-show-departments>
+				<?php esc_html_e( 'Departments', 'bhaivatech-storefront-alpha' ); ?>
+			</button>
+		</div>
+
+		<div class="bt-department-browse__departments" data-bt-departments></div>
+		<p class="bt-department-browse__state" data-bt-browse-state>
+			<?php esc_html_e( 'Loading departments…', 'bhaivatech-storefront-alpha' ); ?>
+		</p>
+	</section>
 
 	<div class="bt-product-workspace__saved-summary">
 		<button
