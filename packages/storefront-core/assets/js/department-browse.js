@@ -109,6 +109,11 @@
 		}
 
 		function formatCountMessage( count, name ) {
+			if ( Number( count ) === 1 ) {
+				return String( messages.browseOneProductFound || '1 product in %s.' )
+					.replace( '%s', name );
+			}
+
 			return String( messages.browseProductsFound || '%d products in %s.' )
 				.replace( '%d', String( count ) )
 				.replace( '%s', name );
