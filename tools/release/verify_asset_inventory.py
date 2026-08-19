@@ -17,6 +17,8 @@ import sys
 from pathlib import Path
 from typing import Iterable
 
+import build_packages as package_builder
+
 DEFAULT_REPO_ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_MANIFEST = Path("release/third-party-assets.json")
 ALLOWED_TYPES = {
@@ -178,11 +180,6 @@ def validate_inventory(data: dict) -> None:
                 fail(f"{item_id}: approved item requires reviewer")
             if not isinstance(item["reviewed_on"], str) or not re.fullmatch(r"\d{4}-\d{2}-\d{2}", item["reviewed_on"]):
                 fail(f"{item_id}: approved item requires reviewed_on YYYY-MM-DD")
-        else:
-            if any(item_path for item_path in paths):
-                # Records may be staged for review, but a scanned redistributable
-                # path cannot be accepted until status becomes approved.
-                pass
 
 
 def iter_files(root: Path) -> Iterable[Path]:
@@ -235,6 +232,13 @@ def scan_surface(repo_root: Path, surface: str, root_value: str, data: dict, map
     for path in iter_files(root):
         repo_relative = path.relative_to(repo_root).as_posix()
         relative = path.relative_to(root)
+
+        # Theme/Core scans must match the actual customer package boundary.
+        # Tests, caches and other paths excluded by the package builder are not
+        # redistributable inputs and therefore must not produce licensing noise.
+        if surface in {"theme", "core"} and package_builder.is_excluded(relative):
+            continue
+
         scan_remote_runtime_assets(path)
         if not is_license_sensitive(relative, sensitive_extensions, vendor_names):
             continue
