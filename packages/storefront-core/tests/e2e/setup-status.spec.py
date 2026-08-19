@@ -17,12 +17,31 @@ CUSTOMER_PASSWORD = "alpha-saved-pass"
 SETUP_URL = f"{BASE_URL}/wp-admin/admin.php?page=bhaivatech-storefront-setup"
 
 
+def has_logged_in_cookie(page) -> bool:
+    return any(
+        cookie["name"].startswith("wordpress_logged_in_")
+        for cookie in page.context.cookies(BASE_URL)
+    )
+
+
 def login(page, username: str, password: str) -> None:
-    page.goto(f"{BASE_URL}/wp-login.php", wait_until="domcontentloaded")
-    page.locator("#user_login").fill(username)
-    page.locator("#user_pass").fill(password)
-    page.locator("#wp-submit").click()
-    page.wait_for_load_state("networkidle")
+    """Establish a real WordPress auth cookie, retrying once on transient failure."""
+    for attempt in range(2):
+        page.goto(f"{BASE_URL}/wp-login.php", wait_until="domcontentloaded")
+        page.locator("#user_login").fill(username)
+        page.locator("#user_pass").fill(password)
+        page.locator("#wp-submit").click()
+        page.wait_for_load_state("networkidle")
+
+        if has_logged_in_cookie(page):
+            return
+
+        if attempt == 0:
+            page.context.clear_cookies()
+
+    error = page.locator("#login_error")
+    detail = error.inner_text().strip() if error.count() else "no WordPress login error was rendered"
+    raise AssertionError(f"WordPress login cookie was not established for {username}: {detail}")
 
 
 def collect_keys(value):
