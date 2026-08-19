@@ -96,12 +96,13 @@ jobs:
         run: google-chrome --version
       - name: Start pinned WordPress + WooCommerce environment
         run: npx -y @wordpress/env@10.39.0 start
-      - name: Activate alpha theme and seed deterministic products
+      - name: Activate alpha theme and seed deterministic fixtures
         run: |
           npx -y @wordpress/env@10.39.0 run cli wp plugin status woocommerce
           npx -y @wordpress/env@10.39.0 run cli wp plugin status storefront-core
           npx -y @wordpress/env@10.39.0 run cli wp theme activate storefront-theme
           npx -y @wordpress/env@10.39.0 run cli wp eval-file wp-content/plugins/storefront-core/tests/e2e/seed-products.php
+          npx -y @wordpress/env@10.39.0 run cli wp eval-file wp-content/plugins/storefront-core/tests/e2e/seed-setup-admin.php
       - name: Exercise real Store API session in Chrome
         run: python packages/storefront-core/tests/e2e/store-api-slice.spec.py
       - name: Exercise Saved auth and ownership boundaries in Chrome
@@ -114,6 +115,10 @@ jobs:
         run: python packages/storefront-core/tests/e2e/department-browse.spec.py
       - name: Exercise visual system at target viewports
         run: python packages/storefront-core/tests/e2e/visual-system.spec.py
+      - name: Exercise Store Setup and privacy-safe status export
+        run: python packages/storefront-core/tests/e2e/setup-status.spec.py
+      - name: Exercise starter import retry/idempotency contract
+        run: npx -y @wordpress/env@10.39.0 run cli wp eval-file wp-content/plugins/storefront-core/tests/e2e/starter-import-transaction.spec.php
       - name: Expand fixture to large department taxonomy
         run: npx -y @wordpress/env@10.39.0 run cli wp eval-file wp-content/plugins/storefront-core/tests/e2e/seed-department-overflow.php
       - name: Exercise adaptive department chooser in Chrome

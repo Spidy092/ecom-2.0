@@ -2,7 +2,7 @@
 /**
  * Plugin Name: BhaivaTech Storefront Core (Internal Alpha)
  * Description: Internal engineering-alpha core plugin for the grocery-first WooCommerce product. Not a public/final product name.
- * Version: 0.0.4-alpha
+ * Version: 0.0.6-alpha
  * Requires at least: 6.9
  * Requires PHP: 8.3
  * Requires Plugins: woocommerce
@@ -12,13 +12,16 @@
 
 defined( 'ABSPATH' ) || exit;
 
-const BHAIVATECH_STOREFRONT_CORE_VERSION = '0.0.4-alpha';
+const BHAIVATECH_STOREFRONT_CORE_VERSION = '0.0.6-alpha';
 const BHAIVATECH_STOREFRONT_CORE_FILE    = __FILE__;
 
 require_once __DIR__ . '/includes/product-workspace.php';
 require_once __DIR__ . '/includes/mobile-shopping-nav.php';
 require_once __DIR__ . '/includes/saved-products.php';
 require_once __DIR__ . '/includes/serviceability.php';
+require_once __DIR__ . '/includes/starter-import-transaction.php';
+require_once __DIR__ . '/includes/starter-preflight.php';
+require_once __DIR__ . '/includes/setup-status.php';
 
 /**
  * Show a clear admin notice when WooCommerce is not active.
@@ -46,6 +49,8 @@ function bhaivatech_storefront_core_bootstrap(): void {
 	add_action( 'init', 'bhaivatech_storefront_register_mobile_shopping_nav' );
 	add_action( 'rest_api_init', 'bhaivatech_storefront_register_saved_routes' );
 	add_action( 'rest_api_init', 'bhaivatech_storefront_register_serviceability_route' );
+	add_action( 'admin_menu', 'bhaivatech_storefront_register_setup_status_page' );
+	add_action( 'admin_post_bhaivatech_storefront_export_status', 'bhaivatech_storefront_export_system_status' );
 
 	/**
 	 * Engineering-alpha extension point. Feature services are registered only
