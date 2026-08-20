@@ -48,7 +48,7 @@ add_action( 'admin_notices', 'grovia_core_missing_woocommerce_notice' );
  *
  * WooCommerce remains authoritative for cart state. The client receives a
  * Store API nonce and reconciles from the full cart response after every
- * serialized mutation instead of maintaining an independent basket model.
+ * serialized mutation instead of maintaining an independent cart model.
  */
 function grovia_core_enqueue_cart_ux() {
 	if ( is_admin() || ! class_exists( 'WooCommerce' ) ) {
@@ -81,12 +81,12 @@ function grovia_core_enqueue_cart_ux() {
 				'added'          => __( 'Added', 'grovia-core' ),
 				'updated'        => __( 'Updated', 'grovia-core' ),
 				'removed'        => __( 'Removed', 'grovia-core' ),
-				'viewBasket'     => __( 'View basket', 'grovia-core' ),
+				'viewBasket'     => __( 'View cart', 'grovia-core' ),
 				'item'           => __( 'item', 'grovia-core' ),
 				'items'          => __( 'items', 'grovia-core' ),
 				'increase'       => __( 'Increase quantity for', 'grovia-core' ),
 				'decrease'       => __( 'Decrease quantity for', 'grovia-core' ),
-				'genericError'   => __( 'Basket update failed. Please try again.', 'grovia-core' ),
+				'genericError'   => __( 'Cart update failed. Please try again.', 'grovia-core' ),
 			),
 		)
 	);
