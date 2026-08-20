@@ -1,0 +1,49 @@
+name: AisleFlow cart single truth
+
+on:
+  pull_request:
+    paths:
+      - 'packages/grovia-core/**'
+      - 'packages/grovia-theme/assets/css/storefront.css'
+      - '.github/workflows/aisleflow-cart-single-truth.yml'
+  push:
+    branches:
+      - 'fix/aisleflow-cart-single-truth'
+    paths:
+      - 'packages/grovia-core/**'
+      - 'packages/grovia-theme/assets/css/storefront.css'
+      - '.github/workflows/aisleflow-cart-single-truth.yml'
+
+concurrency:
+  group: aisleflow-cart-single-truth-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  cart-contract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          coverage: none
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.13'
+      - name: Check cart JavaScript syntax
+        run: node --check packages/grovia-core/assets/js/cart-ux.js
+      - name: Check Core PHP syntax
+        run: php -l packages/grovia-core/grovia-core.php
+      - name: Install Playwright library
+        run: python -m pip install --disable-pip-version-check playwright==1.62.0
+      - name: Verify preinstalled Google Chrome
+        run: google-chrome --version
+      - name: Prove serialized single-truth cart behavior
+        run: python packages/grovia-core/tests/e2e/cart-single-truth.spec.py
