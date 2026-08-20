@@ -136,6 +136,15 @@ body.grovia-has-basket-pulse {
 	color: var(--wp--preset--color--paper);
 }
 
+/* WooCommerce's native AJAX feedback remains the no-JS/hydration fallback.
+ * Once Grovia has an authoritative Store API cart, only the Grovia quantity
+ * controls and Basket Pulse remain visible so shoppers never see two cart
+ * states for the same product. */
+.grovia-cart-enhanced .products a.added_to_cart,
+.grovia-cart-enhanced .products a.wc-forward.added_to_cart {
+	display: none !important;
+}
+
 .grovia-add-button.is-loading {
 	opacity: 0.65;
 	pointer-events: none;
