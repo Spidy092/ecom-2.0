@@ -3,3 +3,6 @@ research/prototypes/aisleflow-v0/.venv/
 
 # Generated deterministic test artifact
 research/prototypes/aisleflow-v0/fixed-mission-result.json
+
+# Generated release/package artifacts
+artifacts/
