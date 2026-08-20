@@ -147,7 +147,10 @@ def card(page, name: str):
 
 
 def resolve_new_call(page, expected_count: int, expected_nonce: str) -> None:
-    page.wait_for_function("count => window.__cartHarness.calls.length === count", expected_count)
+    page.wait_for_function(
+        "count => window.__cartHarness.calls.length === count",
+        arg=expected_count,
+    )
     actual_nonce = page.evaluate("index => window.__cartHarness.calls[index].nonce", expected_count - 1)
     assert actual_nonce == expected_nonce, (expected_count, actual_nonce, expected_nonce)
     page.evaluate("window.__cartHarness.resolveNext()")
@@ -169,9 +172,6 @@ def main() -> None:
         milk_add = milk.locator("a.add_to_cart_button")
         eggs_add = eggs.locator("a.add_to_cart_button")
 
-        # Deliberately click two different products before the first Store API
-        # response resolves. Only Milk may be on the wire until its response has
-        # refreshed the nonce and authoritative cart snapshot.
         milk_add.click()
         eggs_add.click()
         page.wait_for_function("window.__cartHarness.calls.length === 1")
@@ -186,8 +186,6 @@ def main() -> None:
         expect(eggs.locator(".grovia-quantity-control__value")).to_have_text("1")
         expect(page.locator(".grovia-basket-pulse__summary")).to_have_text(re.compile(r"2 items.*7\.60"))
 
-        # Milk -> 3. Every write must use the nonce returned by the previous
-        # serialized response.
         milk.locator('[data-grovia-quantity-action="increase"]').click()
         resolve_new_call(page, 3, "nonce-3")
         expect(milk.locator(".grovia-quantity-control__value")).to_have_text("2")
@@ -196,19 +194,14 @@ def main() -> None:
         resolve_new_call(page, 4, "nonce-4")
         expect(milk.locator(".grovia-quantity-control__value")).to_have_text("3")
 
-        # Eggs -> 2.
         eggs.locator('[data-grovia-quantity-action="increase"]').click()
         resolve_new_call(page, 5, "nonce-5")
         expect(eggs.locator(".grovia-quantity-control__value")).to_have_text("2")
 
-        # The exact founder-reported scenario must have one visible truth.
         expect(milk.locator(".grovia-quantity-control__value")).to_have_text("3")
         expect(eggs.locator(".grovia-quantity-control__value")).to_have_text("2")
         expect(page.locator(".grovia-basket-pulse__summary")).to_have_text(re.compile(r"5 items.*18\.40"))
 
-        # Simulate Woo/native AJAX inserting its own cart feedback after Grovia
-        # has hydrated. The duplicate must become non-interactive/hidden and the
-        # original add label must not become a second quantity display.
         page.evaluate(
             """
             const button = document.querySelector('[data-product="milk"] a.add_to_cart_button');
@@ -223,8 +216,6 @@ def main() -> None:
         expect(milk.locator("a.added_to_cart")).to_be_hidden()
         expect(milk_add).to_have_text("Add to cart")
 
-        # External Woo cart events are rehydrated from the authoritative cart
-        # rather than leaving Basket Pulse or card quantities stale.
         page.evaluate(
             """
             window.__cartHarness.state[101] = 1;
@@ -238,7 +229,6 @@ def main() -> None:
         expect(milk.locator(".grovia-quantity-control__value")).to_have_text("1")
         expect(eggs.locator(".grovia-quantity-control__value")).to_have_text("1")
 
-        # If initial hydration fails, Grovia must not suppress native Woo UI.
         fallback = browser.new_page(viewport={"width": 390, "height": 844})
         fallback.set_content(HTML.replace("</li>", '<a class="added_to_cart wc-forward">View cart</a></li>', 1))
         fallback.add_script_tag(content="window.fetch = async () => { throw new Error('offline'); };")
