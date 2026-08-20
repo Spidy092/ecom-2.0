@@ -3,7 +3,7 @@
  * Plugin Name: Grovia Core Prototype
  * Plugin URI: https://github.com/Spidy092/ecom-2.0
  * Description: Grocery-specific functionality foundation for the ecom-2.0 V1 prototype.
- * Version: 0.2.0
+ * Version: 0.2.1
  * Requires Plugins: woocommerce
  * Text Domain: grovia-core
  *
@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 if ( ! defined( 'GROVIA_CORE_VERSION' ) ) {
-	define( 'GROVIA_CORE_VERSION', '0.2.0' );
+	define( 'GROVIA_CORE_VERSION', '0.2.1' );
 }
 
 /**
@@ -48,7 +48,7 @@ add_action( 'admin_notices', 'grovia_core_missing_woocommerce_notice' );
  *
  * WooCommerce remains authoritative for cart state. The client receives a
  * Store API nonce and reconciles from the full cart response after every
- * mutation instead of maintaining an independent basket model.
+ * serialized mutation instead of maintaining an independent basket model.
  */
 function grovia_core_enqueue_cart_ux() {
 	if ( is_admin() || ! class_exists( 'WooCommerce' ) ) {
