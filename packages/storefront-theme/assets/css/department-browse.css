@@ -1,0 +1,164 @@
+.bt-department-browse {
+  --bt-ink: var(--wp--preset--color--ink, #17201f);
+  --bt-surface: var(--wp--preset--color--surface, #fff);
+  --bt-soft: var(--wp--preset--color--soft, #f3f0e9);
+  --bt-muted: var(--wp--preset--color--muted, #596463);
+  --bt-line: var(--wp--preset--color--line, #d9dedb);
+  --bt-copper: var(--wp--preset--color--copper, #9a3412);
+  --bt-copper-dark: var(--wp--preset--color--copper-dark, #7c2d12);
+  display: grid;
+  gap: 0.875rem;
+  border-block: 1px solid var(--bt-line);
+  padding-block: 1rem;
+  color: var(--bt-ink);
+}
+
+.bt-department-browse:focus-visible {
+  outline: 3px solid var(--bt-copper);
+  outline-offset: 3px;
+}
+
+.bt-department-browse__heading-row {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.bt-department-browse__heading-row > div {
+  display: grid;
+  gap: 0.25rem;
+}
+
+.bt-department-browse__heading-row h2,
+.bt-department-browse__heading-row p,
+.bt-department-browse__state {
+  margin: 0;
+}
+
+.bt-department-browse__heading-row h2 {
+  font-size: 1.35rem;
+  font-weight: 800;
+  letter-spacing: -0.015em;
+}
+
+.bt-department-browse__heading-row p,
+.bt-department-browse__state {
+  color: var(--bt-muted);
+  font-size: 0.875rem;
+}
+
+.bt-department-browse__heading-row a,
+.bt-department-browse__department,
+.bt-department-browse__selected button {
+  min-height: 44px;
+  border: 1px solid var(--bt-line);
+  border-radius: 999px;
+  padding: 0.5rem 0.85rem;
+  background: var(--bt-surface);
+  color: var(--bt-ink);
+  font: inherit;
+  font-weight: 720;
+  line-height: 1.2;
+  text-decoration: none;
+}
+
+.bt-department-browse__heading-row a:hover,
+.bt-department-browse__department:hover,
+.bt-department-browse__selected button:hover {
+  border-color: color-mix(in srgb, var(--bt-copper) 45%, var(--bt-line));
+  background: var(--bt-soft);
+}
+
+.bt-department-browse__heading-row a:focus-visible,
+.bt-department-browse__department:focus-visible,
+.bt-department-browse__selected button:focus-visible {
+  outline: 3px solid var(--bt-copper);
+  outline-offset: 3px;
+}
+
+.bt-department-browse__heading-row a {
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+  color: var(--bt-copper-dark);
+}
+
+.bt-department-browse__heading-row a[hidden],
+.bt-department-browse__selected[hidden],
+.bt-department-browse__departments[hidden] {
+  display: none;
+}
+
+.bt-department-browse__departments {
+  gap: 0.5rem;
+}
+
+.bt-department-browse__departments--rail {
+  display: flex;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  scrollbar-width: thin;
+  padding-block: 0.125rem 0.375rem;
+}
+
+.bt-department-browse__departments--rail .bt-department-browse__department {
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
+
+.bt-department-browse__departments--chooser {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 10rem), 1fr));
+}
+
+.bt-department-browse__department[aria-pressed="true"] {
+  border-color: var(--bt-copper);
+  background: var(--bt-copper);
+  color: #fff;
+  font-weight: 800;
+  box-shadow: 0 0.25rem 0.7rem rgb(154 52 18 / 0.18);
+}
+
+.bt-department-browse__selected {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  border-block: 1px solid var(--bt-line);
+  padding-block: 0.75rem;
+}
+
+.bt-department-browse__selected strong {
+  font-weight: 800;
+}
+
+@media (max-width: 520px) {
+  .bt-department-browse__heading-row {
+    display: grid;
+  }
+
+  .bt-department-browse__heading-row a {
+    justify-self: start;
+  }
+
+  .bt-department-browse__departments--chooser {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 340px) {
+  .bt-department-browse__departments--chooser {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bt-department-browse *,
+  .bt-department-browse *::before,
+  .bt-department-browse *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}

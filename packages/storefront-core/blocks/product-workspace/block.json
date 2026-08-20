@@ -1,0 +1,17 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "bhaivatech-storefront/product-workspace",
+  "version": "0.0.1-alpha",
+  "title": "Grocery Product Workspace (Internal Alpha)",
+  "category": "woocommerce",
+  "icon": "cart",
+  "description": "Internal alpha block for bounded grocery search, inline simple-product quantity, and authoritative WooCommerce cart feedback.",
+  "textdomain": "bhaivatech-storefront-alpha",
+  "supports": {
+    "html": false,
+    "align": ["wide", "full"]
+  },
+  "viewScript": "bhaivatech-storefront-product-workspace",
+  "render": "file:./render.php"
+}
