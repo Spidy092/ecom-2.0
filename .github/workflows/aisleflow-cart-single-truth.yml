@@ -1,0 +1,59 @@
+name: AisleFlow cart single truth
+
+on:
+  pull_request:
+    paths:
+      - 'packages/grovia-core/**'
+      - 'packages/grovia-theme/**'
+      - 'playground/blueprint.json'
+      - '.github/workflows/aisleflow-cart-single-truth.yml'
+  push:
+    branches:
+      - 'fix/aisleflow-cart-single-truth'
+    paths:
+      - 'packages/grovia-core/**'
+      - 'packages/grovia-theme/**'
+      - 'playground/blueprint.json'
+      - '.github/workflows/aisleflow-cart-single-truth.yml'
+
+concurrency:
+  group: aisleflow-cart-single-truth-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  cart-contract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          coverage: none
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.13'
+      - name: Check cart JavaScript syntax
+        run: node --check packages/grovia-core/assets/js/cart-ux.js
+      - name: Check Core PHP syntax
+        run: php -l packages/grovia-core/grovia-core.php
+      - name: Check E2E Python syntax
+        run: |
+          python -m py_compile packages/grovia-core/tests/e2e/cart-single-truth.spec.py
+          python -m py_compile packages/grovia-core/tests/e2e/playground-cart-single-truth.spec.py
+      - name: Install pinned browser and Playground test libraries
+        run: |
+          python -m pip install --disable-pip-version-check playwright==1.62.0
+          npm install --no-save --package-lock=false @wp-playground/cli@3.1.48
+      - name: Verify preinstalled Google Chrome
+        run: google-chrome --version
+      - name: Prove serialized single-truth cart behavior
+        run: python packages/grovia-core/tests/e2e/cart-single-truth.spec.py
+      - name: Prove live Woo cart survives Cart and Checkout navigation
+        run: node packages/grovia-core/tests/e2e/run-playground-cart-smoke.mjs

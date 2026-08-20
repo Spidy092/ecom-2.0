@@ -12,7 +12,10 @@
 	var cart = null;
 	var enhancedReady = false;
 	var pendingProducts = new Set();
+	var mutationQueue = Promise.resolve();
 	var pulseTimer = null;
+	var refreshTimer = null;
+	var nativeObserver = null;
 	var strings = config.strings || {};
 
 	function productButtons() {
@@ -78,6 +81,38 @@
 		}
 	}
 
+	function hideNativeCartIndicators( button ) {
+		if ( ! enhancedReady ) {
+			return;
+		}
+
+		var nativeLabel = button.getAttribute( 'data-grovia-native-label' );
+		var currentLabel = button.textContent ? button.textContent.trim() : '';
+
+		if ( ! nativeLabel ) {
+			nativeLabel = currentLabel || strings.add || 'Add to cart';
+			button.setAttribute( 'data-grovia-native-label', nativeLabel );
+		}
+
+		if ( currentLabel !== nativeLabel ) {
+			button.textContent = nativeLabel;
+		}
+
+		button.classList.remove( 'added' );
+		button.classList.remove( 'loading' );
+
+		var card = button.closest( 'li.product' );
+		if ( ! card ) {
+			return;
+		}
+
+		card.querySelectorAll( 'a.added_to_cart, a.wc-forward.added_to_cart' ).forEach( function ( link ) {
+			link.hidden = true;
+			link.setAttribute( 'aria-hidden', 'true' );
+			link.setAttribute( 'tabindex', '-1' );
+		} );
+	}
+
 	function ensureQuantityControl( button ) {
 		var productId = productIdFromButton( button );
 		var card = button.closest( 'li.product' );
@@ -127,6 +162,8 @@
 		if ( ! productId ) {
 			return;
 		}
+
+		hideNativeCartIndicators( button );
 
 		var item = getCartItem( productId );
 		var control = ensureQuantityControl( button );
@@ -276,10 +313,23 @@
 		}, 2800 );
 	}
 
+	function emitCartUpdate() {
+		document.dispatchEvent( new CustomEvent( 'grovia:cart-updated', {
+			detail: {
+				count: itemCount(),
+			},
+		} ) );
+	}
+
 	function applyCart( nextCart ) {
+		if ( ! nextCart || ! Array.isArray( nextCart.items ) ) {
+			return;
+		}
+
 		cart = nextCart;
 		renderProducts();
 		renderBasket();
+		emitCartUpdate();
 	}
 
 	function updateNonce( response ) {
@@ -346,9 +396,7 @@
 		renderProducts();
 	}
 
-	async function addProduct( button ) {
-		var productId = productIdFromButton( button );
-
+	function queueProductMutation( productId, button, operation ) {
 		if ( ! productId || pendingProducts.has( productId ) ) {
 			return;
 		}
@@ -356,7 +404,24 @@
 		clearError( button );
 		setPending( productId, true );
 
-		try {
+		var run = mutationQueue.then( async function () {
+			try {
+				await operation();
+			} catch ( error ) {
+				showError( button, error.message );
+			} finally {
+				setPending( productId, false );
+			}
+		} );
+
+		// A rejected mutation must never poison later cart writes.
+		mutationQueue = run.catch( function () {} );
+	}
+
+	function addProduct( button ) {
+		var productId = productIdFromButton( button );
+
+		queueProductMutation( productId, button, async function () {
 			var nextCart = await mutateCart( 'add-item', {
 				id: productId,
 				quantity: 1,
@@ -366,41 +431,45 @@
 			var item = getCartItem( productId );
 			var suffix = item ? ' ×' + item.quantity : '';
 			announce( ( strings.added || 'Added' ) + ': ' + productTitle( button ) + suffix );
-		} catch ( error ) {
-			showError( button, error.message );
-		} finally {
-			setPending( productId, false );
-		}
+		} );
 	}
 
-	async function changeQuantity( control, direction ) {
+	function changeQuantity( control, direction ) {
 		var productId = Number.parseInt( control.getAttribute( 'data-product-id' ), 10 );
-		var item = getCartItem( productId );
 		var button = control.parentElement ? control.parentElement.querySelector( 'a.add_to_cart_button[data-product_id="' + productId + '"]' ) : null;
 
-		if ( ! item || ! button || pendingProducts.has( productId ) ) {
+		if ( ! button ) {
 			return;
 		}
 
-		var limits = item.quantity_limits || {};
-		var step = Number.parseInt( limits.multiple_of, 10 );
-		var minimum = Number.parseInt( limits.minimum, 10 );
+		queueProductMutation( productId, button, async function () {
+			// Read the item only when this queued write begins. Earlier queued writes
+			// may have changed its key, quantity or limits.
+			var item = getCartItem( productId );
+			if ( ! item ) {
+				var latestCart = await getCart();
+				applyCart( latestCart );
+				item = getCartItem( productId );
+			}
 
-		if ( ! Number.isFinite( step ) || step < 1 ) {
-			step = 1;
-		}
+			if ( ! item ) {
+				return;
+			}
 
-		if ( ! Number.isFinite( minimum ) || minimum < 1 ) {
-			minimum = 1;
-		}
+			var limits = item.quantity_limits || {};
+			var step = Number.parseInt( limits.multiple_of, 10 );
+			var minimum = Number.parseInt( limits.minimum, 10 );
 
-		var currentQuantity = Number( item.quantity );
-		var targetQuantity = direction === 'increase' ? currentQuantity + step : currentQuantity - step;
+			if ( ! Number.isFinite( step ) || step < 1 ) {
+				step = 1;
+			}
 
-		clearError( button );
-		setPending( productId, true );
+			if ( ! Number.isFinite( minimum ) || minimum < 1 ) {
+				minimum = 1;
+			}
 
-		try {
+			var currentQuantity = Number( item.quantity );
+			var targetQuantity = direction === 'increase' ? currentQuantity + step : currentQuantity - step;
 			var nextCart;
 
 			if ( targetQuantity < minimum ) {
@@ -409,20 +478,75 @@
 				} );
 				applyCart( nextCart );
 				announce( ( strings.removed || 'Removed' ) + ': ' + productTitle( button ) );
-			} else {
-				nextCart = await mutateCart( 'update-item', {
-					key: item.key,
-					quantity: targetQuantity,
-				} );
-				applyCart( nextCart );
-				var updatedItem = getCartItem( productId );
-				announce( ( strings.updated || 'Updated' ) + ': ' + productTitle( button ) + ( updatedItem ? ' ×' + updatedItem.quantity : '' ) );
+				return;
 			}
+
+			nextCart = await mutateCart( 'update-item', {
+				key: item.key,
+				quantity: targetQuantity,
+			} );
+			applyCart( nextCart );
+			var updatedItem = getCartItem( productId );
+			announce( ( strings.updated || 'Updated' ) + ': ' + productTitle( button ) + ( updatedItem ? ' ×' + updatedItem.quantity : '' ) );
+		} );
+	}
+
+	async function refreshAuthoritativeCart() {
+		try {
+			var nextCart = await getCart();
+			applyCart( nextCart );
 		} catch ( error ) {
-			showError( button, error.message );
-		} finally {
-			setPending( productId, false );
+			// A failed background refresh must not replace the last known cart or
+			// disable the progressive enhancement after it has already hydrated.
 		}
+	}
+
+	function scheduleCartRefresh() {
+		if ( ! enhancedReady ) {
+			return;
+		}
+
+		window.clearTimeout( refreshTimer );
+		refreshTimer = window.setTimeout( function () {
+			var run = mutationQueue.then( refreshAuthoritativeCart );
+			mutationQueue = run.catch( function () {} );
+		}, 80 );
+	}
+
+	function startNativeUiObserver() {
+		if ( nativeObserver || ! document.body ) {
+			return;
+		}
+
+		nativeObserver = new MutationObserver( function ( mutations ) {
+			var relevant = mutations.some( function ( mutation ) {
+				if ( mutation.type === 'childList' ) {
+					return mutation.addedNodes.length > 0;
+				}
+
+				return mutation.type === 'attributes' && mutation.target instanceof Element && mutation.target.matches( '.products a.add_to_cart_button' );
+			} );
+
+			if ( relevant && enhancedReady ) {
+				window.requestAnimationFrame( renderProducts );
+			}
+		} );
+
+		nativeObserver.observe( document.body, {
+			subtree: true,
+			childList: true,
+			attributes: true,
+			attributeFilter: [ 'class' ],
+		} );
+	}
+
+	function enableEnhancement( initialCart ) {
+		cart = initialCart;
+		enhancedReady = true;
+		document.body.classList.add( 'grovia-cart-enhanced' );
+		renderProducts();
+		renderBasket();
+		startNativeUiObserver();
 	}
 
 	document.addEventListener( 'click', function ( event ) {
@@ -450,13 +574,23 @@
 		}
 	}, true );
 
-	getCart().then( function ( initialCart ) {
-		cart = initialCart;
-		enhancedReady = true;
-		renderProducts();
-		renderBasket();
-	} ).catch( function () {
-		// Keep native WooCommerce add-to-cart behavior as the fallback.
+	window.addEventListener( 'pageshow', scheduleCartRefresh );
+	document.addEventListener( 'visibilitychange', function () {
+		if ( document.visibilityState === 'visible' ) {
+			scheduleCartRefresh();
+		}
+	} );
+	document.addEventListener( 'wc-blocks_added_to_cart', scheduleCartRefresh );
+	document.addEventListener( 'wc-blocks_removed_from_cart', scheduleCartRefresh );
+
+	if ( window.jQuery ) {
+		window.jQuery( document.body ).on( 'added_to_cart removed_from_cart wc_fragments_refreshed updated_wc_div', scheduleCartRefresh );
+	}
+
+	getCart().then( enableEnhancement ).catch( function () {
+		// Keep native WooCommerce add-to-cart behavior and duplicate/native cart
+		// feedback untouched when Grovia cannot hydrate authoritative cart state.
 		enhancedReady = false;
+		document.body.classList.remove( 'grovia-cart-enhanced' );
 	} );
 }() );
