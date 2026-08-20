@@ -1,0 +1,51 @@
+{
+  "schema": 1,
+  "status": "engineering-alpha",
+  "policy": {
+    "customer_package_roots": {
+      "theme": "packages/storefront-theme",
+      "core": "packages/storefront-core"
+    },
+    "demo_distribution_roots": [],
+    "license_sensitive_extensions": [
+      ".avif",
+      ".eot",
+      ".gif",
+      ".ico",
+      ".jpeg",
+      ".jpg",
+      ".mp3",
+      ".mp4",
+      ".otf",
+      ".pdf",
+      ".png",
+      ".svg",
+      ".ttf",
+      ".wav",
+      ".webm",
+      ".webp",
+      ".woff",
+      ".woff2",
+      ".zip"
+    ],
+    "vendor_directory_names": [
+      "third-party",
+      "third_party",
+      "vendor",
+      "vendors"
+    ]
+  },
+  "items": [],
+  "paid_release_blockers": [
+    "final demo image/illustration providers selected and reviewed",
+    "font and icon strategy approved",
+    "theme and core LICENSE files reviewed",
+    "all redistributed third-party entries approved with evidence",
+    "human review completed for ambiguous or proprietary asset licenses"
+  ],
+  "notes": [
+    "No third-party font, photo, illustration, icon pack or vendored runtime library is currently approved for redistribution in the engineering-alpha Theme/Core packages.",
+    "An empty items array is intentional until a real third-party dependency or redistributable demo asset is introduced.",
+    "Public demo/starter asset roots must be added explicitly before those assets can be treated as redistributable product content."
+  ]
+}

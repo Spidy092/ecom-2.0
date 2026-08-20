@@ -6,7 +6,9 @@ on:
       - 'packages/storefront-theme/**'
       - 'packages/storefront-core/**'
       - 'tools/release/**'
+      - 'release/third-party-assets.json'
       - 'docs/COMMERCIAL-PACKAGE-CONTRACT.md'
+      - 'docs/ASSET-LICENSING-GATE.md'
       - 'docs/RELEASE.md'
       - '.wp-env.package.json'
       - '.github/workflows/package-contract.yml'
@@ -17,6 +19,7 @@ on:
       - 'packages/storefront-theme/**'
       - 'packages/storefront-core/**'
       - 'tools/release/**'
+      - 'release/third-party-assets.json'
       - '.wp-env.package.json'
       - '.github/workflows/package-contract.yml'
 
@@ -38,8 +41,17 @@ jobs:
           node-version: '24'
           package-manager-cache: false
 
-      - name: Check package builder syntax
-        run: python -m py_compile tools/release/build_packages.py
+      - name: Check release-tool syntax
+        run: |
+          python -m py_compile tools/release/build_packages.py
+          python -m py_compile tools/release/verify_asset_inventory.py
+          python -m py_compile tools/release/test_asset_inventory.py
+
+      - name: Exercise third-party asset licensing gate
+        run: python tools/release/test_asset_inventory.py
+
+      - name: Verify repository asset inventory and generated notices
+        run: python tools/release/verify_asset_inventory.py
 
       - name: Build engineering-alpha artifacts twice
         run: |
@@ -50,6 +62,7 @@ jobs:
         run: |
           python - <<'PY'
           import json
+          import zipfile
           from pathlib import Path
 
           first = json.loads(Path('artifacts/release-a/release-manifest.json').read_text())
@@ -71,6 +84,10 @@ jobs:
               first_zip = Path('artifacts/release-a') / a['filename']
               second_zip = Path('artifacts/release-b') / b['filename']
               assert first_zip.read_bytes() == second_zip.read_bytes(), key
+
+              with zipfile.ZipFile(first_zip) as archive:
+                  notice = f"{a['package_root']}/THIRD-PARTY-NOTICES.md"
+                  assert notice in archive.namelist(), (key, notice)
 
           blockers = first['paid_release_blockers']
           assert any('LICENSE' in item for item in blockers)
@@ -111,4 +128,4 @@ jobs:
 
       - name: Stop clean package environment
         if: always()
-        run: npx -y @wordpress/env@10.39.0 stop --config=.wp-env.package.json
+        run: npx -y @wordpress/env@10.39.0 stop --config=.wp-env.package.json || true
