@@ -2,35 +2,33 @@
 
 <!-- wp:group {"tagName":"main","align":"wide","className":"grovia-shell","style":{"spacing":{"padding":{"left":"1rem","right":"1rem"}}},"layout":{"type":"constrained"}} -->
 <main class="wp-block-group alignwide grovia-shell" style="padding-right:1rem;padding-left:1rem"><!-- wp:group {"align":"wide","className":"grovia-context","layout":{"type":"flex","flexWrap":"wrap","justifyContent":"space-between"}} -->
-<div class="wp-block-group alignwide grovia-context"><!-- wp:group {"style":{"spacing":{"blockGap":"0.15rem"}}} -->
+<div class="wp-block-group alignwide grovia-context"><!-- wp:group {"style":{"spacing":{"blockGap":"0.1rem"}}} -->
 <div class="wp-block-group"><!-- wp:paragraph {"className":"grovia-kicker"} -->
-<p class="grovia-kicker">Delivery area</p>
+<p class="grovia-kicker">Delivery</p>
 <!-- /wp:paragraph -->
 
-<!-- wp:paragraph -->
-<p><strong>Check your postcode before filling the basket.</strong></p>
+<!-- wp:paragraph {"fontSize":"small"} -->
+<p class="has-small-font-size"><strong>Exact shipping options are confirmed at checkout.</strong></p>
 <!-- /wp:paragraph --></div>
 <!-- /wp:group -->
 
-<!-- wp:buttons -->
-<div class="wp-block-buttons"><!-- wp:button {"className":"is-style-outline"} -->
-<div class="wp-block-button is-style-outline"><a class="wp-block-button__link wp-element-button" href="#delivery-preview">Check area</a></div>
-<!-- /wp:button --></div>
-<!-- /wp:buttons --></div>
+<!-- wp:paragraph {"className":"grovia-context-note","fontSize":"small"} -->
+<p class="grovia-context-note has-small-font-size">Keep shopping — your basket stays with you.</p>
+<!-- /wp:paragraph --></div>
 <!-- /wp:group -->
 
-<!-- wp:group {"anchor":"grovia-search","align":"wide","className":"grovia-search","style":{"spacing":{"margin":{"top":"1.25rem"}}},"layout":{"type":"constrained"}} -->
-<div id="grovia-search" class="wp-block-group alignwide grovia-search" style="margin-top:1.25rem"><!-- wp:search {"label":"Search groceries","showLabel":true,"placeholder":"Search milk, rice, tomatoes…","buttonText":"Search","buttonPosition":"button-inside","buttonUseIcon":true} /--></div>
+<!-- wp:group {"anchor":"grovia-search","align":"wide","className":"grovia-search","style":{"spacing":{"margin":{"top":"1rem"}}},"layout":{"type":"constrained"}} -->
+<div id="grovia-search" class="wp-block-group alignwide grovia-search" style="margin-top:1rem"><!-- wp:search {"label":"Search groceries","showLabel":true,"placeholder":"Search milk, rice, tomatoes…","buttonText":"Search","buttonPosition":"button-inside","buttonUseIcon":true} /--></div>
 <!-- /wp:group -->
 
-<!-- wp:group {"anchor":"grovia-aisles","align":"wide","style":{"spacing":{"margin":{"top":"1.5rem"},"blockGap":"0.6rem"}},"layout":{"type":"constrained"}} -->
-<div id="grovia-aisles" class="wp-block-group alignwide" style="margin-top:1.5rem"><!-- wp:paragraph {"className":"grovia-kicker"} -->
-<p class="grovia-kicker">Aisles</p>
+<!-- wp:group {"anchor":"grovia-aisles","align":"wide","className":"grovia-aisles","style":{"spacing":{"margin":{"top":"1.25rem"},"blockGap":"0.45rem"}},"layout":{"type":"constrained"}} -->
+<div id="grovia-aisles" class="wp-block-group alignwide grovia-aisles" style="margin-top:1.25rem"><!-- wp:paragraph {"className":"grovia-kicker"} -->
+<p class="grovia-kicker">Shop by aisle</p>
 <!-- /wp:paragraph -->
 
 <!-- wp:html -->
 <nav class="grovia-aisle-rail" aria-label="Grocery aisles">
-  <a href="#everyday">Everyday</a>
+  <a href="#everyday" aria-current="location">Everyday</a>
   <a href="/product-category/produce/">Produce</a>
   <a href="/product-category/dairy/">Dairy</a>
   <a href="/product-category/pantry/">Pantry</a>
@@ -39,38 +37,34 @@
 <!-- /wp:html --></div>
 <!-- /wp:group -->
 
-<!-- wp:group {"anchor":"everyday","align":"wide","style":{"spacing":{"margin":{"top":"1.75rem"},"blockGap":"0.45rem"}},"layout":{"type":"constrained"}} -->
-<div id="everyday" class="wp-block-group alignwide" style="margin-top:1.75rem"><!-- wp:heading {"level":1,"fontSize":"x-large"} -->
-<h1 class="wp-block-heading has-x-large-font-size">Build the basket. Keep moving.</h1>
+<!-- wp:group {"anchor":"everyday","align":"wide","className":"grovia-store-intro","style":{"spacing":{"margin":{"top":"1.5rem"},"blockGap":"0.35rem"}},"layout":{"type":"constrained"}} -->
+<div id="everyday" class="wp-block-group alignwide grovia-store-intro" style="margin-top:1.5rem"><!-- wp:paragraph {"className":"grovia-kicker"} -->
+<p class="grovia-kicker">Modern Grocery</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:heading {"level":1,"fontSize":"x-large"} -->
+<h1 class="wp-block-heading has-x-large-font-size">Everyday groceries, easy to shop.</h1>
 <!-- /wp:heading -->
 
-<!-- wp:paragraph {"style":{"typography":{"fontSize":"1.05rem"}}} -->
-<p style="font-size:1.05rem">A first AisleFlow storefront slice: shopping context first, no full-screen hero, direct grocery products below.</p>
+<!-- wp:paragraph {"className":"grovia-store-intro__copy"} -->
+<p class="grovia-store-intro__copy">Scan the essentials, add what you need, adjust quantities in place, and keep moving.</p>
 <!-- /wp:paragraph --></div>
 <!-- /wp:group -->
 
-<!-- wp:group {"align":"wide","className":"grovia-product-shelf","style":{"spacing":{"margin":{"top":"1.5rem"}}},"layout":{"type":"constrained"}} -->
-<div class="wp-block-group alignwide grovia-product-shelf" style="margin-top:1.5rem"><!-- wp:heading {"level":2,"fontSize":"large"} -->
+<!-- wp:group {"align":"wide","className":"grovia-product-shelf","style":{"spacing":{"margin":{"top":"1.25rem"}}},"layout":{"type":"constrained"}} -->
+<div class="wp-block-group alignwide grovia-product-shelf" style="margin-top:1.25rem"><!-- wp:group {"className":"grovia-section-heading","layout":{"type":"flex","flexWrap":"wrap","justifyContent":"space-between"}} -->
+<div class="wp-block-group grovia-section-heading"><!-- wp:heading {"level":2,"fontSize":"large"} -->
 <h2 class="wp-block-heading has-large-font-size">Everyday essentials</h2>
 <!-- /wp:heading -->
+
+<!-- wp:paragraph {"fontSize":"small"} -->
+<p class="has-small-font-size">Add directly from the shelf.</p>
+<!-- /wp:paragraph --></div>
+<!-- /wp:group -->
 
 <!-- wp:shortcode -->
 [products limit="8" columns="4" orderby="menu_order" order="ASC"]
 <!-- /wp:shortcode --></div>
-<!-- /wp:group -->
-
-<!-- wp:group {"anchor":"delivery-preview","align":"wide","style":{"spacing":{"margin":{"top":"2rem"},"padding":{"top":"1.25rem","right":"1.25rem","bottom":"1.25rem","left":"1.25rem"}},"border":{"top":{"color":"var:preset|color|ink","width":"2px"}}},"layout":{"type":"constrained"}} -->
-<div id="delivery-preview" class="wp-block-group alignwide" style="border-top-color:var(--wp--preset--color--ink);border-top-width:2px;margin-top:2rem;padding-top:1.25rem;padding-right:1.25rem;padding-bottom:1.25rem;padding-left:1.25rem"><!-- wp:paragraph {"className":"grovia-kicker"} -->
-<p class="grovia-kicker">Next functional slice</p>
-<!-- /wp:paragraph -->
-
-<!-- wp:heading {"level":2,"fontSize":"large"} -->
-<h2 class="wp-block-heading has-large-font-size">Early delivery certainty + inline quantity state</h2>
-<!-- /wp:heading -->
-
-<!-- wp:paragraph -->
-<p>This foundation intentionally does not fake those interactions. The next implementation should wire them through supported WooCommerce and Grovia Core boundaries.</p>
-<!-- /wp:paragraph --></div>
 <!-- /wp:group --></main>
 <!-- /wp:group -->
 
