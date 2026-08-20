@@ -143,6 +143,16 @@ jobs:
         run: python packages/storefront-core/tests/e2e/department-browse.spec.py
       - name: Exercise visual system, editable shell and product image crops at target viewports
         run: python packages/storefront-core/tests/e2e/visual-system.spec.py
+      - name: Exercise premium Market Ledger visual hierarchy and capture review screenshots
+        run: python packages/storefront-core/tests/e2e/premium-visual-system.spec.py
+      - name: Upload premium visual review screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: premium-market-ledger-screenshots
+          path: artifacts/visual-competitiveness/*.png
+          if-no-files-found: warn
+          retention-days: 14
       - name: Expand fixture to large department taxonomy
         run: npx -y @wordpress/env@10.39.0 run cli wp eval-file wp-content/plugins/storefront-core/tests/e2e/seed-department-overflow.php
       - name: Exercise adaptive department chooser in Chrome
