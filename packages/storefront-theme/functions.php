@@ -75,3 +75,20 @@ function bhaivatech_grocery_alpha_register_block_styles(): void {
 	);
 }
 add_action( 'init', 'bhaivatech_grocery_alpha_register_block_styles' );
+
+/**
+ * Load account-only Buy Again presentation styles.
+ */
+function bhaivatech_grocery_alpha_enqueue_buy_again_style(): void {
+	if ( ! function_exists( 'is_account_page' ) || ! is_account_page() || ! is_wc_endpoint_url( 'buy-again' ) ) {
+		return;
+	}
+
+	wp_enqueue_style(
+		'bhaivatech-grocery-alpha-buy-again',
+		get_theme_file_uri( 'assets/css/buy-again.css' ),
+		array(),
+		wp_get_theme()->get( 'Version' )
+	);
+}
+add_action( 'wp_enqueue_scripts', 'bhaivatech_grocery_alpha_enqueue_buy_again_style' );
