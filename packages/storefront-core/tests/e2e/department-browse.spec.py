@@ -5,10 +5,19 @@ from __future__ import annotations
 
 import os
 import re
+from urllib.parse import parse_qs, unquote, urlparse
 
 from playwright.sync_api import expect, sync_playwright
 
 BASE_URL = os.environ.get("BT_E2E_BASE_URL", "http://localhost:8888")
+
+
+def is_store_api_route(url: str, route: str) -> bool:
+    """Match Store API requests with either pretty or query REST routing."""
+    parsed = urlparse(url)
+    expected = f"/wc/store/v1/{route}"
+    rest_route = unquote(parse_qs(parsed.query).get("rest_route", [""])[0])
+    return parsed.path.rstrip("/").endswith(expected) or rest_route.rstrip("/") == expected
 
 
 def product_card(page, name: str):
@@ -96,7 +105,7 @@ def main() -> None:
         broken_categories = browser.new_context(viewport={"width": 390, "height": 844})
         broken_page = broken_categories.new_page()
         broken_page.route(
-            re.compile(r"/wc/store/v1/products/categories(?:\?|$)"),
+            lambda url: is_store_api_route(url, "products/categories"),
             lambda route: route.fulfill(
                 status=200,
                 content_type="application/json",
@@ -127,7 +136,7 @@ def main() -> None:
             route.continue_()
 
         broken_product_page.route(
-            re.compile(r"/wc/store/v1/products(?:\?|$)"),
+            lambda url: is_store_api_route(url, "products"),
             corrupt_department_products,
         )
         broken_product_page.goto(BASE_URL, wait_until="networkidle")
@@ -157,7 +166,7 @@ def main() -> None:
             route.fulfill(response=response, headers=headers)
 
         partial_page.route(
-            re.compile(r"/wc/store/v1/products(?:\?|$)"),
+            lambda url: is_store_api_route(url, "products"),
             inflate_product_total,
         )
         partial_page.goto(BASE_URL, wait_until="networkidle")
@@ -182,7 +191,7 @@ def main() -> None:
             route.fulfill(response=response, headers=headers)
 
         overflow_page.route(
-            re.compile(r"/wc/store/v1/products/categories(?:\?|$)"),
+            lambda url: is_store_api_route(url, "products/categories"),
             inflate_category_total,
         )
         overflow_page.goto(BASE_URL, wait_until="networkidle")
