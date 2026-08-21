@@ -129,6 +129,7 @@ jobs:
           npx -y @wordpress/env@10.39.0 run cli wp eval-file wp-content/plugins/storefront-core/tests/e2e/seed-products.php
           # Repeat once: stable asset ownership must reuse Media attachments rather than duplicate them.
           npx -y @wordpress/env@10.39.0 run cli wp eval-file wp-content/plugins/storefront-core/tests/e2e/seed-products.php
+          npx -y @wordpress/env@10.39.0 run cli wp eval-file wp-content/plugins/storefront-core/tests/e2e/seed-demo-shell.php
       - name: Verify deterministic product image ownership after retry
         run: npx -y @wordpress/env@10.39.0 run cli wp eval-file wp-content/plugins/storefront-core/tests/e2e/demo-product-assets.spec.php
       - name: Exercise real Store API session in Chrome
