@@ -50,6 +50,27 @@ Security note: `scripts/with_server.py` intentionally invokes configured server 
 - prefer a direct static `file://` Playwright path when a server is unnecessary;
 - run the helper with `--help` before use, as the upstream skill instructs.
 
+### `market-research`
+
+- Source: `affaan-m/ECC`, `skills/market-research`.
+- Purpose: add a general decision-oriented research discipline: source every material claim, flag stale evidence, include downside/contrarian evidence, and separate fact/inference/recommendation.
+- Upstream license: MIT.
+- Reviewed upstream repository commit: `d8409a4b0813771235555e32e3d8046a73988bfa`.
+- Reviewed skill blob SHA: `cc2c6a8f0ee8659b986fe2e2a8a952f4b07d920d`.
+- Review date: 2026-08-20.
+- Status: **installed project-level** at `.agents/skills/market-research/` with upstream license.
+
+Security/overlap note:
+- the reviewed skill is instruction-only and invokes no scripts, shell commands, MCP servers, or external credentials;
+- it complements rather than replaces `grovia-market-research`: the upstream skill supplies general evidence discipline while the Grovia skill owns the WooCommerce/grocery-specific research gate;
+- the Skills.sh listing showed positive Gen Agent Trust Hub and Socket signals and a Snyk warning signal, so we vendored only the reviewed instruction file and license rather than adopting the broader ECC package/runtime.
+
+Normal CLI installation if needed elsewhere:
+
+```bash
+npx skills add https://github.com/affaan-m/ECC --skill market-research
+```
+
 ### `grovia-market-research`
 
 - Source: this repository.
