@@ -70,6 +70,8 @@ jobs:
           node --check packages/storefront-core/assets/js/product-filters.js
           node --check packages/storefront-core/assets/js/saved-products-model.js
           node --check packages/storefront-core/assets/js/saved-products.js
+          node --check packages/storefront-core/assets/js/buy-again-model.js
+          node --check packages/storefront-core/assets/js/buy-again.js
           node --check packages/storefront-core/assets/js/delivery-serviceability.js
           node --check packages/storefront-core/assets/js/mobile-shopping-nav.js
           node --check packages/storefront-core/assets/js/department-browse.js
@@ -109,6 +111,7 @@ jobs:
           npx -y @wordpress/env@10.39.0 run cli wp plugin status storefront-core
           npx -y @wordpress/env@10.39.0 run cli wp theme activate storefront-theme
           npx -y @wordpress/env@10.39.0 run cli wp eval-file wp-content/plugins/storefront-core/tests/e2e/seed-products.php
+          npx -y @wordpress/env@10.39.0 run cli wp eval-file wp-content/plugins/storefront-core/tests/e2e/seed-buy-again.php
           npx -y @wordpress/env@10.39.0 run cli wp eval-file wp-content/plugins/storefront-core/tests/e2e/seed-product-filters.php
       - name: Exercise real Store API session in Chrome
         run: python packages/storefront-core/tests/e2e/store-api-slice.spec.py
@@ -116,6 +119,10 @@ jobs:
         run: python packages/storefront-core/tests/e2e/saved-products-api.spec.py
       - name: Exercise Saved shopper UI in Chrome
         run: python packages/storefront-core/tests/e2e/saved-products-ui.spec.py
+      - name: Exercise Buy Again auth and ownership boundaries in Chrome
+        run: python packages/storefront-core/tests/e2e/buy-again-api.spec.py
+      - name: Exercise Buy Again account UI in Chrome
+        run: python packages/storefront-core/tests/e2e/buy-again-ui.spec.py
       - name: Exercise mobile shopping navigation in Chrome
         run: python packages/storefront-core/tests/e2e/mobile-shopping-nav.spec.py
       - name: Exercise adaptive department rail in Chrome
