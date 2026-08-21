@@ -86,11 +86,16 @@ def exercise_desktop(browser) -> None:
     assert_no_page_overflow(page, width)
 
     choose_department(page, "Produce")
+
+    # Department selection is asynchronous. Wait for the real product card
+    # rather than treating the selected button state as proof that the shared
+    # product workspace has finished rendering.
+    apple = page.locator(".bt-product-card").filter(has_text="Alpha Apple")
+    expect(apple).to_be_visible(timeout=10_000)
+
     cards = page.locator(".bt-product-card")
     assert cards.count() >= 2, cards.count()
 
-    apple = cards.filter(has_text="Alpha Apple")
-    expect(apple).to_be_visible()
     card_box = apple.bounding_box()
     image_box = apple.locator(".bt-product-card__image-link").bounding_box()
     assert card_box and image_box, (card_box, image_box)
