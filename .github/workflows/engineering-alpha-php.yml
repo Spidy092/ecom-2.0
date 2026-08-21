@@ -113,6 +113,14 @@ jobs:
         run: google-chrome --version
       - name: Start pinned WordPress + WooCommerce environment
         run: npx -y @wordpress/env@10.39.0 start
+      - name: Print pinned WordPress, WooCommerce and PHP versions
+        run: |
+          echo 'WordPress:'
+          npx -y @wordpress/env@10.39.0 run cli wp core version
+          echo 'WooCommerce:'
+          npx -y @wordpress/env@10.39.0 run cli wp plugin get woocommerce --field=version
+          echo 'PHP:'
+          npx -y @wordpress/env@10.39.0 run cli wp eval "echo PHP_VERSION . PHP_EOL;"
       - name: Activate alpha theme and seed deterministic products twice
         run: |
           npx -y @wordpress/env@10.39.0 run cli wp plugin status woocommerce
