@@ -56,7 +56,7 @@ Security note: `scripts/with_server.py` intentionally invokes configured server 
 - Purpose: support the V1 visual-design phase with a deliberate, distinctive design process instead of generic template aesthetics.
 - Upstream license: Apache-2.0.
 - Reviewed upstream repository commit: `0a64e398ec6bb34a494f0c347e8ccae53a862f8e`.
-- Reviewed skill blob SHA: `8ed6b320fadba34688070f008f2e187419e115e4` as fetched from the reviewed upstream tree.
+- Reviewed skill blob SHA: `decdff43d05908b4c1fc2cfd2d80fc5743440934`.
 - Review date: 2026-08-21.
 - Status: **installed project-level** at `.agents/skills/frontend-design/` with its upstream license.
 
