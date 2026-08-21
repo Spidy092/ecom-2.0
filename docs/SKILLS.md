@@ -50,6 +50,27 @@ Security note: `scripts/with_server.py` intentionally invokes configured server 
 - prefer a direct static `file://` Playwright path when a server is unnecessary;
 - run the helper with `--help` before use, as the upstream skill instructs.
 
+### `frontend-design`
+
+- Source: `anthropics/skills`, `skills/frontend-design`.
+- Purpose: support the V1 visual-design phase with a deliberate, distinctive design process instead of generic template aesthetics.
+- Upstream license: Apache-2.0.
+- Reviewed upstream repository commit: `0a64e398ec6bb34a494f0c347e8ccae53a862f8e`.
+- Reviewed skill blob SHA: `decdff43d05908b4c1fc2cfd2d80fc5743440934`.
+- Review date: 2026-08-21.
+- Status: **installed project-level** at `.agents/skills/frontend-design/` with its upstream license.
+
+Security/overlap note:
+- the reviewed skill is instruction-only and adds no scripts, shell commands, runtime packages, credentials or network services;
+- it complements `grovia-design-critic`: the upstream skill gives a visual exploration/critique workflow, while the Grovia skill keeps grocery task speed, accessibility, performance and product originality as the deciding constraints;
+- its warning about generic AI design defaults is directly relevant to the current visual-system phase, so visual directions must be tested against Grovia's subject and not adopted mechanically.
+
+Normal CLI installation if needed elsewhere:
+
+```bash
+npx skills add https://github.com/anthropics/skills --skill frontend-design
+```
+
 ### `grovia-market-research`
 
 - Source: this repository.
@@ -83,14 +104,6 @@ Security note: `scripts/with_server.py` intentionally invokes configured server 
 ## Approved candidates to evaluate when their task begins
 
 These are **not automatically installed** merely because they are popular.
-
-### Anthropic `frontend-design`
-
-Useful during the V1 visual-design phase. Install only when we move from interaction validation into actual visual system work, after re-reading the current upstream skill/license.
-
-```bash
-npx skills add https://github.com/anthropics/skills --skill frontend-design
-```
 
 ### Matt Pocock `tdd`
 
