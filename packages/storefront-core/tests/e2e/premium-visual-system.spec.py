@@ -37,11 +37,26 @@ def assert_no_page_overflow(page, width: int) -> None:
     assert overflow <= 1, (width, overflow)
 
 
+def assert_shop_shell(page) -> None:
+    """Keep repository/testing residue out of shopper-facing visual evidence."""
+    expect(page.locator("header .wp-block-site-title")).to_have_text("Modern Grocery")
+    expect(page.locator("footer .wp-block-site-tagline")).to_have_text(
+        "Everyday groceries, clearly organized."
+    )
+    assert page.get_by_text("ecom-2.0", exact=True).count() == 0
+    assert page.get_by_text("Edit this footer in Appearance → Editor.", exact=True).count() == 0
+    assert page.get_by_text(
+        "Engineering alpha for moderated testing. Product name, brand identity and public claims are not final.",
+        exact=True,
+    ).count() == 0
+
+
 def exercise_mobile(browser, width: int) -> None:
     context = browser.new_context(viewport={"width": width, "height": 844})
     page = context.new_page()
     page.goto(BASE_URL, wait_until="networkidle")
     assert_no_page_overflow(page, width)
+    assert_shop_shell(page)
 
     search = page.locator("[data-bt-search]")
     expect(search).to_be_visible()
@@ -88,6 +103,7 @@ def exercise_desktop(browser) -> None:
     page = context.new_page()
     page.goto(BASE_URL, wait_until="networkidle")
     assert_no_page_overflow(page, width)
+    assert_shop_shell(page)
 
     choose_department(page, "Produce")
 
