@@ -19,6 +19,10 @@ def css(locator, property_name: str) -> str:
     )
 
 
+def px(locator, property_name: str) -> float:
+    return float(css(locator, property_name).replace("px", ""))
+
+
 def choose_department(page, name: str) -> None:
     button = page.locator("[data-bt-departments] button").filter(has_text=name)
     expect(button).to_be_visible()
@@ -43,7 +47,7 @@ def exercise_mobile(browser, width: int) -> None:
     expect(search).to_be_visible()
     search_box = search.bounding_box()
     assert search_box and search_box["height"] >= 56, (width, search_box)
-    assert float(css(search, "border-bottom-width").replace("px", "")) >= 2, css(search, "border-bottom-width")
+    assert px(search, "border-bottom-width") >= 2, css(search, "border-bottom-width")
     assert css(search, "box-shadow") == "none", css(search, "box-shadow")
 
     choose_department(page, "Dairy")
@@ -70,7 +74,7 @@ def exercise_mobile(browser, width: int) -> None:
 
     cart = page.locator(".bt-product-workspace__cart")
     expect(page.locator("[data-bt-cart-count]")).to_have_text("1 item")
-    cart_radius = float(css(cart, "border-radius").replace("px", ""))
+    cart_radius = px(cart, "border-radius")
     assert cart_radius <= 8, (width, cart_radius)
 
     ARTIFACT_DIR.mkdir(parents=True, exist_ok=True)
@@ -100,9 +104,13 @@ def exercise_desktop(browser) -> None:
     image_box = apple.locator(".bt-product-card__image-link").bounding_box()
     assert card_box and image_box, (card_box, image_box)
 
-    # Desktop is an intentional grocery shelf: the image becomes the dominant
-    # square block and spans almost the full card content width.
-    assert image_box["width"] >= card_box["width"] * 0.84, (card_box, image_box)
+    # Desktop is an intentional grocery shelf. Measure image dominance against
+    # the actual content box, not the outer card box that includes deliberate
+    # breathing-room padding. The image should essentially fill that content
+    # width while remaining square.
+    content_width = card_box["width"] - px(apple, "padding-left") - px(apple, "padding-right")
+    assert content_width > 0, (card_box, content_width)
+    assert image_box["width"] >= content_width * 0.96, (card_box, content_width, image_box)
     assert abs(image_box["width"] - image_box["height"]) <= 1.5, image_box
     assert css(apple, "border-radius") == "0px"
     assert css(apple, "box-shadow") == "none"
