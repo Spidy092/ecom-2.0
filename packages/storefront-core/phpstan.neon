@@ -1,0 +1,16 @@
+includes:
+    - vendor/szepeviktor/phpstan-wordpress/extension.neon
+
+parameters:
+    level: 6
+    paths:
+        - src
+        - storefront-core.php
+    excludePaths:
+        - vendor
+        - tests
+    bootstrapFiles:
+        - storefront-core.php
+    ignoreErrors:
+        - '#Call to static method get_zone_matching_package\(\) on an unknown class WC_Shipping_Zones#'
+        - '#Instantiation of unknown class WC_Shipping_Zone#'

@@ -1,0 +1,66 @@
+name: Grovia CI Quality Gates
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  static-analysis-php:
+    name: PHP CodeSniffer & PHPStan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          coverage: none
+
+      - name: Install Plugin Dependencies
+        run: |
+          cd packages/storefront-core
+          composer install --prefer-dist --no-progress
+
+      - name: Run PHPCS (WordPress Coding Standards)
+        run: |
+          cd packages/storefront-core
+          vendor/bin/phpcs --standard=.phpcs.xml.dist src/ storefront-core.php
+
+      - name: Run PHPStan Static Analysis
+        run: |
+          cd packages/storefront-core
+          vendor/bin/phpstan analyse -c phpstan.neon
+
+      - name: Run PHPUnit Tests
+        run: |
+          cd packages/storefront-core
+          vendor/bin/phpunit
+
+  static-analysis-js:
+    name: ESLint & Node JS Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Theme Dependencies
+        run: |
+          cd packages/storefront-theme
+          npm ci || npm install
+
+      - name: Run ESLint
+        run: |
+          cd packages/storefront-theme
+          npx eslint assets/js/*.js
+
+      - name: Run JS Unit Tests
+        run: |
+          cd packages/storefront-theme
+          npm test

@@ -8,9 +8,9 @@ The first objective is deliberately small: create one exceptional grocery-first 
 
 ## Current phase
 
-**Phase 0 — research, product and business definition.**
+**Engineering alpha — first core shopping vertical slice implemented and validated.**
 
-No production theme implementation should begin until the relevant market/customer research, V1 requirements, UX thesis, technical boundaries, security baseline, licensing approach, and release process are reviewed.
+The research and engineering gates have been reviewed. The repository now contains an installable block theme, a WooCommerce-dependent Core plugin, a disposable WordPress Playground, and automated REST/browser smoke coverage. It is an engineering alpha, not a paid beta: production compatibility, commercial operations, and broader tester evidence remain before launch.
 
 ## Non-generic rule
 
@@ -35,9 +35,23 @@ Competitors are research inputs, never code/design/asset sources.
 - Mobile-first grocery shopping UX
 - Fast product discovery and quantity shopping
 - Shopping List / Buy Again flows
-- Delivery availability by zone/postcode
+- Delivery availability through WooCommerce Shipping Zones
 - Guided setup wizard
 - Performance, accessibility, security and maintainability by default
+
+## Implemented alpha slice
+
+- Modern Grocery block-theme templates, parts, tokens and mobile shopping dock;
+- WooCommerce product search/product collection composition points;
+- public Shipping-Zone-backed delivery checker with input validation;
+- custom-table, user-scoped Shopping List REST routes and product-card Save to list action;
+- HPOS-safe Buy Again service and authenticated endpoint;
+- capability-protected three-step setup wizard;
+- cart feedback reconciled from the WooCommerce Store API;
+- disposable Playground Blueprint, authenticated Playwright smoke test, CI validation, release ZIPs and checksums;
+- deterministic skill lockfile.
+
+The remaining work is tracked in [`docs/ROADMAP.md`](docs/ROADMAP.md): quantity-control polish, deeper WooCommerce compatibility coverage, starter-site/importer hardening, tester evidence, and release/commercial operations.
 
 ## Documents
 

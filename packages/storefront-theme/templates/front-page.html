@@ -1,0 +1,48 @@
+<!-- wp:template-part {"slug":"grovia-header","tagName":"header","className":"grovia-site-header"} /-->
+
+<main id="grovia-main" class="storefront-main" tabindex="-1">
+	<!-- wp:group {"tagName":"div","className":"storefront-workspace","layout":{"type":"constrained"}} -->
+	<div class="wp-block-group storefront-workspace">
+		<!-- wp:group {"className":"grovia-intro","layout":{"type":"constrained"}} -->
+		<div class="wp-block-group grovia-intro">
+			<!-- wp:paragraph {"className":"grovia-kicker"} -->
+			<p class="grovia-kicker">Modern Grocery</p>
+			<!-- /wp:paragraph -->
+			<!-- wp:heading {"level":1,"fontSize":"display"} -->
+			<h1 class="wp-block-heading has-display-font-size">Build your basket without losing your place.</h1>
+			<!-- /wp:heading -->
+			<!-- wp:paragraph {"className":"grovia-intro__lede","fontSize":"lead"} -->
+			<p class="grovia-intro__lede has-lead-font-size">Search, scan, and adjust everyday groceries in one calm workspace. Delivery context stays visible before the basket grows.</p>
+			<!-- /wp:paragraph -->
+		</div>
+		<!-- /wp:group -->
+
+		<!-- wp:shortcode -->
+		[bhaivatech_delivery_checker]
+		<!-- /wp:shortcode -->
+
+		<!-- wp:search {"label":"Search groceries","showLabel":false,"placeholder":"Search milk, rice, tomatoes…","buttonText":"Search","buttonPosition":"button-outside","buttonUseIcon":true,"className":"storefront-search-bar","query":{"post_type":"product"}} /-->
+
+		<!-- wp:template-part {"slug":"aisle-rail"} /-->
+
+		<!-- wp:woocommerce/product-collection {"queryId":0,"query":{"perPage":20,"pages":0,"offset":0,"postType":"product","order":"asc","orderBy":"title","inherit":false,"taxQuery":{},"isProductCollectionBlock":true,"woocommerceStockStatus":["instock","outofstock","onbackorder"]},"namespace":"woocommerce/product-collection","tagName":"div","displayLayout":{"type":"flex","columns":2,"shrinkColumns":true},"queryContextIncludes":["collection"],"className":"storefront-product-ledger"} -->
+			<!-- wp:woocommerce/product-template -->
+				<!-- wp:pattern {"slug":"storefront/product-ledger-row"} /-->
+			<!-- /wp:woocommerce/product-template -->
+
+			<!-- wp:woocommerce/product-collection-no-results -->
+				<!-- wp:paragraph {"align":"center","className":"storefront-no-results"} -->
+				<p class="has-text-align-center storefront-no-results">No products found. Try a different search or browse another aisle.</p>
+				<!-- /wp:paragraph -->
+			<!-- /wp:woocommerce/product-collection-no-results -->
+		<!-- /wp:woocommerce/product-collection -->
+
+		<!-- wp:shortcode -->
+		[bhaivatech_buy_again]
+		<!-- /wp:shortcode -->
+	</div>
+	<!-- /wp:group -->
+</main>
+
+<!-- wp:template-part {"slug":"grovia-footer","tagName":"footer","className":"grovia-site-footer"} /-->
+<!-- wp:template-part {"slug":"mobile-nav","className":"grovia-mobile-nav-region"} /-->

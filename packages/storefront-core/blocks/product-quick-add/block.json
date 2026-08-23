@@ -1,0 +1,23 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "storefront-core/product-quick-add",
+	"version": "1.0.0",
+	"title": "Grocery Product Quick Add",
+	"category": "woocommerce",
+	"icon": "cart",
+	"description": "Fast quantity stepper for grocery product cards.",
+	"textdomain": "storefront-core",
+	"supports": {
+		"html": false,
+		"interactivity": true
+	},
+	"attributes": {
+		"productId": {
+			"type": "number",
+			"default": 0
+		}
+	},
+	"render": "file:./render.php",
+	"viewScriptModule": "file:./view.js"
+}

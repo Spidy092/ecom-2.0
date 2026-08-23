@@ -1,0 +1,16 @@
+{
+  "core": "WordPress/WordPress#master",
+  "plugins": [
+    "https://downloads.wordpress.org/plugin/woocommerce.latest-stable.zip",
+    "./packages/storefront-core"
+  ],
+  "themes": [
+    "./packages/storefront-theme"
+  ],
+  "port": 8888,
+  "testsPort": 8889,
+  "config": {
+    "WP_DEBUG": true,
+    "SCRIPT_DEBUG": true
+  }
+}

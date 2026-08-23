@@ -206,6 +206,40 @@ Research: `research/business/monetization-stack.md`.
 
 ---
 
+## D-027 — Delivery checker reads WooCommerce Shipping Zones directly
+
+**Status:** Accepted
+**Date:** 2026-08-23
+
+Decision: the Storefront delivery checker calls `WC_Shipping_Zones::get_zone_matching_package()` (public WooCommerce API) rather than maintaining a parallel configured-postcode list in a WP option.
+
+Rationale:
+- No production WooCommerce theme maintains its own postcode database.
+- `WC_Shipping_Zones::get_zone_matching_package()` handles wildcards (`560*`) and ranges (`560001...560099`) natively.
+- Using WC Zones as the single source eliminates the dual-truth risk identified in the open decision.
+- Zone ID 0 ("Rest of the World") = unavailable; named zone ID > 0 = available.
+- No admin postcode settings page is required — store owners configure delivery in WooCommerce → Shipping → Zones as normal.
+- An admin notice on activation guides owners to configure named zones.
+
+Research evidence: competitor plugins (MakeWebBetter, iNext) use the same WC zone query pattern.
+
+## D-028 — Shopping List uses a custom database table
+
+**Status:** Accepted
+**Date:** 2026-08-23
+
+Decision: the Shopping List is persisted in a dedicated custom table (`{prefix}storefront_shopping_list`) with columns `user_id`, `product_id`, `variation_id`, `added_at`.
+
+Rationale:
+- Both YITH WooCommerce Wishlist and TI WooCommerce Wishlist — the two market-leading plugins — use custom tables (`yith_wcwl_items`, `tinvwl_items`). They moved away from user_meta because serialized arrays are opaque to the DB engine and degrade at scale.
+- Shopping List is a core Grovia differentiator; migrating from user_meta later would require a data migration breaking customer lists.
+- `UNIQUE KEY (user_id, product_id, variation_id)` makes adds idempotent.
+- `KEY user_id` supports efficient per-user retrieval.
+- No price/stock is stored — both are resolved from WooCommerce at render time.
+- Table created via `dbDelta()` on activation; dropped and cleaned on uninstall; GDPR eraser hook registered.
+
+---
+
 ## Open decisions
 
 Record these as new entries when resolved:
@@ -213,8 +247,6 @@ Record these as new entries when resolved:
 - exact PHP customer minimum (development/recommended target is PHP 8.3+);
 - exact WordPress/WooCommerce minimum support matrix at paid beta;
 - final licensing/update/payment provider after Lemon Squeezy/Freemius sandbox validation;
-- Shopping List persistence model;
-- whether delivery serviceability wraps/synchronizes WooCommerce Shipping Zones;
 - variable-product quick-add choice surface;
 - whether any custom Interactivity API block is justified after prototype/platform testing;
 - public vs private repository strategy before commercial code is committed;

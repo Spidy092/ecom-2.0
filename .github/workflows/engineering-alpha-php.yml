@@ -7,10 +7,11 @@ on:
       - '.github/workflows/engineering-alpha-php.yml'
   push:
     branches:
-      - agent/grovia-alpha-skeleton
+      - agent/grovia-foundation
     paths:
       - 'packages/**/*.php'
       - '.github/workflows/engineering-alpha-php.yml'
+  workflow_dispatch:
 
 permissions:
   contents: read

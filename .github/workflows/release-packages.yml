@@ -1,0 +1,47 @@
+name: Build release packages
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Release version, for example 0.1.0-alpha'
+        required: true
+        type: string
+  push:
+    tags:
+      - 'v*.*.*'
+
+permissions:
+  contents: read
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v6
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          coverage: none
+      - name: Validate source
+        run: tools/validate-project.sh
+      - name: Resolve version
+        id: version
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            echo "value=${{ inputs.version }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "value=${GITHUB_REF_NAME#v}" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Build ZIP artifacts
+        run: tools/build-release.sh "${{ steps.version.outputs.value }}" dist
+      - name: Upload release artifacts
+        uses: actions/upload-artifact@v7
+        with:
+          name: storefront-release-${{ steps.version.outputs.value }}
+          path: dist/
+          if-no-files-found: error
+          retention-days: 30

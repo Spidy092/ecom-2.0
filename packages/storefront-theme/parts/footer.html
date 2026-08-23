@@ -1,0 +1,32 @@
+<!-- wp:group {"tagName":"div","className":"storefront-footer-inner","layout":{"type":"constrained"}} -->
+<div class="wp-block-group storefront-footer-inner">
+
+	<!-- wp:group {"layout":{"type":"flex","flexWrap":"wrap","justifyContent":"space-between","verticalAlignment":"top"}} -->
+	<div class="wp-block-group">
+
+		<!-- wp:group {"className":"storefront-footer-brand"} -->
+		<div class="wp-block-group storefront-footer-brand">
+			<!-- wp:site-logo {"width":120} /-->
+			<!-- wp:site-tagline {"className":"storefront-footer-tagline"} /-->
+		</div>
+		<!-- /wp:group -->
+
+		<!-- wp:navigation {"className":"storefront-footer-nav","layout":{"type":"flex","orientation":"vertical"}} /-->
+
+	</div>
+	<!-- /wp:group -->
+
+	<!-- wp:separator {"className":"storefront-footer-rule"} -->
+	<hr class="wp-block-separator storefront-footer-rule"/>
+	<!-- /wp:separator -->
+
+	<!-- wp:group {"layout":{"type":"flex","flexWrap":"wrap","justifyContent":"space-between","verticalAlignment":"center"}} -->
+	<div class="wp-block-group">
+		<!-- wp:paragraph {"className":"storefront-footer-legal","fontSize":"xs"} -->
+		<p class="storefront-footer-legal has-xs-font-size">&copy; <?php echo esc_html( gmdate( 'Y' ) ); ?> <!-- wp:site-title {"isLink":false} /-->. All rights reserved.</p>
+		<!-- /wp:paragraph -->
+	</div>
+	<!-- /wp:group -->
+
+</div>
+<!-- /wp:group -->
