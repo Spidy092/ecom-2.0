@@ -1,0 +1,40 @@
+<!-- wp:template-part {"slug":"header","tagName":"header","className":"storefront-site-header"} /-->
+
+<main id="storefront-main" class="storefront-main" tabindex="-1">
+	<!-- wp:group {"tagName":"div","layout":{"type":"constrained"}} -->
+	<div class="wp-block-group">
+
+		<!-- wp:woocommerce/product-collection {"queryId":1,"query":{"perPage":20,"pages":0,"offset":0,"postType":"product","order":"asc","orderBy":"title","inherit":true,"taxQuery":{},"isProductCollectionBlock":true,"woocommerceStockStatus":["instock","outofstock","onbackorder"]},"namespace":"woocommerce/product-collection","tagName":"div","displayLayout":{"type":"flex","columns":2,"shrinkColumns":true},"queryContextIncludes":["collection"],"className":"storefront-product-ledger"} -->
+
+			<!-- wp:group {"className":"storefront-archive-header","layout":{"type":"constrained"}} -->
+			<div class="wp-block-group storefront-archive-header">
+				<!-- wp:query-title {"type":"archive","className":"storefront-archive-title"} /-->
+				<!-- wp:term-description {"className":"storefront-archive-description"} /-->
+			</div>
+			<!-- /wp:group -->
+
+			<!-- wp:woocommerce/product-template -->
+				<!-- wp:pattern {"slug":"storefront/product-ledger-row"} /-->
+			<!-- /wp:woocommerce/product-template -->
+
+			<!-- wp:woocommerce/product-collection-no-results -->
+				<!-- wp:paragraph {"align":"center","className":"storefront-no-results"} -->
+				<p class="has-text-align-center storefront-no-results">No products found. Try a different search or browse another aisle.</p>
+				<!-- /wp:paragraph -->
+			<!-- /wp:woocommerce/product-collection-no-results -->
+
+			<!-- wp:woocommerce/product-collection-pagination -->
+				<!-- wp:woocommerce/product-collection-pagination-previous /-->
+				<!-- wp:woocommerce/product-collection-pagination-numbers /-->
+				<!-- wp:woocommerce/product-collection-pagination-next /-->
+			<!-- /wp:woocommerce/product-collection-pagination -->
+
+		<!-- /wp:woocommerce/product-collection -->
+
+	</div>
+	<!-- /wp:group -->
+</main>
+
+<!-- wp:template-part {"slug":"basket-pulse","className":"storefront-basket-pulse-region"} /-->
+<!-- wp:template-part {"slug":"footer","tagName":"footer","className":"storefront-site-footer"} /-->
+<!-- wp:template-part {"slug":"mobile-nav","className":"storefront-mobile-nav-region"} /-->

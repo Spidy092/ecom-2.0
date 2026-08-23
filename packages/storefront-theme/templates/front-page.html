@@ -1,31 +1,48 @@
-<!-- wp:group {"tagName":"main","className":"bt-storefront-main","layout":{"type":"constrained"},"style":{"spacing":{"padding":{"top":"var:preset|spacing|50","bottom":"var:preset|spacing|50"}}}} -->
-<main class="wp-block-group bt-storefront-main" style="padding-top:var(--wp--preset--spacing--50);padding-bottom:var(--wp--preset--spacing--50)">
-	<!-- wp:group {"align":"wide","layout":{"type":"constrained"}} -->
-	<div class="wp-block-group alignwide">
-		<!-- wp:group {"className":"bt-storefront-intro","layout":{"type":"constrained"}} -->
-		<div class="wp-block-group bt-storefront-intro">
-			<!-- wp:paragraph {"className":"bt-storefront-intro__eyebrow"} -->
-			<p class="bt-storefront-intro__eyebrow">Modern Grocery</p>
-			<!-- /wp:paragraph -->
+<!-- wp:template-part {"slug":"grovia-header","tagName":"header","className":"grovia-site-header"} /-->
 
-			<!-- wp:heading {"level":1} -->
-			<h1 class="wp-block-heading">Groceries, without the detours.</h1>
+<main id="grovia-main" class="storefront-main" tabindex="-1">
+	<!-- wp:group {"tagName":"div","className":"storefront-workspace","layout":{"type":"constrained"}} -->
+	<div class="wp-block-group storefront-workspace">
+		<!-- wp:group {"className":"grovia-intro","layout":{"type":"constrained"}} -->
+		<div class="wp-block-group grovia-intro">
+			<!-- wp:paragraph {"className":"grovia-kicker"} -->
+			<p class="grovia-kicker">Modern Grocery</p>
+			<!-- /wp:paragraph -->
+			<!-- wp:heading {"level":1,"fontSize":"display"} -->
+			<h1 class="wp-block-heading has-display-font-size">Build your basket without losing your place.</h1>
 			<!-- /wp:heading -->
-
-			<!-- wp:paragraph {"className":"bt-storefront-intro__lead"} -->
-			<p class="bt-storefront-intro__lead">Check delivery, search or browse departments, then adjust quantities without losing your shopping flow.</p>
-			<!-- /wp:paragraph -->
-
-			<!-- wp:paragraph {"className":"bt-storefront-alpha-note"} -->
-			<p class="bt-storefront-alpha-note">Engineering alpha for moderated testing. Product name, brand identity and public claims are not final.</p>
+			<!-- wp:paragraph {"className":"grovia-intro__lede","fontSize":"lead"} -->
+			<p class="grovia-intro__lede has-lead-font-size">Search, scan, and adjust everyday groceries in one calm workspace. Delivery context stays visible before the basket grows.</p>
 			<!-- /wp:paragraph -->
 		</div>
 		<!-- /wp:group -->
 
-		<!-- wp:bhaivatech-storefront/product-workspace {"align":"wide"} /-->
+		<!-- wp:shortcode -->
+		[bhaivatech_delivery_checker]
+		<!-- /wp:shortcode -->
+
+		<!-- wp:search {"label":"Search groceries","showLabel":false,"placeholder":"Search milk, rice, tomatoes…","buttonText":"Search","buttonPosition":"button-outside","buttonUseIcon":true,"className":"storefront-search-bar","query":{"post_type":"product"}} /-->
+
+		<!-- wp:template-part {"slug":"aisle-rail"} /-->
+
+		<!-- wp:woocommerce/product-collection {"queryId":0,"query":{"perPage":20,"pages":0,"offset":0,"postType":"product","order":"asc","orderBy":"title","inherit":false,"taxQuery":{},"isProductCollectionBlock":true,"woocommerceStockStatus":["instock","outofstock","onbackorder"]},"namespace":"woocommerce/product-collection","tagName":"div","displayLayout":{"type":"flex","columns":2,"shrinkColumns":true},"queryContextIncludes":["collection"],"className":"storefront-product-ledger"} -->
+			<!-- wp:woocommerce/product-template -->
+				<!-- wp:pattern {"slug":"storefront/product-ledger-row"} /-->
+			<!-- /wp:woocommerce/product-template -->
+
+			<!-- wp:woocommerce/product-collection-no-results -->
+				<!-- wp:paragraph {"align":"center","className":"storefront-no-results"} -->
+				<p class="has-text-align-center storefront-no-results">No products found. Try a different search or browse another aisle.</p>
+				<!-- /wp:paragraph -->
+			<!-- /wp:woocommerce/product-collection-no-results -->
+		<!-- /wp:woocommerce/product-collection -->
+
+		<!-- wp:shortcode -->
+		[bhaivatech_buy_again]
+		<!-- /wp:shortcode -->
 	</div>
 	<!-- /wp:group -->
 </main>
-<!-- /wp:group -->
 
-<!-- wp:template-part {"slug":"footer"} /-->
+<!-- wp:template-part {"slug":"grovia-footer","tagName":"footer","className":"grovia-site-footer"} /-->
+<!-- wp:template-part {"slug":"mobile-nav","className":"grovia-mobile-nav-region"} /-->

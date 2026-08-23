@@ -1,0 +1,23 @@
+# Copyright (C) 2026 BhaivaTech
+# This file is distributed under the same license as the BhaivaTech Storefront Core plugin.
+msgid ""
+msgstr ""
+"Project-Id-Version: BhaivaTech Storefront Core 0.0.1-alpha\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/storefront-core\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2026-08-24T00:00:00+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.10.0\n"
+"X-Domain: storefront-core\n"
+
+#: src/Delivery/RestHandler.php:77
+msgid "Invalid postcode format."
+msgstr ""
+
+#: src/Delivery/AdminNotice.php:45
+msgid "Grovia Storefront requires at least one named WooCommerce Shipping Zone configured with postcodes for delivery availability checks."
+msgstr ""

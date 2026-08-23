@@ -1,0 +1,20 @@
+{
+	"root": true,
+	"extends": [
+		"plugin:@wordpress/eslint-plugin/recommended"
+	],
+	"env": {
+		"browser": true,
+		"es2022": true,
+		"node": true
+	},
+	"globals": {
+		"storefrontConfig": "readonly",
+		"sessionStorage": "readonly",
+		"fetch": "readonly"
+	},
+	"rules": {
+		"no-console": "warn",
+		"no-unused-vars": ["error", { "argsIgnorePattern": "^_" }]
+	}
+}

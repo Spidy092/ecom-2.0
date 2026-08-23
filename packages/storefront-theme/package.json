@@ -1,0 +1,16 @@
+{
+	"name": "grovia-theme",
+	"version": "0.0.1",
+	"description": "Grovia grocery-first block theme for WooCommerce.",
+	"type": "module",
+	"scripts": {
+		"test": "node --test tests/*.test.mjs",
+		"lint:js": "eslint assets/js/*.js",
+		"lint": "npm run lint:js && npm test"
+	},
+	"devDependencies": {
+		"@wordpress/eslint-plugin": "^18.0.0",
+		"eslint": "^8.57.0"
+	},
+	"private": true
+}

@@ -1,0 +1,75 @@
+<!-- wp:template-part {"slug":"header","tagName":"header","className":"grovia-site-header"} /-->
+
+<main id="grovia-main" class="grovia-main" tabindex="-1">
+	<!-- wp:group {"tagName":"div","layout":{"type":"constrained"}} -->
+	<div class="wp-block-group">
+
+		<!-- wp:woocommerce/breadcrumbs /-->
+
+		<!-- wp:columns {"className":"grovia-single-product-grid"} -->
+		<div class="wp-block-columns grovia-single-product-grid">
+			
+			<!-- wp:column {"width":"50%"} -->
+			<div class="wp-block-column" style="flex-basis:50%">
+				<!-- wp:woocommerce/product-image-gallery /-->
+			</div>
+			<!-- /wp:column -->
+
+			<!-- wp:column {"width":"50%"} -->
+			<div class="wp-block-column" style="flex-basis:50%">
+				<!-- wp:group {"className":"grovia-product-detail","layout":{"type":"constrained"}} -->
+				<div class="wp-block-group grovia-product-detail">
+
+					<!-- wp:woocommerce/product-title {"level":1} /-->
+					<!-- wp:woocommerce/product-rating /-->
+					<!-- wp:woocommerce/product-price /-->
+					<!-- wp:woocommerce/product-short-description /-->
+
+					<!-- wp:woocommerce/add-to-cart-with-options /-->
+
+					<!-- wp:buttons {"className":"grovia-product-actions"} -->
+					<div class="wp-block-buttons grovia-product-actions">
+						<!-- wp:button {"className":"grovia-btn-shopping-list","width":100} -->
+						<div class="wp-block-button grovia-btn-shopping-list is-style-outline"><a class="wp-block-button__link wp-element-button" id="grovia-add-to-list-btn">♥ Add to Shopping List</a></div>
+						<!-- /wp:button -->
+					</div>
+					<!-- /wp:buttons -->
+
+					<!-- wp:separator {"className":"grovia-divider"} -->
+					<hr class="wp-block-separator grovia-divider"/>
+					<!-- /wp:separator -->
+
+					<!-- wp:storefront-core/delivery-checker /-->
+
+					<!-- wp:separator {"className":"grovia-divider"} -->
+					<hr class="wp-block-separator grovia-divider"/>
+					<!-- /wp:separator -->
+
+					<!-- wp:group {"className":"grovia-buy-again-context","layout":{"type":"flex","flexWrap":"nowrap"}} -->
+					<div class="wp-block-group grovia-buy-again-context">
+						<span class="grovia-buy-again-icon">🔄</span>
+						<p class="grovia-buy-again-text">Frequently reordered item in your weekly grocery basket.</p>
+					</div>
+					<!-- /wp:group -->
+
+					<!-- wp:woocommerce/product-meta /-->
+
+				</div>
+				<!-- /wp:group -->
+			</div>
+			<!-- /wp:column -->
+
+		</div>
+		<!-- /wp:columns -->
+
+		<!-- wp:woocommerce/product-details /-->
+
+		<!-- wp:woocommerce/related-products {"columns":4,"rows":1} /-->
+
+	</div>
+	<!-- /wp:group -->
+</main>
+
+<!-- wp:template-part {"slug":"basket-pulse","className":"grovia-basket-pulse-region"} /-->
+<!-- wp:template-part {"slug":"footer","tagName":"footer","className":"grovia-site-footer"} /-->
+<!-- wp:template-part {"slug":"mobile-nav","className":"grovia-mobile-nav-region"} /-->

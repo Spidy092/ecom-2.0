@@ -1,0 +1,30 @@
+<!-- wp:template-part {"slug":"header","tagName":"header","className":"storefront-site-header"} /-->
+
+<main id="storefront-main" class="storefront-main" tabindex="-1">
+	<!-- wp:group {"tagName":"div","layout":{"type":"constrained"}} -->
+	<div class="wp-block-group storefront-404">
+
+		<!-- wp:heading {"level":1,"className":"storefront-404__title"} -->
+		<h1 class="wp-block-heading storefront-404__title">Page not found</h1>
+		<!-- /wp:heading -->
+
+		<!-- wp:paragraph {"className":"storefront-404__message"} -->
+		<p class="storefront-404__message">The page you're looking for doesn't exist. Try searching for a product or browse the aisles.</p>
+		<!-- /wp:paragraph -->
+
+		<!-- wp:search {"label":"Search groceries","showLabel":false,"placeholder":"Search milk, rice, tomatoes…","buttonText":"Search","buttonPosition":"button-outside","buttonUseIcon":true,"className":"storefront-search-bar","query":{"post_type":"product"}} /-->
+
+		<!-- wp:buttons {"className":"storefront-404__actions"} -->
+		<div class="wp-block-buttons storefront-404__actions">
+			<!-- wp:button -->
+			<div class="wp-block-button"><a class="wp-block-button__link wp-element-button" href="/">Back to shop</a></div>
+			<!-- /wp:button -->
+		</div>
+		<!-- /wp:buttons -->
+
+	</div>
+	<!-- /wp:group -->
+</main>
+
+<!-- wp:template-part {"slug":"footer","tagName":"footer","className":"storefront-site-footer"} /-->
+<!-- wp:template-part {"slug":"mobile-nav","className":"storefront-mobile-nav-region"} /-->

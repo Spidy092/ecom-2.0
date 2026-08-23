@@ -1,5 +1,16 @@
-# Local Python environment for prototype browser checks
+# Local Python environments & binaries
+.venv/
+*.venv/
 research/prototypes/aisleflow-v0/.venv/
 
-# Generated deterministic test artifact
+# Build artifacts & releases
+dist/
+vendor/
+node_modules/
+
+# Generated test artifacts
 research/prototypes/aisleflow-v0/fixed-mission-result.json
+
+# OS files
+.DS_Store
+Thumbs.db

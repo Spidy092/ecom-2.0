@@ -10,3 +10,370 @@ License: GNU General Public License v2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: bhaivatech-grocery-alpha
 */
+
+:root {
+	--grovia-shadow: 0 12px 32px rgba(23, 34, 27, 0.08);
+}
+
+body {
+	background: #f5f7f2;
+}
+
+.wp-site-blocks > main,
+.grovia-home {
+	padding-bottom: 7rem;
+}
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+	outline: 3px solid #f1b541;
+	outline-offset: 3px;
+}
+
+.grovia-site-header {
+	border-bottom: 1px solid #c7d3c8;
+	background: #f5f7f2;
+}
+
+.grovia-header-row {
+	min-height: 5rem;
+	padding-top: 0.75rem;
+	padding-bottom: 0.75rem;
+}
+
+.grovia-site-title a {
+	color: #17221b;
+	font-family: "Avenir Next", "Trebuchet MS", sans-serif;
+	font-size: clamp(1.3rem, 2vw, 1.75rem);
+	font-weight: 800;
+	letter-spacing: -0.045em;
+	text-decoration: none;
+}
+
+.grovia-header-search {
+	border-top: 1px solid #c7d3c8;
+	padding-top: 0.8rem;
+	padding-bottom: 0.8rem;
+}
+
+.grovia-home {
+	padding-bottom: 7rem;
+}
+
+.grovia-intro {
+	padding-top: clamp(3rem, 8vw, 7rem);
+	padding-bottom: clamp(2.5rem, 6vw, 5rem);
+}
+
+.grovia-kicker {
+	margin: 0;
+	color: #1f5b45;
+	font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+	font-size: 0.75rem;
+	font-weight: 700;
+	letter-spacing: 0.12em;
+	text-transform: uppercase;
+}
+
+.grovia-intro h1 {
+	max-width: 15ch;
+	margin-top: 0.6rem;
+	margin-bottom: 1.25rem;
+	font-size: clamp(2.8rem, 8vw, 6.5rem);
+	line-height: 0.95;
+	text-wrap: balance;
+}
+
+.grovia-intro__lede {
+	max-width: 48rem;
+	color: #526158;
+	font-size: clamp(1.1rem, 2vw, 1.35rem);
+}
+
+.grovia-delivery-checker {
+	align-items: end;
+	background: #dce9dd;
+	border: 1px solid #c7d3c8;
+	box-shadow: var(--grovia-shadow);
+	display: grid;
+	gap: 1.25rem 2rem;
+	grid-template-columns: minmax(0, 1fr) minmax(18rem, 0.7fr);
+	margin: 0 auto 4rem;
+	max-width: 1240px;
+	padding: clamp(1.25rem, 3vw, 2.5rem);
+}
+
+.grovia-delivery-checker h2 {
+	margin: 0.25rem 0 0.5rem;
+	font-size: clamp(1.5rem, 3vw, 2.5rem);
+}
+
+.grovia-delivery-checker p:not(.grovia-kicker):not(.grovia-delivery-checker__status) {
+	margin: 0;
+	color: #526158;
+}
+
+.grovia-delivery-checker__form label {
+	display: block;
+	font-size: 0.85rem;
+	font-weight: 700;
+	margin-bottom: 0.4rem;
+}
+
+.grovia-delivery-checker__controls {
+	display: flex;
+	gap: 0.5rem;
+}
+
+.grovia-delivery-checker__controls input {
+	min-width: 0;
+	width: 100%;
+}
+
+.grovia-delivery-checker__status {
+	min-height: 1.5rem;
+	margin: 0.65rem 0 0;
+	font-size: 0.9rem;
+	font-weight: 700;
+}
+
+.grovia-delivery-checker__status.is-available { color: #1f5b45; }
+.grovia-delivery-checker__status.is-unavailable,
+.grovia-delivery-checker__status.is-error { color: #b95a31; }
+
+.grovia-aisle-heading {
+	border-bottom: 1px solid #c7d3c8;
+	padding-bottom: 0.75rem;
+}
+
+.grovia-aisle-heading h2 { margin: 0; }
+
+.grovia-aisle-rail a {
+	border-bottom: 2px solid transparent;
+	font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+	font-size: 0.8rem;
+	font-weight: 700;
+	text-decoration: none;
+	text-transform: uppercase;
+}
+
+.grovia-aisle-rail a:hover { border-color: #f1b541; }
+
+.grovia-product-grid ul.wc-block-grid__products,
+.grovia-product-grid .wc-block-grid__products {
+	gap: 1rem;
+}
+
+.grovia-product-grid .wc-block-grid__product,
+.grovia-product-grid .wc-block-components-product-card {
+	background: #fff;
+	border: 1px solid #c7d3c8;
+	box-shadow: none;
+	padding: 1rem;
+}
+
+.grovia-product-grid .wc-block-grid__product-title,
+.grovia-product-grid .wc-block-components-product-name {
+	color: #17221b;
+	font-family: "Avenir Next", "Trebuchet MS", sans-serif;
+	font-weight: 700;
+}
+
+.grovia-product-grid .wc-block-grid__product-price,
+.grovia-product-grid .wc-block-components-product-price {
+	color: #1f5b45;
+	font-variant-numeric: tabular-nums;
+	font-weight: 800;
+}
+
+.grovia-save-list-button {
+	background: transparent;
+	border: 1px solid #c7d3c8;
+	border-radius: 6px;
+	color: #1f5b45;
+	cursor: pointer;
+	display: inline-block;
+	font-size: 0.78rem;
+	font-weight: 700;
+	margin-top: 0.5rem;
+	padding: 0.45rem 0.65rem;
+}
+
+.grovia-save-list-button:hover,
+.grovia-save-list-button[aria-pressed="true"] {
+	background: #dce9dd;
+	border-color: #1f5b45;
+}
+
+.grovia-save-list-button:disabled {
+	cursor: wait;
+	opacity: 0.7;
+}
+
+.grovia-shopping-list {
+	margin: 0 auto;
+	max-width: 760px;
+	padding: 4rem 1rem 8rem;
+}
+
+.grovia-shopping-list h2 {
+	margin-top: 0.4rem;
+}
+
+.grovia-shopping-list__items {
+	list-style: none;
+	margin: 2rem 0 0;
+	padding: 0;
+}
+
+.grovia-shopping-list__item {
+	align-items: center;
+	border-bottom: 1px solid #c7d3c8;
+	display: flex;
+	gap: 1rem;
+	justify-content: space-between;
+	padding: 1rem 0;
+}
+
+.grovia-shopping-list__item a {
+	font-weight: 700;
+}
+
+.grovia-shopping-list__price {
+	color: #1f5b45;
+	font-variant-numeric: tabular-nums;
+	margin-top: 0.2rem;
+}
+
+.grovia-buy-again {
+	margin: 0 auto 4rem;
+	max-width: 1240px;
+	padding: 0 1rem;
+}
+
+.grovia-buy-again h2 {
+	margin-top: 0.4rem;
+}
+
+.grovia-buy-again__items {
+	list-style: none;
+	margin: 1.5rem 0 0;
+	padding: 0;
+}
+
+.grovia-buy-again__item {
+	align-items: center;
+	border-bottom: 1px solid #c7d3c8;
+	display: flex;
+	gap: 1rem;
+	justify-content: space-between;
+	padding: 1rem 0;
+}
+
+.grovia-buy-again__item > div:first-child {
+	min-width: 0;
+}
+
+.grovia-buy-again__item a:first-child {
+	font-weight: 700;
+}
+
+.grovia-buy-again__action {
+	background: #1f5b45;
+	border-radius: 6px;
+	color: #f5f7f2;
+	display: inline-block;
+	flex: 0 0 auto;
+	font-size: 0.8rem;
+	font-weight: 700;
+	padding: 0.6rem 0.8rem;
+	text-decoration: none;
+}
+
+.grovia-buy-again__action:hover {
+	background: #17221b;
+	color: #f5f7f2;
+}
+
+.grovia-bottom-nav {
+	background: #17221b;
+	border-top: 1px solid #526158;
+	bottom: 0;
+	color: #f5f7f2;
+	left: 0;
+	padding: 0.65rem 1rem calc(0.65rem + env(safe-area-inset-bottom));
+	position: fixed;
+	right: 0;
+	scroll-margin-top: 1rem;
+	z-index: 20;
+}
+
+.grovia-cart-feedback {
+	align-items: center;
+	background: #f1b541;
+	bottom: calc(4.5rem + env(safe-area-inset-bottom));
+	color: #17221b;
+	display: flex;
+	gap: 1rem;
+	justify-content: space-between;
+	left: 1rem;
+	max-width: 28rem;
+	padding: 0.7rem 1rem;
+	position: fixed;
+	right: 1rem;
+	z-index: 19;
+}
+
+.grovia-cart-feedback p {
+	margin: 0;
+}
+
+.grovia-cart-feedback a {
+	color: #17221b;
+	font-size: 0.8rem;
+	font-weight: 800;
+}
+
+.grovia-bottom-nav a {
+	color: #f5f7f2;
+	font-size: 0.75rem;
+	font-weight: 700;
+	text-decoration: none;
+}
+
+.grovia-bottom-nav a:hover { color: #f1b541; }
+
+.grovia-site-footer {
+	padding-top: 3rem;
+	padding-bottom: 7rem;
+}
+
+@media (max-width: 700px) {
+	.grovia-delivery-checker {
+		grid-template-columns: 1fr;
+		margin-bottom: 2.5rem;
+	}
+
+	.grovia-delivery-checker__controls {
+		align-items: stretch;
+		flex-direction: column;
+	}
+
+	.grovia-delivery-checker__controls button {
+		width: 100%;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	*,
+	*::before,
+	*::after {
+		animation-duration: 0.01ms !important;
+		animation-iteration-count: 1 !important;
+		scroll-behavior: auto !important;
+		transition-duration: 0.01ms !important;
+	}
+}

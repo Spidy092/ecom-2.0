@@ -1,0 +1,35 @@
+name: Engineering alpha static validation
+
+on:
+  pull_request:
+    paths:
+      - 'packages/**'
+      - 'tools/**'
+      - '.github/workflows/alpha-static.yml'
+  push:
+    branches:
+      - agent/grovia-foundation
+    paths:
+      - 'packages/**'
+      - 'tools/**'
+      - '.github/workflows/alpha-static.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          coverage: none
+      - name: Validate packages
+        run: tools/validate-project.sh

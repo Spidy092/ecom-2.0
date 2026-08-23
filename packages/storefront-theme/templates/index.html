@@ -1,8 +1,18 @@
-<!-- wp:group {"tagName":"main","layout":{"type":"constrained"}} -->
-<main class="wp-block-group">
-	<!-- wp:query-title {"type":"archive"} /-->
-	<!-- wp:post-content /-->
+<!-- wp:template-part {"slug":"grovia-header"} /-->
+<!-- wp:group {"tagName":"main","anchor":"main-content","align":"full","layout":{"type":"constrained"}} -->
+<main id="main-content" class="wp-block-group alignfull">
+	<!-- wp:group {"align":"wide","layout":{"type":"constrained"}} -->
+	<div class="wp-block-group alignwide">
+		<!-- wp:query-title {"type":"archive"} /-->
+		<!-- wp:query {"query":{"perPage":12,"postType":"post","inherit":true},"layout":{"type":"default"}} -->
+			<!-- wp:post-template {"layout":{"type":"grid","columnCount":3}} -->
+				<!-- wp:post-title {"isLink":true} /-->
+				<!-- wp:post-excerpt /-->
+			<!-- /wp:post-template -->
+			<!-- wp:query-pagination /-->
+		<!-- /wp:query -->
+	</div>
+	<!-- /wp:group -->
 </main>
 <!-- /wp:group -->
-
-<!-- wp:template-part {"slug":"footer"} /-->
+<!-- wp:template-part {"slug":"grovia-footer"} /-->

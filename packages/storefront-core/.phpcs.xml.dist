@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<ruleset name="GroviaCore">
+	<description">PHPCodeSniffer ruleset for Grovia Core plugin.</description>
+
+	<!-- Pass flags -->
+	<arg value="ps"/>
+	<arg name="colors"/>
+	<arg name="extensions" value="php"/>
+
+	<!-- Exclude paths -->
+	<exclude-pattern>*/vendor/*</exclude-pattern>
+	<exclude-pattern>*/node_modules/*</exclude-pattern>
+	<exclude-pattern>*/tests/*</exclude-pattern>
+
+	<!-- Included Code Standards -->
+	<rule ref="WordPress-Core"/>
+	<rule ref="WordPress-Docs"/>
+	<rule ref="WordPress-Extra"/>
+
+	<!-- Specific Configs -->
+	<config name="minimum_supported_wp_version" value="6.5"/>
+
+	<!-- Naming convention overrides for PSR-4 compliance -->
+	<rule ref="WordPress.Files.FileName">
+		<properties>
+			<property name="strict_class_file_names" value="false"/>
+		</properties>
+	</rule>
+
+	<rule ref="WordPress.NamingConventions.ValidVariableName">
+		<properties>
+			<property name="customVariablesWhitelist" type="array" value="wpdb"/>
+		</properties>
+	</rule>
+</ruleset>
