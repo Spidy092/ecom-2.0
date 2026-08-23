@@ -52,6 +52,10 @@
     {
       "step": "runPHP",
       "code": "<?php\nrequire '/wordpress/wp-load.php';\n$zone = new WC_Shipping_Zone();\n$zone->set_zone_name( 'Bengaluru validation zone' );\n$zone->save();\nforeach ( array( '560001', '560034', '560038' ) as $postcode ) {\n    $zone->add_location( $postcode, 'postcode' );\n}\n$zone->save();\n"
+    },
+    {
+      "step": "runPHP",
+      "code": "<?php\nrequire '/wordpress/wp-load.php';\ndelete_option( 'bhaivatech_storefront_delivery_postcodes' );\n"
     }
   ]
 }

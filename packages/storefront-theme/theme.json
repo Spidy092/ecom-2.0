@@ -49,7 +49,6 @@
         { "slug": "3xl", "size": "2rem",     "name": "3XL", "fluid": { "min": "1.5rem",  "max": "2rem" } },
         { "slug": "4xl", "size": "2.5rem",   "name": "4XL", "fluid": { "min": "1.75rem", "max": "2.5rem" } }
       ],
-      "fontWeights": true,
       "letterSpacing": true,
       "lineHeight": true,
       "textDecoration": true,
@@ -180,7 +179,14 @@
       },
       "woocommerce/customer-account": {
         "border": { "radius": "var(--wp--custom--radius--md)", "width": "1px", "color": "var(--wp--preset--color--border)" },
-        "spacing": { "padding": "var(--wp--preset--spacing--6)" }
+        "spacing": {
+          "padding": {
+            "top": "var(--wp--preset--spacing--6)",
+            "bottom": "var(--wp--preset--spacing--6)",
+            "left": "var(--wp--preset--spacing--6)",
+            "right": "var(--wp--preset--spacing--6)"
+          }
+        }
       },
       "woocommerce/cart-block": {
         "border": { "radius": "var(--wp--custom--radius--md)" }

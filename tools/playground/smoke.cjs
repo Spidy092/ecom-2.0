@@ -54,7 +54,7 @@ const { chromium } = require( 'playwright' );
 	check( buyAgain.status() === 200 && Array.isArray( ( await buyAgain.json() ).items ), 'authenticated Buy Again response failed' );
 
 	const setup = await page.goto( `${ base }/wp-admin/admin.php?page=bhaivatech-storefront-setup`, { waitUntil: 'networkidle' } );
-	check( setup?.status() === 200 && ( await page.locator( 'h1' ).textContent() )?.includes( 'Storefront setup' ), 'setup wizard page failed' );
+	check( setup?.status() === 200 && ( await page.locator( 'h1' ).first().textContent() )?.includes( 'Storefront setup' ), 'setup wizard page failed' );
 
 	await browser.close();
 	if ( failures.length ) {
