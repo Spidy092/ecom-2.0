@@ -33,10 +33,26 @@ def exercise_mobile(browser, width: int) -> None:
     expect(workspace).to_be_visible()
 
     # The page itself must never become horizontally scrollable at alpha targets.
-    overflow = page.evaluate(
-        "() => document.documentElement.scrollWidth - document.documentElement.clientWidth"
+    overflow, offenders = page.evaluate(
+        """() => {
+            const viewport = document.documentElement.clientWidth;
+            const offenders = Array.from(document.querySelectorAll('*'))
+                .map((element) => {
+                    const rect = element.getBoundingClientRect();
+                    return {
+                        tag: element.tagName,
+                        className: element.className,
+                        right: Math.round(rect.right),
+                        width: Math.round(rect.width),
+                    };
+                })
+                .filter(({ right }) => right > viewport + 1)
+                .sort((a, b) => b.right - a.right)
+                .slice(0, 5);
+            return [document.documentElement.scrollWidth - viewport, offenders];
+        }"""
     )
-    assert overflow <= 1, (width, overflow)
+    assert overflow <= 1, (width, overflow, offenders)
 
     # Search remains the strongest form control and gets the branded focus ring.
     search = page.locator("[data-bt-search]")
