@@ -111,6 +111,8 @@ jobs:
           ./node_modules/.bin/wp-env run cli wp plugin status storefront-core
           ./node_modules/.bin/wp-env run cli wp theme activate storefront-theme
           ./node_modules/.bin/wp-env run cli wp eval-file wp-content/plugins/storefront-core/tests/e2e/seed-products.php
+          ./node_modules/.bin/wp-env run cli wp option update permalink_structure '/%postname%/'
+          ./node_modules/.bin/wp-env run cli wp rewrite flush --hard
           WORKSPACE_URL="$(./node_modules/.bin/wp-env run cli wp eval-file wp-content/plugins/storefront-core/tests/e2e/seed-workspace-page.php | grep -Eo 'http://localhost:8888/[^[:space:]]+' | tail -1)"
           test -n "$WORKSPACE_URL"
           echo "BT_E2E_SITE_URL=http://localhost:8888" >> "$GITHUB_ENV"
