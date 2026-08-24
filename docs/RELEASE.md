@@ -32,6 +32,13 @@ PR
 
 The pipeline should fail fast on cheap checks and run slower browser tests after the basic build is valid.
 
+The current engineering-alpha workflow is `.github/workflows/engineering-alpha-php.yml`. It runs the
+static contracts plus a real WordPress/WooCommerce/Chrome regression job for `main` and pull requests
+targeting `main`. That job pins WordPress 7.1, WooCommerce 11.0.1 and PHP 8.3 from `.wp-env.json`,
+prints the runtime versions, seeds deterministic HPOS-safe fixtures, and exercises Search/Cart, Saved,
+department browse, delivery, mobile navigation, visual states and Buy Again. Static/unit green is not a
+substitute for this installed storefront evidence.
+
 ### Engineering-alpha compatibility lanes
 
 The engineering-alpha browser E2E lane is a **release-gating/reproducibility lane**. It must pin exact WordPress, WooCommerce and PHP versions in repository configuration and print those versions in CI before running shopper flows. A passing commit should therefore mean the same tested platform combination over time.

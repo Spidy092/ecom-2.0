@@ -26,7 +26,10 @@ PY
 if command -v php >/dev/null 2>&1; then
 	while IFS= read -r -d '' file; do
 		php -l "$file" >/dev/null
-	done < <(find packages -type f -name '*.php' -print0)
+	done < <(find packages \
+		-path '*/vendor' -prune -o \
+		-path '*/node_modules' -prune -o \
+		-type f -name '*.php' -print0)
 	echo 'PHP syntax passed'
 else
 	echo 'PHP not installed; PHP syntax check deferred to CI' >&2

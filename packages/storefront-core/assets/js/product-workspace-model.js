@@ -105,6 +105,18 @@
 		return url.toString();
 	}
 
+	function filterShopperDepartments( categories, defaultCategoryId ) {
+		const normalizedDefaultId = Number( defaultCategoryId );
+
+		return ( Array.isArray( categories ) ? categories : [] ).filter( function ( category ) {
+			if ( ! category || Number( category.parent || 0 ) !== 0 || Number( category.count || 0 ) <= 0 ) {
+				return false;
+			}
+
+			return ! Number.isSafeInteger( normalizedDefaultId ) || normalizedDefaultId <= 0 || Number( category.id ) !== normalizedDefaultId;
+		} );
+	}
+
 	function normalizeCategoryValue( category ) {
 		if ( category && typeof category === 'object' ) {
 			if ( Number.isSafeInteger( Number( category.id ) ) && Number( category.id ) > 0 ) {
@@ -303,6 +315,7 @@
 		buildConventionalSearchUrl,
 		buildProductsByIdsUrl,
 		buildTopCategoriesUrl,
+		filterShopperDepartments,
 		buildDepartmentProductsUrl,
 		departmentPresentation,
 		editDistance,

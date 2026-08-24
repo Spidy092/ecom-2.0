@@ -252,9 +252,10 @@
 					return;
 				}
 
-				categories = collection.items.filter( function ( category ) {
-					return Number( category.parent || 0 ) === 0 && Number( category.count || 0 ) > 0;
-				} );
+				categories = model.filterShopperDepartments(
+					collection.items,
+					config.defaultProductCategoryId
+				);
 
 				if ( ! categories.length ) {
 					setBrowseState( messages.browseNoDepartments || 'No grocery departments are available yet.' );
