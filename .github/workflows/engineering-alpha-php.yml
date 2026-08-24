@@ -96,20 +96,22 @@ jobs:
         run: python -m pip install --disable-pip-version-check playwright==1.62.0
       - name: Verify preinstalled Google Chrome
         run: google-chrome --version
+      - name: Install pinned wp-env CLI
+        run: npm install --no-save --no-package-lock @wordpress/env@10.39.0 @wp-playground/cli@3.1.50
       - name: Start pinned WordPress + WooCommerce environment
-        run: npx -y @wordpress/env@10.39.0 start
+        run: ./node_modules/.bin/wp-env start
       - name: Print tested platform versions
         run: |
-          echo "WordPress: $(npx -y @wordpress/env@10.39.0 run cli wp core version)"
-          echo "WooCommerce: $(npx -y @wordpress/env@10.39.0 run cli wp plugin get woocommerce --field=version)"
-          echo "PHP: $(npx -y @wordpress/env@10.39.0 run cli wp eval 'echo PHP_VERSION;')"
+          echo "WordPress: $(./node_modules/.bin/wp-env run cli wp core version)"
+          echo "WooCommerce: $(./node_modules/.bin/wp-env run cli wp plugin get woocommerce --field=version)"
+          echo "PHP: $(./node_modules/.bin/wp-env run cli wp eval 'echo PHP_VERSION;')"
       - name: Activate packages and seed deterministic products
         run: |
-          npx -y @wordpress/env@10.39.0 run cli wp plugin status woocommerce
-          npx -y @wordpress/env@10.39.0 run cli wp plugin status storefront-core
-          npx -y @wordpress/env@10.39.0 run cli wp theme activate storefront-theme
-          npx -y @wordpress/env@10.39.0 run cli wp eval-file wp-content/plugins/storefront-core/tests/e2e/seed-products.php
-          WORKSPACE_URL="$(npx -y @wordpress/env@10.39.0 run cli wp eval-file wp-content/plugins/storefront-core/tests/e2e/seed-workspace-page.php | grep -Eo 'http://localhost:8888/[^[:space:]]+' | tail -1)"
+          ./node_modules/.bin/wp-env run cli wp plugin status woocommerce
+          ./node_modules/.bin/wp-env run cli wp plugin status storefront-core
+          ./node_modules/.bin/wp-env run cli wp theme activate storefront-theme
+          ./node_modules/.bin/wp-env run cli wp eval-file wp-content/plugins/storefront-core/tests/e2e/seed-products.php
+          WORKSPACE_URL="$(./node_modules/.bin/wp-env run cli wp eval-file wp-content/plugins/storefront-core/tests/e2e/seed-workspace-page.php | grep -Eo 'http://localhost:8888/[^[:space:]]+' | tail -1)"
           test -n "$WORKSPACE_URL"
           echo "BT_E2E_SITE_URL=http://localhost:8888" >> "$GITHUB_ENV"
           echo "BT_E2E_BASE_URL=$WORKSPACE_URL" >> "$GITHUB_ENV"
@@ -125,20 +127,20 @@ jobs:
           python packages/storefront-core/tests/e2e/visual-system.spec.py
       - name: Exercise department overflow and delivery contracts
         run: |
-          npx -y @wordpress/env@10.39.0 run cli wp eval-file wp-content/plugins/storefront-core/tests/e2e/seed-department-overflow.php
+          ./node_modules/.bin/wp-env run cli wp eval-file wp-content/plugins/storefront-core/tests/e2e/seed-department-overflow.php
           python packages/storefront-core/tests/e2e/department-browse-overflow.spec.py
-          npx -y @wordpress/env@10.39.0 run cli wp eval-file wp-content/plugins/storefront-core/tests/e2e/seed-serviceability.php
+          ./node_modules/.bin/wp-env run cli wp eval-file wp-content/plugins/storefront-core/tests/e2e/seed-serviceability.php
           python packages/storefront-core/tests/e2e/serviceability-api.spec.py
           python packages/storefront-core/tests/e2e/serviceability-ui.spec.py
-          npx -y @wordpress/env@10.39.0 run cli wp eval "update_option( 'woocommerce_specific_ship_to_countries', array( 'IN' ) );"
+          ./node_modules/.bin/wp-env run cli wp eval "update_option( 'woocommerce_specific_ship_to_countries', array( 'IN' ) );"
           python packages/storefront-core/tests/e2e/serviceability-single-country.spec.py
-          npx -y @wordpress/env@10.39.0 run cli wp eval "update_option( 'woocommerce_ship_to_countries', 'disabled' );"
+          ./node_modules/.bin/wp-env run cli wp eval "update_option( 'woocommerce_ship_to_countries', 'disabled' );"
           python packages/storefront-core/tests/e2e/serviceability-disabled.spec.py
       - name: Exercise Buy Again account isolation and cart flow
         run: |
-          npx -y @wordpress/env@10.39.0 run cli wp eval-file wp-content/plugins/storefront-core/tests/e2e/seed-buy-again.php
+          ./node_modules/.bin/wp-env run cli wp eval-file wp-content/plugins/storefront-core/tests/e2e/seed-buy-again.php
           python packages/storefront-core/tests/e2e/buy-again-api.spec.py
           python packages/storefront-core/tests/e2e/buy-again-ui.spec.py
       - name: Stop wp-env
         if: always()
-        run: npx -y @wordpress/env@10.39.0 stop
+        run: ./node_modules/.bin/wp-env stop
