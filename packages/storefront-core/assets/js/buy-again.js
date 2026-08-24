@@ -146,6 +146,8 @@
 			const choose = makeProductLink( product, 'bt-buy-again__choose', config.messages?.chooseOptions || 'Choose options' );
 			if ( choose ) {
 				action.appendChild( choose );
+			} else {
+				action.appendChild( textElement( 'span', 'bt-buy-again__state', config.messages?.unavailableProduct || 'Unavailable' ) );
 			}
 		} else if ( ! model.canDirectAdd( product ) ) {
 			action.appendChild( textElement( 'span', 'bt-buy-again__state', config.messages?.unavailableProduct || 'Unavailable' ) );
@@ -223,8 +225,16 @@
 				},
 				body: JSON.stringify( { id: productId, quantity } ),
 			} );
-			await jsonResponse( response );
-			const cart = await getAuthoritativeCart();
+			const addPayload = await jsonResponse( response );
+			// The mutation response is already authoritative. A follow-up cart
+			// read refreshes the account surface when available, but a transient
+			// read failure must not report a successful add as a failed mutation.
+			let cart = addPayload.cart || addPayload;
+			try {
+				cart = ( await getAuthoritativeCart() ) || cart;
+			} catch ( error ) {
+				// Keep the authoritative mutation payload as the safe fallback.
+			}
 			root.dispatchEvent( new CustomEvent( 'bhaivatech:cart-updated', { detail: { cart } } ) );
 			announce( ( config.messages?.added || 'Added %d × %s to your cart.' ).replace( '%d', String( quantity ) ).replace( '%s', productName ) );
 		} catch ( error ) {
