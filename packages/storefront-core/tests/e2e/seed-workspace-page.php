@@ -29,4 +29,8 @@ if ( is_wp_error( $page_id ) ) {
 update_option( 'permalink_structure', '/%postname%/' );
 flush_rewrite_rules();
 
-echo esc_url_raw( get_permalink( (int) $page_id ) );
+// wp-env may keep its front controller on query permalinks even after the
+// rewrite option is updated. index.php is the stable public WordPress seam in
+// both configurations, so the browser gate does not depend on Apache rewrite
+// behavior.
+echo esc_url_raw( home_url( '/index.php?pagename=alpha-workspace' ) );
