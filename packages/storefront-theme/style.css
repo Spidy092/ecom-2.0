@@ -396,6 +396,10 @@ textarea:focus-visible {
  * system so the theme remains coherent when a block is replaced or omitted.
  */
 
+html {
+	overflow-x: clip;
+}
+
 body {
 	background: var(--wp--preset--color--base, #f5f4f1);
 	color: var(--wp--preset--color--text, #1c1b19);
