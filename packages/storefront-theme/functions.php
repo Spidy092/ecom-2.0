@@ -108,6 +108,76 @@ function storefront_theme_assets(): void {
 add_action( 'wp_enqueue_scripts', 'storefront_theme_assets' );
 
 /**
+ * Attach the theme's scoped presentation styles to the Core-owned blocks.
+ *
+ * The block markup and interaction behavior belong to Storefront Core; the
+ * visual system belongs here. Using wp_enqueue_block_style keeps these files
+ * conditional so account, cart, and checkout pages do not pay for browse UI.
+ *
+ * @return void
+ */
+function storefront_theme_register_block_styles(): void {
+	$version = wp_get_theme()->get( 'Version' ) ?: '0.0.1';
+	$styles  = array(
+		'bhaivatech-storefront/product-workspace' => array(
+			array(
+				'handle' => 'bhaivatech-grocery-alpha-product-workspace',
+				'file'   => 'assets/css/product-workspace.css',
+			),
+			array(
+				'handle' => 'bhaivatech-grocery-alpha-department-browse',
+				'file'   => 'assets/css/department-browse.css',
+			),
+			array(
+				'handle' => 'bhaivatech-grocery-alpha-product-filters',
+				'file'   => 'assets/css/product-filters.css',
+			),
+		),
+		'bhaivatech-storefront/mobile-shopping-nav' => array(
+			array(
+				'handle' => 'bhaivatech-grocery-alpha-mobile-shopping-nav',
+				'file'   => 'assets/css/mobile-shopping-nav.css',
+			),
+		),
+	);
+
+	foreach ( $styles as $block_name => $block_styles ) {
+		foreach ( $block_styles as $style ) {
+			$file = get_theme_file_path( $style['file'] );
+			if ( ! file_exists( $file ) ) {
+				continue;
+			}
+
+			wp_enqueue_block_style(
+				$block_name,
+				array(
+					'handle' => $style['handle'],
+					'src'    => get_theme_file_uri( $style['file'] ),
+					'path'   => $file,
+					'ver'    => $version,
+				)
+			);
+		}
+	}
+}
+add_action( 'init', 'storefront_theme_register_block_styles', 20 );
+
+/**
+ * Load the small shell styles used by template parts and fallback patterns.
+ *
+ * @return void
+ */
+function storefront_theme_enqueue_shell_style(): void {
+	wp_enqueue_style(
+		'bhaivatech-grocery-alpha-storefront-shell',
+		get_theme_file_uri( 'assets/css/storefront-shell.css' ),
+		array(),
+		wp_get_theme()->get( 'Version' ) ?: '0.0.1'
+	);
+}
+add_action( 'wp_enqueue_scripts', 'storefront_theme_enqueue_shell_style', 15 );
+
+/**
  * Load Buy Again presentation styles only on the dedicated account endpoint.
  *
  * @return void

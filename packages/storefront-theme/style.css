@@ -13,6 +13,16 @@ Text Domain: bhaivatech-grocery-alpha
 
 :root {
 	--grovia-shadow: 0 12px 32px rgba(23, 34, 27, 0.08);
+	/* Backwards-compatible aliases for the scoped Core styles. */
+	--wp--preset--color--paper: var(--wp--preset--color--base, #f5f4f1);
+	--wp--preset--color--ink: var(--wp--preset--color--text, #1c1b19);
+	--wp--preset--color--soft: var(--wp--preset--color--surface-2, #eceae4);
+	--wp--preset--color--muted: var(--wp--preset--color--text-2, #6e6c69);
+	--wp--preset--color--line: var(--wp--preset--color--border, #e0ddd6);
+	--wp--preset--color--copper: var(--wp--preset--color--accent, #d4600b);
+	--wp--preset--color--copper-dark: color-mix(in srgb, var(--wp--preset--color--accent, #d4600b) 78%, var(--wp--preset--color--text, #1c1b19));
+	--wp--preset--color--danger: var(--wp--preset--color--error, #b53d2f);
+	--wp--preset--color--info: #155e75;
 }
 
 body {
@@ -375,5 +385,451 @@ textarea:focus-visible {
 		animation-iteration-count: 1 !important;
 		scroll-behavior: auto !important;
 		transition-duration: 0.01ms !important;
+	}
+}
+
+/* -------------------------------------------------------------------------
+ * Modern Grocery shell
+ * -------------------------------------------------------------------------
+ * The templates use these semantic storefront-* names while the Core
+ * interaction blocks own their bt-* styles. Keep both surfaces in one visual
+ * system so the theme remains coherent when a block is replaced or omitted.
+ */
+
+body {
+	background: var(--wp--preset--color--base, #f5f4f1);
+	color: var(--wp--preset--color--text, #1c1b19);
+}
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+	outline-color: var(--wp--preset--color--accent, #d4600b);
+}
+
+.storefront-main,
+.grovia-main {
+	box-sizing: border-box;
+	width: min(100% - 2rem, 1280px);
+	margin-inline: auto;
+	padding-block: clamp(1.25rem, 3vw, 3rem) 7rem;
+}
+
+.storefront-workspace,
+.storefront-main > .wp-block-group {
+	width: 100%;
+}
+
+.storefront-site-header,
+.grovia-site-header,
+.grovia-header {
+	border-bottom: 1px solid var(--wp--preset--color--border, #e0ddd6);
+	background: var(--wp--preset--color--base, #f5f4f1);
+}
+
+.storefront-header-inner,
+.grovia-header__inner {
+	box-sizing: border-box;
+	width: min(100% - 2rem, 1280px);
+	min-height: 4.5rem;
+	margin-inline: auto;
+	padding-block: 0.75rem;
+}
+
+.storefront-site-logo img,
+.grovia-header .custom-logo {
+	max-height: 3rem;
+	width: auto;
+}
+
+.storefront-header-search {
+	min-width: 0;
+	flex: 1 1 26rem;
+	margin-inline: clamp(1rem, 4vw, 4rem);
+}
+
+.storefront-search-bar,
+.storefront-header-search .wp-block-search {
+	width: 100%;
+}
+
+.storefront-search-bar .wp-block-search__inside-wrapper,
+.storefront-header-search .wp-block-search__inside-wrapper {
+	min-height: 2.9rem;
+	border: 1px solid var(--wp--preset--color--border, #e0ddd6);
+	border-radius: var(--wp--custom--radius--md, 8px);
+	background: var(--wp--preset--color--surface, #fff);
+	box-shadow: var(--wp--custom--shadow--xs, 0 1px 2px rgb(0 0 0 / 5%));
+}
+
+.storefront-search-bar input,
+.storefront-header-search input {
+	min-width: 0;
+	border: 0;
+	background: transparent;
+}
+
+.storefront-header-actions {
+	flex: 0 0 auto;
+}
+
+.storefront-header-actions a,
+.grovia-header__actions a {
+	min-height: 2.75rem;
+	color: var(--wp--preset--color--text, #1c1b19);
+}
+
+.grovia-intro {
+	max-width: 56rem;
+	padding-block: clamp(2rem, 6vw, 5rem) clamp(1.5rem, 4vw, 3rem);
+}
+
+.grovia-intro h1 {
+	max-width: 18ch;
+	color: var(--wp--preset--color--text, #1c1b19);
+	font-size: clamp(2.35rem, 6vw, 4.75rem);
+	line-height: 0.98;
+}
+
+.grovia-kicker {
+	color: var(--wp--preset--color--accent, #d4600b);
+}
+
+.grovia-intro__lede,
+.storefront-archive-description,
+.storefront-no-results {
+	color: var(--wp--preset--color--text-2, #6e6c69);
+}
+
+.storefront-aisle-rail {
+	margin-block: 1rem 1.5rem;
+	border-block: 1px solid var(--wp--preset--color--border, #e0ddd6);
+	padding-block: 0.65rem;
+	overflow-x: auto;
+	overscroll-behavior-inline: contain;
+}
+
+.storefront-aisle-rail__list {
+	display: flex;
+	min-width: max-content;
+	gap: 0.35rem;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.storefront-aisle-rail__link {
+	display: inline-flex;
+	align-items: baseline;
+	gap: 0.4rem;
+	min-height: 2.75rem;
+	border: 1px solid transparent;
+	border-radius: 999px;
+	padding: 0.55rem 0.8rem;
+	color: var(--wp--preset--color--text-2, #6e6c69);
+	font-size: 0.875rem;
+	font-weight: 700;
+	text-decoration: none;
+	white-space: nowrap;
+}
+
+.storefront-aisle-rail__link:hover,
+.storefront-aisle-rail__link:focus-visible {
+	border-color: var(--wp--preset--color--accent, #d4600b);
+	color: var(--wp--preset--color--accent, #d4600b);
+}
+
+.storefront-aisle-rail__num {
+	color: var(--wp--preset--color--text-2, #6e6c69);
+	font-family: var(--wp--preset--font-family--mono, ui-monospace, monospace);
+	font-size: 0.7rem;
+	font-variant-numeric: tabular-nums;
+}
+
+.storefront-product-ledger {
+	margin-block: 1.5rem;
+}
+
+.storefront-product-ledger > .wp-block-woocommerce-product-template {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 0.75rem;
+}
+
+.storefront-ledger-row {
+	box-sizing: border-box;
+	min-width: 0;
+	min-height: 7.25rem;
+	border: 1px solid var(--wp--preset--color--border, #e0ddd6);
+	border-radius: var(--wp--custom--radius--md, 8px);
+	padding: 0.75rem;
+	background: var(--wp--preset--color--surface, #fff);
+	box-shadow: var(--wp--custom--shadow--xs, 0 1px 2px rgb(0 0 0 / 5%));
+	transition: border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
+}
+
+.storefront-ledger-row:hover {
+	border-color: color-mix(in srgb, var(--wp--preset--color--accent, #d4600b) 45%, var(--wp--preset--color--border, #e0ddd6));
+	box-shadow: var(--wp--custom--shadow--sm, 0 1px 3px rgb(0 0 0 / 8%));
+}
+
+.storefront-ledger-row__image {
+	flex: 0 0 4.5rem;
+	align-self: center;
+	margin: 0;
+	border-radius: var(--wp--custom--radius--sm, 4px);
+	background: var(--wp--preset--color--surface-2, #eceae4);
+	overflow: hidden;
+}
+
+.storefront-ledger-row__image img {
+	display: block;
+	width: 100%;
+	height: 4.5rem;
+	object-fit: cover;
+}
+
+.storefront-ledger-row__info {
+	min-width: 0;
+	gap: 0.25rem;
+}
+
+.storefront-ledger-row__title {
+	display: -webkit-box;
+	overflow: hidden;
+	color: var(--wp--preset--color--text, #1c1b19);
+	font-size: 0.95rem;
+	font-weight: 760;
+	line-height: 1.25;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: 2;
+}
+
+.storefront-ledger-row__title a {
+	color: inherit;
+	text-decoration: none;
+}
+
+.storefront-ledger-row__price {
+	color: var(--wp--preset--color--accent, #d4600b);
+	font-variant-numeric: tabular-nums;
+	font-weight: 800;
+}
+
+.storefront-ledger-row__action {
+	flex: 0 0 auto;
+}
+
+.storefront-ledger-row .wp-block-button__link,
+.storefront-ledger-row .wc-block-components-product-button__button {
+	min-height: 2.75rem;
+	padding-inline: 0.8rem;
+}
+
+.storefront-basket-pulse {
+	position: fixed;
+	inset-inline: 1rem;
+	bottom: calc(4.75rem + env(safe-area-inset-bottom));
+	z-index: 30;
+	border: 1px solid var(--wp--preset--color--accent, #d4600b);
+	border-radius: var(--wp--custom--radius--md, 8px);
+	background: var(--wp--preset--color--accent-2, #f5ece4);
+	box-shadow: var(--wp--custom--shadow--md, 0 4px 6px rgb(0 0 0 / 8%));
+}
+
+.storefront-basket-pulse__inner {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 0.75rem;
+	width: min(100%, 72rem);
+	margin-inline: auto;
+	padding: 0.7rem 0.85rem;
+}
+
+.storefront-basket-pulse p,
+.storefront-basket-pulse__summary {
+	margin: 0;
+}
+
+.storefront-basket-pulse__summary {
+	display: inline-flex;
+	gap: 0.5rem;
+	color: var(--wp--preset--color--text, #1c1b19);
+	font-weight: 760;
+}
+
+.storefront-basket-pulse__cta {
+	flex: 0 0 auto;
+}
+
+.storefront-mobile-nav {
+	display: none;
+}
+
+.storefront-footer-inner,
+.grovia-footer__inner {
+	box-sizing: border-box;
+	width: min(100% - 2rem, 1280px);
+	margin-inline: auto;
+	padding-block: 2.5rem 6rem;
+}
+
+.storefront-footer-tagline,
+.storefront-footer-legal,
+.grovia-footer p {
+	color: var(--wp--preset--color--text-2, #6e6c69);
+}
+
+.storefront-footer-rule {
+	margin-block: 1.75rem;
+	border-color: var(--wp--preset--color--border, #e0ddd6);
+}
+
+.woocommerce-account .woocommerce,
+.woocommerce-cart .wc-block-cart,
+.woocommerce-checkout .wc-block-checkout {
+	box-sizing: border-box;
+	width: min(100%, 72rem);
+	margin-inline: auto;
+}
+
+.woocommerce-account .woocommerce-MyAccount-navigation ul {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.4rem;
+	margin: 0 0 1.5rem;
+	padding: 0;
+	list-style: none;
+}
+
+.woocommerce-account .woocommerce-MyAccount-navigation a {
+	display: inline-flex;
+	min-height: 2.75rem;
+	align-items: center;
+	border: 1px solid var(--wp--preset--color--border, #e0ddd6);
+	border-radius: 999px;
+	padding: 0.5rem 0.85rem;
+	color: var(--wp--preset--color--text, #1c1b19);
+	font-size: 0.875rem;
+	font-weight: 700;
+	text-decoration: none;
+}
+
+.woocommerce-account .woocommerce-MyAccount-navigation .is-active a,
+.woocommerce-account .woocommerce-MyAccount-navigation a:hover {
+	border-color: var(--wp--preset--color--accent, #d4600b);
+	background: var(--wp--preset--color--accent-2, #f5ece4);
+	color: var(--wp--preset--color--accent, #d4600b);
+}
+
+@media (max-width: 700px) {
+	.storefront-main,
+	.grovia-main {
+		width: min(100% - 1rem, 1280px);
+		padding-bottom: 7rem;
+	}
+
+	.storefront-header-inner,
+	.grovia-header__inner {
+		width: min(100% - 1rem, 1280px);
+		flex-wrap: wrap;
+		gap: 0.65rem;
+	}
+
+	.storefront-header-search {
+		order: 3;
+		flex-basis: 100%;
+		margin-inline: 0;
+	}
+
+	.storefront-product-ledger > .wp-block-woocommerce-product-template {
+		grid-template-columns: 1fr;
+	}
+
+	.storefront-ledger-row {
+		min-height: 6.5rem;
+	}
+
+	.storefront-basket-pulse__inner {
+		align-items: stretch;
+		flex-wrap: wrap;
+	}
+
+	.storefront-basket-pulse__last-added {
+		flex-basis: 100%;
+	}
+
+	.storefront-mobile-nav {
+		position: fixed;
+		inset-inline: 0.5rem;
+		bottom: calc(0.5rem + env(safe-area-inset-bottom));
+		z-index: 40;
+		display: block;
+		border: 1px solid var(--wp--preset--color--border, #e0ddd6);
+		border-radius: var(--wp--custom--radius--lg, 12px);
+		background: color-mix(in srgb, var(--wp--preset--color--base, #f5f4f1) 96%, var(--wp--preset--color--surface, #fff));
+		box-shadow: var(--wp--custom--shadow--md, 0 4px 6px rgb(0 0 0 / 8%));
+		backdrop-filter: blur(12px);
+	}
+
+	.storefront-mobile-nav__list {
+		display: grid;
+		grid-template-columns: repeat(5, minmax(0, 1fr));
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	.storefront-mobile-nav__link {
+		display: grid;
+		min-height: 3.25rem;
+		place-items: center;
+		gap: 0.15rem;
+		padding: 0.35rem 0.15rem;
+		color: var(--wp--preset--color--text-2, #6e6c69);
+		font-size: 0.7rem;
+		font-weight: 720;
+		line-height: 1;
+		text-decoration: none;
+	}
+
+	.storefront-mobile-nav__link:hover,
+	.storefront-mobile-nav__link:focus-visible {
+		color: var(--wp--preset--color--accent, #d4600b);
+	}
+
+	.storefront-mobile-nav__icon {
+		width: 1.25rem;
+		height: 1.25rem;
+	}
+
+	.storefront-mobile-nav__cart-wrap {
+		position: relative;
+	}
+
+	.storefront-mobile-nav__cart-count {
+		position: absolute;
+		top: -0.4rem;
+		right: -0.55rem;
+		display: grid;
+		min-width: 1.1rem;
+		height: 1.1rem;
+		place-items: center;
+		border-radius: 999px;
+		background: var(--wp--preset--color--accent, #d4600b);
+		color: var(--wp--preset--color--accent-text, #fff);
+		font-size: 0.65rem;
+		font-variant-numeric: tabular-nums;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.storefront-ledger-row,
+	.storefront-mobile-nav,
+	.storefront-basket-pulse {
+		transition: none;
 	}
 }
