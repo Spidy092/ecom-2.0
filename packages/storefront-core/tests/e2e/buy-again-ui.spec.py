@@ -24,7 +24,7 @@ def login(page, username: str) -> None:
 
 def main() -> None:
     with sync_playwright() as playwright:
-        browser = playwright.chromium.launch(headless=True)
+        browser = playwright.chromium.launch(channel="chrome", headless=True)
         context = browser.new_context(viewport={"width": 390, "height": 844})
         page = context.new_page()
         login(page, "alpha-saved-a")

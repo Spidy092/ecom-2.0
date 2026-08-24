@@ -38,7 +38,7 @@ def request(page, endpoint: str, nonce: str = "") -> dict:
 
 def main() -> None:
     with sync_playwright() as playwright:
-        browser = playwright.chromium.launch(headless=True)
+        browser = playwright.chromium.launch(channel="chrome", headless=True)
 
         guest = browser.new_page()
         result = request(guest, f"{SITE_URL}/?rest_route=/bhaivatech-storefront/v1/buy-again")
