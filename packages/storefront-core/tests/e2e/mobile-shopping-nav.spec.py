@@ -50,7 +50,11 @@ def main() -> None:
         labels = nav.locator(".bt-mobile-shopping-nav__item")
         assert labels.count() == 5
         assert labels.all_inner_texts() == ["Home", "Search", "Browse", "Cart\n0", "Account"]
-        expect(labels.nth(0)).to_have_attribute("aria-current", "page")
+        # The gate mounts the Core workspace on a deterministic page rather
+        # than replacing the theme's native front page. Only the real front
+        # page should mark Home as the current destination.
+        if urlsplit(BASE_URL).path in ("", "/"):
+            expect(labels.nth(0)).to_have_attribute("aria-current", "page")
 
         for index in range(5):
             box = labels.nth(index).bounding_box()
