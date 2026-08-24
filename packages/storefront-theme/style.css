@@ -749,6 +749,16 @@ textarea:focus-visible {
 		flex-wrap: wrap !important;
 	}
 
+	.storefront-header-inner {
+		position: relative;
+	}
+
+	.storefront-header-actions {
+		position: absolute;
+		inset-inline-end: 0;
+		top: 0.75rem;
+	}
+
 	.storefront-header-search {
 		order: 3;
 		flex-basis: 100%;
