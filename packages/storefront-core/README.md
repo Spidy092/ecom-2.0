@@ -8,6 +8,18 @@ The first vertical slice now provides a public delivery checker, an authenticate
 
 The shopper-facing commerce source of truth remains WooCommerce. Product discovery/cart work must use supported WooCommerce Store API/public APIs; customer-order work must use supported WooCommerce CRUD/query APIs.
 
+When a bounded search reaches its result cap, the workspace exposes a conventional WooCommerce search link with the same query instead of silently hiding additional matches.
+
+## Search slice
+
+The product workspace uses a bounded WooCommerce Store API search (`12` results, `80` characters maximum) with debounced and cancellable requests. Search results keep the same product-card and inline quantity interaction as department browsing. A typo recovery request is only made after an empty result set and never silently replaces the shopper's query.
+
+The search control is also a conventional `GET` form targeting the WooCommerce shop URL (`s` query parameter). JavaScript intercepts valid submissions for the enhanced flow; browsers without JavaScript, or after an endpoint failure, retain a normal search path.
+
+Authenticated shoppers also receive repeat-aware context from the private Buy Again endpoint. A matching product can show the bounded remembered quantity and an explicit `Add N again` action without changing WooCommerce search relevance. History loads once, never blocks ordinary search, makes no guest request, and fails closed to normal search. Products requiring options retain `Choose options`.
+
+The market/product rationale is recorded in `research/market/search-gap-2026-08-21.md`.
+
 Do not use WooCommerce internal APIs or direct order-table/post-table assumptions.
 
 ## Public seams in this slice
