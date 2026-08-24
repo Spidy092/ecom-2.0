@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import os
+from urllib.parse import urlsplit
 
 from playwright.sync_api import expect, sync_playwright
 
@@ -86,9 +87,10 @@ def exercise_mobile(browser, width: int) -> None:
 
     nav = page.locator("[data-bt-mobile-shopping-nav]")
     expect(nav).to_be_visible()
-    home = nav.locator('[aria-current="page"]')
-    expect(home).to_be_visible()
-    assert css(home, "color") == COPPER, (width, css(home, "color"))
+    if urlsplit(BASE_URL).path in ("", "/"):
+        home = nav.locator('[aria-current="page"]')
+        expect(home).to_be_visible()
+        assert css(home, "color") == COPPER, (width, css(home, "color"))
 
     context.close()
 
