@@ -35,16 +35,6 @@ final class Storefront_Frontend {
 		add_shortcode( 'bhaivatech_buy_again', array( $this, 'render_buy_again' ) );
 		add_shortcode( 'bhaivatech_cart_feedback', array( $this, 'render_cart_feedback' ) );
 		add_filter( 'woocommerce_loop_add_to_cart_link', array( $this, 'append_shopping_list_button' ), 20, 3 );
-		$this->register_setup_wizard();
-	}
-
-	/**
-	 * Register the setup wizard once WooCommerce is available.
-	 *
-	 * @return void
-	 */
-	private function register_setup_wizard(): void {
-		( new Setup_Wizard() )->register();
 	}
 
 	/**

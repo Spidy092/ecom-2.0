@@ -15,6 +15,9 @@
 		<testsuite name="ShoppingList">
 			<directory>tests/ShoppingList</directory>
 		</testsuite>
+		<testsuite name="Admin">
+			<directory>tests/Admin</directory>
+		</testsuite>
 	</testsuites>
 
 	<source>

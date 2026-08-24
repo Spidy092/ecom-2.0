@@ -101,6 +101,7 @@ function bhaivatech_storefront_register_product_workspace(): void {
 			'removeItem'             => esc_url_raw( rest_url( 'wc/store/v1/cart/remove-item' ) ),
 			'serviceability'         => esc_url_raw( rest_url( 'bhaivatech-storefront/v1/serviceability' ) ),
 		),
+		'defaultProductCategoryId' => absint( get_option( 'default_term_product_cat', 0 ) ),
 		'serviceability' => $serviceability_config,
 		'saved'          => array(
 			'loggedIn'        => $is_logged_in,

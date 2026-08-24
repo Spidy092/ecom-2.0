@@ -1,27 +1,37 @@
-name: Engineering alpha PHP smoke
+name: Engineering alpha smoke
 
 on:
   pull_request:
+    branches: [ main ]
     paths:
-      - 'packages/**/*.php'
+      - 'packages/**'
+      - 'tools/**'
+      - '.wp-env.json'
       - '.github/workflows/engineering-alpha-php.yml'
   push:
-    branches:
-      - agent/grovia-foundation
+    branches: [ main ]
     paths:
-      - 'packages/**/*.php'
+      - 'packages/**'
+      - 'tools/**'
+      - '.wp-env.json'
       - '.github/workflows/engineering-alpha-php.yml'
   workflow_dispatch:
 
 permissions:
   contents: read
 
+concurrency:
+  group: engineering-alpha-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   php-syntax:
+    name: PHP syntax ${{ matrix.php }}
     runs-on: ubuntu-latest
+    timeout-minutes: 8
     strategy:
       matrix:
-        php: ['8.3', '8.4']
+        php: [ '8.3', '8.4' ]
     steps:
       - uses: actions/checkout@v6
       - uses: shivammathur/setup-php@v2
@@ -40,3 +50,99 @@ jobs:
           for file in "${files[@]}"; do
             php -l "$file"
           done
+
+  javascript-contracts:
+    name: JavaScript contracts
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      - name: Check storefront JavaScript syntax
+        run: |
+          node --check packages/storefront-core/assets/js/product-workspace-model.js
+          node --check packages/storefront-core/assets/js/product-workspace.js
+          node --check packages/storefront-core/assets/js/saved-products-model.js
+          node --check packages/storefront-core/assets/js/saved-products.js
+          node --check packages/storefront-core/assets/js/delivery-serviceability.js
+          node --check packages/storefront-core/assets/js/mobile-shopping-nav.js
+          node --check packages/storefront-core/assets/js/department-browse.js
+          node --check packages/storefront-core/assets/js/buy-again-model.js
+          node --check packages/storefront-core/assets/js/buy-again.js
+      - name: Validate JSON metadata
+        run: |
+          node -e "JSON.parse(require('fs').readFileSync('packages/storefront-theme/theme.json','utf8'))"
+          node -e "JSON.parse(require('fs').readFileSync('packages/storefront-core/blocks/product-workspace/block.json','utf8'))"
+      - name: Run storefront model tests
+        run: node --test packages/storefront-core/tests/js/*.test.js
+
+  woo-store-api-e2e:
+    name: WordPress + WooCommerce browser regression
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.13'
+      - name: Install Playwright Python library
+        run: python -m pip install --disable-pip-version-check playwright==1.62.0
+      - name: Verify preinstalled Google Chrome
+        run: google-chrome --version
+      - name: Install pinned wp-env CLI
+        run: npm install --no-save --no-package-lock @wordpress/env@10.39.0 @wp-playground/cli@3.1.50
+      - name: Start pinned WordPress + WooCommerce environment
+        run: ./node_modules/.bin/wp-env start
+      - name: Print tested platform versions
+        run: |
+          echo "WordPress: $(./node_modules/.bin/wp-env run cli wp core version)"
+          echo "WooCommerce: $(./node_modules/.bin/wp-env run cli wp plugin get woocommerce --field=version)"
+          echo "PHP: $(./node_modules/.bin/wp-env run cli wp eval 'echo PHP_VERSION;')"
+      - name: Activate packages and seed deterministic products
+        run: |
+          ./node_modules/.bin/wp-env run cli wp plugin status woocommerce
+          ./node_modules/.bin/wp-env run cli wp plugin status storefront-core
+          ./node_modules/.bin/wp-env run cli wp theme activate storefront-theme
+          ./node_modules/.bin/wp-env run cli wp eval-file wp-content/plugins/storefront-core/tests/e2e/seed-products.php
+          ./node_modules/.bin/wp-env run cli wp option update permalink_structure '/%postname%/'
+          ./node_modules/.bin/wp-env run cli wp rewrite flush --hard
+          WORKSPACE_URL="$(./node_modules/.bin/wp-env run cli wp eval-file wp-content/plugins/storefront-core/tests/e2e/seed-workspace-page.php | grep -Eo 'http://localhost:8888/[^[:space:]]+' | tail -1)"
+          test -n "$WORKSPACE_URL"
+          echo "BT_E2E_SITE_URL=http://localhost:8888" >> "$GITHUB_ENV"
+          echo "BT_E2E_BASE_URL=$WORKSPACE_URL" >> "$GITHUB_ENV"
+          echo "Workspace: $WORKSPACE_URL"
+          curl --fail --silent --show-error http://localhost:8888/ >/dev/null
+      - name: Exercise core shopper flows in Chrome
+        run: |
+          python packages/storefront-core/tests/e2e/store-api-slice.spec.py
+          python packages/storefront-core/tests/e2e/saved-products-api.spec.py
+          python packages/storefront-core/tests/e2e/saved-products-ui.spec.py
+          python packages/storefront-core/tests/e2e/mobile-shopping-nav.spec.py
+          python packages/storefront-core/tests/e2e/department-browse.spec.py
+          python packages/storefront-core/tests/e2e/visual-system.spec.py
+      - name: Exercise department overflow and delivery contracts
+        run: |
+          ./node_modules/.bin/wp-env run cli wp eval-file wp-content/plugins/storefront-core/tests/e2e/seed-department-overflow.php
+          python packages/storefront-core/tests/e2e/department-browse-overflow.spec.py
+          ./node_modules/.bin/wp-env run cli wp eval-file wp-content/plugins/storefront-core/tests/e2e/seed-serviceability.php
+          python packages/storefront-core/tests/e2e/serviceability-api.spec.py
+          python packages/storefront-core/tests/e2e/serviceability-ui.spec.py
+          ./node_modules/.bin/wp-env run cli wp eval "update_option( 'woocommerce_specific_ship_to_countries', array( 'IN' ) );"
+          python packages/storefront-core/tests/e2e/serviceability-single-country.spec.py
+          ./node_modules/.bin/wp-env run cli wp eval "update_option( 'woocommerce_ship_to_countries', 'disabled' );"
+          python packages/storefront-core/tests/e2e/serviceability-disabled.spec.py
+      - name: Exercise Buy Again account isolation and cart flow
+        run: |
+          ./node_modules/.bin/wp-env run cli wp eval-file wp-content/plugins/storefront-core/tests/e2e/seed-buy-again.php
+          python packages/storefront-core/tests/e2e/buy-again-api.spec.py
+          python packages/storefront-core/tests/e2e/buy-again-ui.spec.py
+      - name: Stop wp-env
+        if: always()
+        run: ./node_modules/.bin/wp-env stop

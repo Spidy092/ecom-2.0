@@ -396,6 +396,10 @@ textarea:focus-visible {
  * system so the theme remains coherent when a block is replaced or omitted.
  */
 
+html {
+	overflow-x: clip;
+}
+
 body {
 	background: var(--wp--preset--color--base, #f5f4f1);
 	color: var(--wp--preset--color--text, #1c1b19);
@@ -735,8 +739,24 @@ textarea:focus-visible {
 	.storefront-header-inner,
 	.grovia-header__inner {
 		width: min(100% - 1rem, 1280px);
-		flex-wrap: wrap;
+		flex-wrap: wrap !important;
 		gap: 0.65rem;
+	}
+
+	/* Block layout support emits an `.is-nowrap` utility inline; the mobile
+	 * header must still be allowed to move its search row below the controls. */
+	body .storefront-header-inner.is-nowrap {
+		flex-wrap: wrap !important;
+	}
+
+	.storefront-header-inner {
+		position: relative;
+	}
+
+	.storefront-header-actions {
+		position: absolute;
+		inset-inline-end: 0;
+		top: 0.75rem;
 	}
 
 	.storefront-header-search {

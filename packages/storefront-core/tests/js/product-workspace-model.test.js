@@ -50,6 +50,19 @@ test( 'department categories query requests only bounded non-empty top-level ter
 	assert.equal( url.searchParams.get( 'order' ), 'asc' );
 } );
 
+test( 'department browsing excludes WooCommerce configured default category by ID', () => {
+	const input = [
+		{ id: 12, parent: 0, count: 3, name: 'Uncategorized' },
+		{ id: 14, parent: 0, count: 2, name: 'Produce' },
+		{ id: 18, parent: 14, count: 4, name: 'Leafy Greens' },
+		{ id: 20, parent: 0, count: 0, name: 'Empty' },
+	];
+	const categories = model.filterShopperDepartments( input, 12 );
+
+	assert.deepEqual( categories.map( ( category ) => category.name ), [ 'Produce' ] );
+	assert.deepEqual( model.filterShopperDepartments( input, 0 ).map( ( category ) => category.name ), [ 'Uncategorized', 'Produce' ] );
+} );
+
 test( 'department product query is bounded and catalog-scoped', () => {
 	const url = new URL( model.buildDepartmentProductsUrl(
 		'https://example.test/wp-json/wc/store/v1/products',

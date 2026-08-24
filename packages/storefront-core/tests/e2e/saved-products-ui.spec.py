@@ -5,10 +5,12 @@ from __future__ import annotations
 
 import os
 import re
+from urllib.parse import urlsplit
 
 from playwright.sync_api import expect, sync_playwright
 
 BASE_URL = os.environ.get("BT_E2E_BASE_URL", "http://localhost:8888")
+SITE_URL = os.environ.get("BT_E2E_SITE_URL", f"{urlsplit(BASE_URL).scheme}://{urlsplit(BASE_URL).netloc}")
 PASSWORD = "alpha-saved-pass"
 
 
@@ -45,13 +47,13 @@ def close_saved(page) -> None:
 def has_logged_in_cookie(page) -> bool:
     return any(
         cookie["name"].startswith("wordpress_logged_in_")
-        for cookie in page.context.cookies(BASE_URL)
+        for cookie in page.context.cookies(SITE_URL)
     )
 
 
 def login(page, username: str) -> None:
     for attempt in range(2):
-        page.goto(f"{BASE_URL}/wp-login.php", wait_until="domcontentloaded")
+        page.goto(f"{SITE_URL}/wp-login.php", wait_until="domcontentloaded")
         page.locator("#user_login").fill(username)
         page.locator("#user_pass").fill(PASSWORD)
         page.locator("#wp-submit").click()
