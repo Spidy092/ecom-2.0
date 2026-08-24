@@ -743,6 +743,12 @@ textarea:focus-visible {
 		gap: 0.65rem;
 	}
 
+	/* Block layout support emits an `.is-nowrap` utility inline; the mobile
+	 * header must still be allowed to move its search row below the controls. */
+	body .storefront-header-inner.is-nowrap {
+		flex-wrap: wrap !important;
+	}
+
 	.storefront-header-search {
 		order: 3;
 		flex-basis: 100%;
