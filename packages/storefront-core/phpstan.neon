@@ -11,6 +11,8 @@ parameters:
         - tests
     bootstrapFiles:
         - storefront-core.php
-    ignoreErrors:
-        - '#Call to static method get_zone_matching_package\(\) on an unknown class WC_Shipping_Zones#'
-        - '#Instantiation of unknown class WC_Shipping_Zone#'
+    scanFiles:
+        - vendor/php-stubs/woocommerce-stubs/woocommerce-stubs.php
+        - includes/class-buy-again-service.php
+        - includes/class-storefront-frontend.php
+        - includes/class-setup-wizard.php

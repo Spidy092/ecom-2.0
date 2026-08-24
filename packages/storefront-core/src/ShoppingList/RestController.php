@@ -197,7 +197,9 @@ final class RestController {
 	}
 
 	/**
-	 * Schema for list items.
+	 * Return the public schema for list items.
+	 *
+	 * @return array<string, mixed> REST schema definition.
 	 */
 	public function get_public_item_schema(): array {
 		return [
@@ -215,7 +217,10 @@ final class RestController {
 							'name'         => [ 'type' => [ 'string', 'null' ] ],
 							'available'    => [ 'type' => 'boolean' ],
 							'removed'      => [ 'type' => 'boolean' ],
-							'added_at'     => [ 'type' => 'string', 'format' => 'date-time' ],
+							'added_at'     => [
+								'type'   => 'string',
+								'format' => 'date-time',
+							],
 						],
 					],
 				],

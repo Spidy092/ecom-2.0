@@ -26,13 +26,13 @@ require_once __DIR__ . '/includes/serviceability.php';
 require_once __DIR__ . '/includes/buy-again.php';
 
 spl_autoload_register(
-	static function ( string $class ): void {
+	static function ( string $class_name ): void {
 		$prefix = 'StorefrontCore\\';
-		if ( 0 !== strpos( $class, $prefix ) ) {
+		if ( 0 !== strpos( $class_name, $prefix ) ) {
 			return;
 		}
 
-		$relative = substr( $class, strlen( $prefix ) );
+		$relative = substr( $class_name, strlen( $prefix ) );
 		$file     = __DIR__ . '/src/' . str_replace( '\\', '/', $relative ) . '.php';
 		if ( file_exists( $file ) ) {
 			require_once $file;
@@ -151,12 +151,15 @@ function storefront_core_bootstrap(): void {
 	/**
 	 * Register Custom Blocks (apiVersion 3 + Interactivity API)
 	 */
-	add_action( 'init', static function (): void {
-		if ( function_exists( 'register_block_type_from_metadata' ) ) {
-			register_block_type_from_metadata( __DIR__ . '/blocks/delivery-checker' );
-			register_block_type_from_metadata( __DIR__ . '/blocks/product-quick-add' );
+	add_action(
+		'init',
+		static function (): void {
+			if ( function_exists( 'register_block_type_from_metadata' ) ) {
+				register_block_type_from_metadata( __DIR__ . '/blocks/delivery-checker' );
+				register_block_type_from_metadata( __DIR__ . '/blocks/product-quick-add' );
+			}
 		}
-	} );
+	);
 
 	/**
 	 * Core loaded — future services (Buy Again, Setup) hook in here.

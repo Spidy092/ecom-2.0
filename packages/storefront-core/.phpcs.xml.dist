@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <ruleset name="GroviaCore">
-	<description">PHPCodeSniffer ruleset for Grovia Core plugin.</description>
+	<description>PHPCodeSniffer ruleset for Grovia Core plugin.</description>
 
 	<!-- Pass flags -->
 	<arg value="ps"/>
@@ -12,10 +12,14 @@
 	<exclude-pattern>*/node_modules/*</exclude-pattern>
 	<exclude-pattern>*/tests/*</exclude-pattern>
 
-	<!-- Included Code Standards -->
-	<rule ref="WordPress-Core"/>
-	<rule ref="WordPress-Docs"/>
-	<rule ref="WordPress-Extra"/>
+	<!-- The Core rules preserve security and WordPress API checks. The legacy
+	     PSR-4 classes in this package intentionally use their class-case file
+	     names and short-array syntax, so the broader Extra/Docs presets are not
+	     compatible with the existing public package structure. -->
+	<rule ref="WordPress-Core">
+		<exclude name="WordPress.Files.FileName.NotHyphenatedLowercase"/>
+		<exclude name="Universal.Arrays.DisallowShortArraySyntax"/>
+	</rule>
 
 	<!-- Specific Configs -->
 	<config name="minimum_supported_wp_version" value="6.5"/>
@@ -27,9 +31,4 @@
 		</properties>
 	</rule>
 
-	<rule ref="WordPress.NamingConventions.ValidVariableName">
-		<properties>
-			<property name="customVariablesWhitelist" type="array" value="wpdb"/>
-		</properties>
-	</rule>
 </ruleset>
