@@ -26,10 +26,11 @@ Do not use WooCommerce internal APIs or direct order-table/post-table assumption
 
 - `storefront-core/v1/delivery/check?postcode=...` — bounded, public read-only serviceability result backed by WooCommerce Shipping Zones.
 - `storefront-core/v1/shopping-list` and `/items` — authenticated list read/write/delete operations scoped to the current WordPress user.
-- `storefront-core/v1/buy-again` — authenticated product IDs derived from paid orders through `wc_get_orders()`.
+- `bhaivatech-storefront/v1/buy-again` — authenticated, current-user-scoped product IDs and remembered quantities derived from the latest 20 `processing`/`completed` orders through `wc_get_orders()`; `storefront-core/v1/buy-again` remains a compatibility alias.
 - `[bhaivatech_delivery_checker]` — progressive-enhancement shortcode used by the block theme.
 - `[bhaivatech_shopping_list]` — private list view for a customer page; standard WooCommerce product-card add-to-cart markup receives a secondary Save to list action for signed-in customers.
 - `[bhaivatech_buy_again]` — private repeat-purchase view derived through `wc_get_orders()` and current product truth; it never accepts an order ID from the client.
+- `buy-again` — WooCommerce My Account endpoint with quantity memory, direct Store API cart add for safe simple products, explicit variable-product choices, unavailable states, and retry-safe failure handling.
 - `[bhaivatech_cart_feedback]` — compact Store API-backed cart count/total surface that reconciles after common WooCommerce cart events.
 - WooCommerce > Storefront setup — capability-protected three-step merchant setup for store basics and delivery areas; WooCommerce tax/shipping/payment configuration remains separate and authoritative.
 

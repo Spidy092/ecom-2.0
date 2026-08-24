@@ -34,7 +34,6 @@ final class Storefront_Frontend {
 		add_shortcode( 'bhaivatech_shopping_list', array( $this, 'render_shopping_list' ) );
 		add_shortcode( 'bhaivatech_buy_again', array( $this, 'render_buy_again' ) );
 		add_shortcode( 'bhaivatech_cart_feedback', array( $this, 'render_cart_feedback' ) );
-		add_action( 'rest_api_init', array( $this, 'register_buy_again_route' ) );
 		add_filter( 'woocommerce_loop_add_to_cart_link', array( $this, 'append_shopping_list_button' ), 20, 3 );
 		$this->register_setup_wizard();
 	}
@@ -130,37 +129,6 @@ final class Storefront_Frontend {
 		</section>
 		<?php
 		return (string) ob_get_clean();
-	}
-
-	/**
-	 * Register authenticated Buy Again IDs for progressive clients.
-	 *
-	 * @return void
-	 */
-	public function register_buy_again_route(): void {
-		register_rest_route(
-			'storefront-core/v1',
-			'/buy-again',
-			array(
-				'methods'             => \WP_REST_Server::READABLE,
-				'callback'            => array( $this, 'get_buy_again' ),
-				'permission_callback' => array( $this, 'require_auth' ),
-			)
-		);
-	}
-
-	/**
-	 * @return array<string, array<int>>
-	 */
-	public function get_buy_again(): array {
-		return array( 'items' => array_map( static fn ( $product ): int => absint( $product->get_id() ), $this->get_buy_again_products() ) );
-	}
-
-	/**
-	 * @return bool
-	 */
-	public function require_auth(): bool {
-		return is_user_logged_in();
 	}
 
 	/**

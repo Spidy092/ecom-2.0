@@ -14,7 +14,16 @@
 
 defined( 'ABSPATH' ) || exit;
 
-const BHAIVATECH_STOREFRONT_CORE_VERSION = '0.0.1-alpha';
+const BHAIVATECH_STOREFRONT_CORE_VERSION = '0.0.2-alpha';
+const BHAIVATECH_STOREFRONT_CORE_FILE    = __FILE__;
+
+// Legacy-compatible storefront modules remain presentation/application seams
+// while the newer Delivery and Shopping List services use PSR-4 classes.
+require_once __DIR__ . '/includes/product-workspace.php';
+require_once __DIR__ . '/includes/mobile-shopping-nav.php';
+require_once __DIR__ . '/includes/saved-products.php';
+require_once __DIR__ . '/includes/serviceability.php';
+require_once __DIR__ . '/includes/buy-again.php';
 
 spl_autoload_register(
 	static function ( string $class ): void {
@@ -47,10 +56,19 @@ register_activation_hook(
 	static function (): void {
 		( new StorefrontCore\ShoppingList\Installer() )->activate();
 		StorefrontCore\Delivery\AdminNotice::on_activate();
+		bhaivatech_storefront_register_buy_again_endpoint();
+		flush_rewrite_rules();
 	}
 );
 
 register_uninstall_hook( __FILE__, 'storefront_core_uninstall' );
+
+register_deactivation_hook(
+	__FILE__,
+	static function (): void {
+		flush_rewrite_rules();
+	}
+);
 
 function storefront_core_uninstall(): void {
 	StorefrontCore\ShoppingList\Installer::uninstall();
@@ -102,6 +120,21 @@ function storefront_core_bootstrap(): void {
 
 	add_action( 'rest_api_init', [ $handler, 'register' ] );
 	$notice->register();
+
+	// Existing grocery interaction modules.
+	add_action( 'init', 'bhaivatech_storefront_register_product_workspace', 15 );
+	add_action( 'init', 'bhaivatech_storefront_register_mobile_shopping_nav', 15 );
+	add_action( 'init', 'bhaivatech_storefront_register_buy_again_endpoint', 15 );
+	add_action( 'init', 'bhaivatech_storefront_register_buy_again_assets', 15 );
+	add_action( 'rest_api_init', 'bhaivatech_storefront_register_saved_routes' );
+	add_action( 'rest_api_init', 'bhaivatech_storefront_register_serviceability_route' );
+	add_action( 'rest_api_init', 'bhaivatech_storefront_register_buy_again_routes' );
+	add_action( 'wp_enqueue_scripts', 'bhaivatech_storefront_enqueue_buy_again_assets', 20 );
+	add_filter( 'woocommerce_get_query_vars', 'bhaivatech_storefront_buy_again_query_vars' );
+	add_filter( 'woocommerce_account_menu_items', 'bhaivatech_storefront_buy_again_account_menu' );
+	add_action( 'woocommerce_account_dashboard', 'bhaivatech_storefront_render_buy_again_dashboard_link', 20 );
+	add_action( 'woocommerce_account_buy-again_endpoint', 'bhaivatech_storefront_render_buy_again_endpoint' );
+	add_filter( 'the_content', 'bhaivatech_storefront_buy_again_account_content', 20 );
 
 	// Shopping List services.
 	$repository = new StorefrontCore\ShoppingList\ListRepository();

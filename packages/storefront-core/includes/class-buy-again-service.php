@@ -27,13 +27,12 @@ final class Buy_Again_Service {
 			return array();
 		}
 
-		$statuses = function_exists( 'wc_get_is_paid_statuses' )
-			? wc_get_is_paid_statuses()
-			: array( 'processing', 'completed' );
 		$orders = wc_get_orders(
 			array(
 				'customer_id' => $customer_id,
-				'status'      => $statuses,
+				// Buy Again intentionally excludes pending, cancelled, failed and
+				// refunded orders; only settled/current fulfilment states qualify.
+				'status'      => array( 'processing', 'completed' ),
 				'limit'       => self::ORDER_LIMIT,
 				'orderby'     => 'date',
 				'order'       => 'DESC',
@@ -53,17 +52,16 @@ final class Buy_Again_Service {
 					continue;
 				}
 
-				$variation_id = is_callable( array( $item, 'get_variation_id' ) ) ? absint( $item->get_variation_id() ) : 0;
-				$product_id   = $variation_id > 0
-					? $variation_id
-					: ( is_callable( array( $item, 'get_product_id' ) ) ? absint( $item->get_product_id() ) : 0 );
+				// The parent product is the safe repeat-card identity. Variable
+				// products still require options in the browser.
+				$product_id = is_callable( array( $item, 'get_product_id' ) ) ? absint( $item->get_product_id() ) : 0;
 
 				if ( $product_id <= 0 || isset( $seen[ $product_id ] ) ) {
 					continue;
 				}
 
 				$product = wc_get_product( $product_id );
-				if ( ! $product || ! is_callable( array( $product, 'is_purchasable' ) ) || ! $product->is_purchasable() || 'publish' !== $product->get_status() ) {
+				if ( ! $product || ! is_callable( array( $product, 'is_visible' ) ) || ! $product->is_visible() || 'publish' !== $product->get_status() ) {
 					continue;
 				}
 

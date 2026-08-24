@@ -108,6 +108,30 @@ function storefront_theme_assets(): void {
 add_action( 'wp_enqueue_scripts', 'storefront_theme_assets' );
 
 /**
+ * Load Buy Again presentation styles only on the dedicated account endpoint.
+ *
+ * @return void
+ */
+function storefront_theme_buy_again_assets(): void {
+	if (
+		! function_exists( 'is_account_page' )
+		|| ! is_account_page()
+		|| ! function_exists( 'is_wc_endpoint_url' )
+		|| ! is_wc_endpoint_url( 'buy-again' )
+	) {
+		return;
+	}
+
+	wp_enqueue_style(
+		'bhaivatech-grocery-alpha-buy-again',
+		get_theme_file_uri( 'assets/css/buy-again.css' ),
+		array(),
+		wp_get_theme()->get( 'Version' )
+	);
+}
+add_action( 'wp_enqueue_scripts', 'storefront_theme_buy_again_assets', 20 );
+
+/**
  * Output storefrontConfig before body — readable by the ES module via window.storefrontConfig.
  *
  * wp_add_inline_script() does not work with script modules (type="module" tags),
