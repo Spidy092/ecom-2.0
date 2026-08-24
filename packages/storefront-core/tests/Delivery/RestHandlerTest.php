@@ -51,7 +51,7 @@ class RestHandlerTest extends TestCase {
 	 */
 	public function test_handle_invalid_postcode(): void {
 		if ( ! class_exists( 'WP_REST_Request' ) ) {
-			eval( 'class WP_REST_Request { public function get_param($k) { return "12"; } }' );
+			eval( 'class WP_REST_Request { public function get_param($k) { return "12!"; } }' );
 		}
 		if ( ! class_exists( 'WP_Error' ) ) {
 			eval( 'class WP_Error { public $code; public $message; public $data; public function __construct($c, $m, $d=[]) { $this->code=$c; $this->message=$m; $this->data=$d; } }' );
