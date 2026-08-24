@@ -2,12 +2,28 @@ const test = require( 'node:test' );
 const assert = require( 'node:assert/strict' );
 const model = require( '../../assets/js/product-workspace-model.js' );
 
+test( 'product search trims and bounds untrusted query text', () => {
+	const query = '  ' + 'a'.repeat( 100 ) + '  ';
+	assert.equal( model.boundedSearchQuery( query ).length, model.MAX_QUERY_LENGTH );
+	assert.equal( model.boundedSearchQuery( null ), '' );
+} );
+
 test( 'product search is bounded to 12 results with pretty REST URLs', () => {
 	const url = new URL( model.buildProductsUrl( 'https://example.test/wp-json/wc/store/v1/products', '  milk  ' ) );
 	assert.equal( url.pathname, '/wp-json/wc/store/v1/products' );
 	assert.equal( url.searchParams.get( 'search' ), 'milk' );
 	assert.equal( url.searchParams.get( 'per_page' ), '12' );
 	assert.equal( url.searchParams.get( 'catalog_visibility' ), 'search' );
+} );
+
+test( 'conventional search fallback preserves the bounded query', () => {
+	const url = new URL( model.buildConventionalSearchUrl(
+		'https://example.test/shop/?post_type=product',
+		'  bulk rice  '
+	) );
+	assert.equal( url.pathname, '/shop/' );
+	assert.equal( url.searchParams.get( 'post_type' ), 'product' );
+	assert.equal( url.searchParams.get( 's' ), 'bulk rice' );
 } );
 
 test( 'product search preserves WordPress plain-permalink rest_route endpoints', () => {

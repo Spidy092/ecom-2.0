@@ -52,7 +52,7 @@ final class ServiceabilityChecker {
 			return false;
 		}
 
-		$country = $this->country ?: $this->store_base_country();
+		$country = '' !== $this->country ? $this->country : $this->store_base_country();
 
 		/**
 		 * WC_Shipping_Zones::get_zone_matching_package() is a public, stable

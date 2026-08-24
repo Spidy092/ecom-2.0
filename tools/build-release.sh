@@ -25,7 +25,7 @@ mkdir -p "$THEME_STAGE" "$CORE_STAGE"
 cp -R "$ROOT_DIR/packages/storefront-theme/." "$THEME_STAGE/"
 cp -R "$ROOT_DIR/packages/storefront-core/." "$CORE_STAGE/"
 
-find "$THEME_STAGE" "$CORE_STAGE" -type d -name tests -prune -exec rm -rf {} +
+find "$THEME_STAGE" "$CORE_STAGE" -type d \( -name tests -o -name node_modules -o -name vendor \) -prune -exec rm -rf {} +
 find "$THEME_STAGE" "$CORE_STAGE" -type f \( -name '.gitkeep' -o -name '*.log' \) -delete
 find "$THEME_STAGE" "$CORE_STAGE" -name '.DS_Store' -delete
 

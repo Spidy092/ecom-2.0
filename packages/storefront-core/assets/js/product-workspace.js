@@ -3,6 +3,7 @@
 
 	const config = window.BhaivaTechStorefrontConfig || {};
 	const model = window.BhaivaTechProductWorkspaceModel;
+	const buyAgainModel = window.BhaivaTechBuyAgainModel;
 	const endpoints = config.endpoints || {};
 
 	if ( ! model || ! endpoints.products || ! endpoints.cart || ! config.messages ) {
@@ -13,6 +14,7 @@
 
 	roots.forEach( function ( root ) {
 		const searchInput = root.querySelector( '[data-bt-search]' );
+		const searchForm = root.querySelector( '[data-bt-search-form]' );
 		const results = root.querySelector( '[data-bt-results]' );
 		const status = root.querySelector( '[data-bt-status]' );
 		const cartCount = root.querySelector( '[data-bt-cart-count]' );
@@ -21,12 +23,15 @@
 		let cart = null;
 		let products = [];
 		let lastSearchQuery = '';
+		let searchHasMore = false;
 		let recoverySuggestion = '';
 		let searchTimer = null;
 		let searchController = null;
 		let mutationInFlight = false;
 		let nonce = config.nonce || '';
 		let pendingOperations = 0;
+		let repeatHistory = new Map();
+		let repeatHistoryPromise = null;
 
 		function setStatus( message ) {
 			status.textContent = message;
@@ -95,7 +100,11 @@
 				);
 			}
 
-			return parseResponse( await fetch( endpoint, requestOptions ) );
+			const returnMeta = Boolean( requestOptions.returnMeta );
+			delete requestOptions.returnMeta;
+			const response = await fetch( endpoint, requestOptions );
+			const payload = await parseResponse( response );
+			return returnMeta ? { payload, response } : payload;
 		}
 
 		function focusProductAction( productId, preferredAction ) {
@@ -197,10 +206,18 @@
 			const cartItem = model.findCartItemForProduct( cart, product.id );
 			if ( ! cartItem ) {
 				const add = document.createElement( 'button' );
+				const repeatItem = repeatHistory.get( Number( product.id ) );
+				const repeatQuantity = repeatItem ? repeatItem.purchased_quantity : 1;
 				add.type = 'button';
 				add.dataset.action = 'add';
 				add.dataset.productId = String( product.id );
-				add.textContent = config.messages.add;
+				add.dataset.quantity = String( repeatQuantity );
+				add.textContent = repeatItem
+					? config.messages.addAgainQuantity.replace( '%d', String( repeatQuantity ) )
+					: config.messages.add;
+				add.setAttribute( 'aria-label', repeatItem
+					? config.messages.addAgainQuantity.replace( '%d', String( repeatQuantity ) ) + ' ' + product.name
+					: config.messages.add + ' ' + product.name );
 				action.appendChild( add );
 				return action;
 			}
@@ -271,12 +288,80 @@
 				titleLink.textContent = product.name;
 
 				const price = makeTextElement( 'span', 'bt-product-card__price', model.productPrice( product ) );
-				body.append( titleLink, price, makeProductAction( product ) );
+				const repeatItem = repeatHistory.get( Number( product.id ) );
+				body.appendChild( titleLink );
+				if ( repeatItem ) {
+					body.appendChild(
+						makeTextElement(
+							'span',
+							'bt-product-card__repeat',
+							config.messages.boughtBefore.replace( '%d', String( repeatItem.purchased_quantity ) )
+						)
+					);
+				}
+				body.append( price, makeProductAction( product ) );
 				article.appendChild( body );
 				results.appendChild( article );
 			} );
 
+			if ( searchHasMore && lastSearchQuery ) {
+				const moreResults = document.createElement( 'a' );
+				moreResults.className = 'bt-product-workspace__more-results';
+				moreResults.href = model.buildConventionalSearchUrl( config.shopUrl, lastSearchQuery );
+				moreResults.textContent = config.messages.showAllResults.replace( '%s', lastSearchQuery );
+				results.appendChild( moreResults );
+			}
+
 			root.dispatchEvent( new CustomEvent( 'bhaivatech:products-rendered' ) );
+		}
+
+		function renderProductsPreservingFocus() {
+			const activeElement = document.activeElement;
+			const activeProduct = activeElement && activeElement.closest
+				? activeElement.closest( '[data-product-id]' )
+				: null;
+			const activeAction = activeElement && activeElement.dataset ? activeElement.dataset.action : '';
+			renderProducts();
+
+			if ( activeElement === searchInput ) {
+				searchInput.focus( { preventScroll: true } );
+			} else if ( activeProduct && activeAction ) {
+				focusProductAction( activeProduct.dataset.productId, activeAction );
+			}
+		}
+
+		async function loadRepeatHistory() {
+			if ( repeatHistoryPromise || ! buyAgainModel || ! config.buyAgain || ! config.buyAgainNonce ) {
+				return repeatHistoryPromise;
+			}
+
+			repeatHistoryPromise = fetch( config.buyAgain, {
+				credentials: 'same-origin',
+				headers: {
+					Accept: 'application/json',
+					'X-WP-Nonce': config.buyAgainNonce,
+				},
+			} )
+				.then( async function ( response ) {
+					if ( ! response.ok ) {
+						throw new Error( 'Repeat history unavailable.' );
+					}
+					return buyAgainModel.normalizeResponse( await response.json() );
+				} )
+				.then( function ( payload ) {
+					repeatHistory = new Map( payload.items.map( function ( item ) {
+						return [ Number( item.product_id ), item ];
+					} ) );
+					if ( products.length ) {
+						renderProductsPreservingFocus();
+					}
+				} )
+				.catch( function () {
+					// Search remains useful when private history is unavailable.
+					repeatHistory = new Map();
+				} );
+
+			return repeatHistoryPromise;
 		}
 
 		function stopSearchForBrowse() {
@@ -287,6 +372,7 @@
 			}
 			searchInput.value = '';
 			lastSearchQuery = '';
+			searchHasMore = false;
 			recoverySuggestion = '';
 		}
 
@@ -342,6 +428,28 @@
 			}
 		}
 
+		function clearSearchTimer() {
+			window.clearTimeout( searchTimer );
+			searchTimer = null;
+		}
+
+		function queueSearch( query, immediate ) {
+			clearSearchTimer();
+			const boundedQuery = model.boundedSearchQuery( query );
+			if ( boundedQuery.length < model.MIN_QUERY_LENGTH ) {
+				return;
+			}
+
+			if ( immediate ) {
+				search( boundedQuery );
+				return;
+			}
+
+			searchTimer = window.setTimeout( function () {
+				search( boundedQuery );
+			}, 250 );
+		}
+
 		async function search( query ) {
 			if ( searchController ) {
 				searchController.abort();
@@ -353,10 +461,16 @@
 			setStatus( config.messages.searching );
 
 			try {
-				const nextProducts = await request( model.buildProductsUrl( endpoints.products, query ), {
+				const searchResponse = await request( model.buildProductsUrl( endpoints.products, query ), {
 					method: 'GET',
 					signal: controller.signal,
+					returnMeta: true,
 				} );
+				const nextProducts = searchResponse.payload;
+				const totalHeader = searchResponse.response.headers.get( 'X-WP-Total' );
+				const total = Number( totalHeader );
+				const hasTotal = totalHeader !== null && totalHeader !== '' && Number.isSafeInteger( total ) && total >= 0;
+				const nextHasMore = hasTotal ? total > nextProducts.length : nextProducts.length === model.MAX_RESULTS;
 
 				if ( searchController !== controller ) {
 					return;
@@ -373,6 +487,7 @@
 
 				products = nextProducts;
 				lastSearchQuery = query;
+				searchHasMore = nextHasMore;
 				recoverySuggestion = nextSuggestion;
 				renderProducts();
 				setStatus(
@@ -384,6 +499,7 @@
 				if ( error.name !== 'AbortError' && searchController === controller ) {
 					products = [];
 					lastSearchQuery = '';
+					searchHasMore = false;
 					recoverySuggestion = '';
 					renderProducts();
 					setStatus( error.message || config.messages.requestFailed );
@@ -423,8 +539,11 @@
 		}
 
 		searchInput.addEventListener( 'input', function () {
-			window.clearTimeout( searchTimer );
-			const query = searchInput.value.trim();
+			clearSearchTimer();
+			const query = model.boundedSearchQuery( searchInput.value );
+			if ( searchInput.value !== query ) {
+				searchInput.value = query;
+			}
 			root.dispatchEvent( new CustomEvent( 'bhaivatech:search-activated' ) );
 
 			if ( query.length < model.MIN_QUERY_LENGTH ) {
@@ -434,16 +553,29 @@
 				}
 				products = [];
 				lastSearchQuery = '';
+				searchHasMore = false;
 				recoverySuggestion = '';
 				renderProducts();
 				setStatus( config.messages.keepTyping );
 				return;
 			}
 
-			searchTimer = window.setTimeout( function () {
-				search( query );
-			}, 250 );
+			queueSearch( query );
 		} );
+
+		if ( searchForm ) {
+			searchForm.addEventListener( 'submit', function ( event ) {
+				const query = model.boundedSearchQuery( searchInput.value );
+				if ( query.length < model.MIN_QUERY_LENGTH ) {
+					return;
+				}
+
+				event.preventDefault();
+				searchInput.value = query;
+				root.dispatchEvent( new CustomEvent( 'bhaivatech:search-activated' ) );
+				queueSearch( query, true );
+			} );
+		}
 
 		results.addEventListener( 'click', function ( event ) {
 			const button = event.target.closest( 'button[data-action]' );
@@ -472,9 +604,16 @@
 			const cartItem = model.findCartItemForProduct( cart, productId );
 
 			if ( action === 'add' ) {
+				const requestedQuantity = Math.max(
+					1,
+					Math.min(
+						buyAgainModel ? buyAgainModel.MAX_QUANTITY : 100,
+						Number( button.dataset.quantity ) || 1
+					)
+				);
 				mutateCart(
 					endpoints.addItem,
-					{ id: productId, quantity: 1 },
+					{ id: productId, quantity: requestedQuantity },
 					config.messages.added,
 					productId,
 					'increment'
@@ -525,5 +664,6 @@
 		} );
 
 		loadCart();
+		loadRepeatHistory();
 	} );
 } )();

@@ -31,7 +31,7 @@ function bhaivatech_storefront_register_product_workspace(): void {
 	wp_register_script(
 		$view_handle,
 		plugins_url( 'assets/js/product-workspace.js', BHAIVATECH_STOREFRONT_CORE_FILE ),
-		array( $model_handle ),
+		array( $model_handle, 'bhaivatech-storefront-buy-again-model' ),
 		BHAIVATECH_STOREFRONT_CORE_VERSION,
 		true
 	);
@@ -110,6 +110,8 @@ function bhaivatech_storefront_register_product_workspace(): void {
 			'restNonce'       => $is_logged_in ? wp_create_nonce( 'wp_rest' ) : '',
 		),
 		'shopUrl'        => esc_url_raw( $shop_url ),
+		'buyAgain'       => $is_logged_in ? esc_url_raw( rest_url( 'bhaivatech-storefront/v1/buy-again' ) ) : '',
+		'buyAgainNonce'  => $is_logged_in ? wp_create_nonce( 'wp_rest' ) : '',
 		'nonce'          => wp_create_nonce( 'wc_store_api' ),
 		'messages'       => array(
 			'requestFailed'                => __( 'Something went wrong. Try again.', 'bhaivatech-storefront-alpha' ),
@@ -118,6 +120,7 @@ function bhaivatech_storefront_register_product_workspace(): void {
 			'keepTyping'                   => __( 'Type at least 2 characters to search.', 'bhaivatech-storefront-alpha' ),
 			'noResults'                    => __( 'No exact matches.', 'bhaivatech-storefront-alpha' ),
 			'noResultsFor'                 => __( 'No products found for “%s”.', 'bhaivatech-storefront-alpha' ),
+			'showAllResults'               => __( 'See all results for “%s”', 'bhaivatech-storefront-alpha' ),
 			'didYouMean'                   => __( 'Did you mean “%s”?', 'bhaivatech-storefront-alpha' ),
 			'searchSuggestion'             => __( 'Search %s', 'bhaivatech-storefront-alpha' ),
 			'browseProducts'               => __( 'Browse products', 'bhaivatech-storefront-alpha' ),
@@ -159,6 +162,8 @@ function bhaivatech_storefront_register_product_workspace(): void {
 			'chooseOptions'                => __( 'Choose options', 'bhaivatech-storefront-alpha' ),
 			'add'                          => __( 'Add', 'bhaivatech-storefront-alpha' ),
 			'addToCart'                    => __( 'Add to cart', 'bhaivatech-storefront-alpha' ),
+			'boughtBefore'                => __( 'Bought before · %d last time', 'bhaivatech-storefront-alpha' ),
+			'addAgainQuantity'             => __( 'Add %d again', 'bhaivatech-storefront-alpha' ),
 			'quantityFor'                  => __( 'Quantity for %s', 'bhaivatech-storefront-alpha' ),
 			'decrease'                     => __( 'Decrease %s quantity', 'bhaivatech-storefront-alpha' ),
 			'increase'                     => __( 'Increase %s quantity', 'bhaivatech-storefront-alpha' ),

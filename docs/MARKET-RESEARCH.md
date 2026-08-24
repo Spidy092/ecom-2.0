@@ -222,6 +222,8 @@ Shopping List and Buy Again can be more grocery-relevant than generic product co
 Test:
 - observe repeat grocery shoppers selecting products from history/list versus conventional browse/search.
 
+Current search-gap follow-up: `research/market/search-gap-2026-08-21.md` tests a narrower hypothesis: private repeat-purchase context inside ordinary search, without changing catalog relevance or adding a search dependency.
+
 ### H3 — Delivery certainty should happen early
 
 Customers should know delivery availability before building a large basket.

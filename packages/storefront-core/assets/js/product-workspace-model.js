@@ -10,6 +10,7 @@
 
 	const MAX_RESULTS = 12;
 	const MIN_QUERY_LENGTH = 2;
+	const MAX_QUERY_LENGTH = 80;
 	const RECOVERY_PREFIX_LENGTH = 3;
 	const MAX_SAVED_PRODUCTS_QUERY = 100;
 	const MAX_DEPARTMENT_CATEGORIES = 100;
@@ -46,9 +47,13 @@
 		return characters.slice( 0, RECOVERY_PREFIX_LENGTH ).join( '' );
 	}
 
+	function boundedSearchQuery( query ) {
+		return String( query == null ? '' : query ).trim().slice( 0, MAX_QUERY_LENGTH );
+	}
+
 	function buildProductsUrl( productsEndpoint, query ) {
 		const url = new URL( productsEndpoint );
-		url.searchParams.set( 'search', String( query ).trim() );
+		url.searchParams.set( 'search', boundedSearchQuery( query ) );
 		url.searchParams.set( 'per_page', String( MAX_RESULTS ) );
 		url.searchParams.set( 'catalog_visibility', 'search' );
 		return url.toString();
@@ -57,6 +62,12 @@
 	function buildRecoveryUrl( productsEndpoint, query ) {
 		const prefix = recoveryPrefix( query );
 		return prefix ? buildProductsUrl( productsEndpoint, prefix ) : '';
+	}
+
+	function buildConventionalSearchUrl( shopEndpoint, query ) {
+		const url = new URL( shopEndpoint );
+		url.searchParams.set( 's', boundedSearchQuery( query ) );
+		return url.toString();
 	}
 
 	function buildProductsByIdsUrl( productsEndpoint, ids ) {
@@ -279,6 +290,8 @@
 	return {
 		MAX_RESULTS,
 		MIN_QUERY_LENGTH,
+		MAX_QUERY_LENGTH,
+		boundedSearchQuery,
 		RECOVERY_PREFIX_LENGTH,
 		MAX_SAVED_PRODUCTS_QUERY,
 		MAX_DEPARTMENT_CATEGORIES,
@@ -287,6 +300,7 @@
 		recoveryPrefix,
 		buildProductsUrl,
 		buildRecoveryUrl,
+		buildConventionalSearchUrl,
 		buildProductsByIdsUrl,
 		buildTopCategoriesUrl,
 		buildDepartmentProductsUrl,

@@ -26,7 +26,7 @@ use WP_Error;
  */
 final class RestHandler {
 
-	private PostcodeNormalizer  $normalizer;
+	private PostcodeNormalizer $normalizer;
 	private ServiceabilityChecker $checker;
 
 	public function __construct( PostcodeNormalizer $normalizer, ServiceabilityChecker $checker ) {
@@ -68,8 +68,8 @@ final class RestHandler {
 	 * @return WP_REST_Response|WP_Error
 	 */
 	public function handle( WP_REST_Request $request ): WP_REST_Response|WP_Error {
-		$raw       = (string) $request->get_param( 'postcode' );
-		$postcode  = $this->normalizer->normalize( $raw );
+		$raw      = (string) $request->get_param( 'postcode' );
+		$postcode = $this->normalizer->normalize( $raw );
 
 		if ( null === $postcode ) {
 			return new WP_Error(

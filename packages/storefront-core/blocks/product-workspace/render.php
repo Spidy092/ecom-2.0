@@ -116,17 +116,24 @@ foreach ( $delivery_countries as $delivery_country ) {
 	</section>
 
 	<div class="bt-product-workspace__search" id="grocery-search">
-		<label for="<?php echo esc_attr( $search_id ); ?>">
-			<?php esc_html_e( 'Search groceries', 'bhaivatech-storefront-alpha' ); ?>
-		</label>
-		<input
-			id="<?php echo esc_attr( $search_id ); ?>"
-			class="bt-product-workspace__input"
-			type="search"
-			autocomplete="off"
-			placeholder="<?php echo esc_attr_x( 'Milk, rice, tomatoes…', 'grocery product search placeholder', 'bhaivatech-storefront-alpha' ); ?>"
-			data-bt-search
-		/>
+		<form action="<?php echo esc_url( $shop_url ); ?>" method="get" data-bt-search-form>
+			<label for="<?php echo esc_attr( $search_id ); ?>">
+				<?php esc_html_e( 'Search groceries', 'bhaivatech-storefront-alpha' ); ?>
+			</label>
+			<input
+				id="<?php echo esc_attr( $search_id ); ?>"
+				class="bt-product-workspace__input"
+				type="search"
+				name="s"
+				maxlength="80"
+				autocomplete="off"
+				placeholder="<?php echo esc_attr_x( 'Milk, rice, tomatoes…', 'grocery product search placeholder', 'bhaivatech-storefront-alpha' ); ?>"
+				data-bt-search
+			/>
+			<button type="submit" class="screen-reader-text">
+				<?php esc_html_e( 'Search', 'bhaivatech-storefront-alpha' ); ?>
+			</button>
+		</form>
 		<p class="bt-product-workspace__hint">
 			<?php esc_html_e( 'Type at least 2 characters. Results are limited to keep shopping fast.', 'bhaivatech-storefront-alpha' ); ?>
 		</p>

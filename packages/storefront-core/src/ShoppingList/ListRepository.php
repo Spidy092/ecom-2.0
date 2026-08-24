@@ -15,7 +15,7 @@ namespace StorefrontCore\ShoppingList;
 /**
  * CRUD for the storefront_shopping_list table.
  */
-final class ListRepository {
+class ListRepository {
 
 	/** Max items per user list. Prevents unbounded growth. */
 	public const MAX_ITEMS = 200;

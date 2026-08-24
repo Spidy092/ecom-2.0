@@ -50,7 +50,7 @@ final class Installer {
 			return;
 		}
 
-		$table          = $wpdb->prefix . self::TABLE_SUFFIX;
+		$table           = $wpdb->prefix . self::TABLE_SUFFIX;
 		$charset_collate = $wpdb->get_charset_collate();
 
 		/**
