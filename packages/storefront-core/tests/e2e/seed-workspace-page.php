@@ -10,7 +10,13 @@ $page = get_page_by_path( 'alpha-workspace', OBJECT, 'page' );
 $post = array(
 	'post_title'   => 'Alpha Grocery Workspace',
 	'post_name'    => 'alpha-workspace',
-	'post_content' => '<!-- wp:bhaivatech-storefront/product-workspace /-->',
+	'post_content' => implode(
+		"\n",
+		array(
+			'<!-- wp:bhaivatech-storefront/product-workspace /-->',
+			'<!-- wp:bhaivatech-storefront/mobile-shopping-nav /-->',
+		)
+	),
 	'post_status'  => 'publish',
 	'post_type'    => 'page',
 );
