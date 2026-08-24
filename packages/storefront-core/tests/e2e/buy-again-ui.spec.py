@@ -5,15 +5,17 @@ from __future__ import annotations
 
 import os
 import re
+from urllib.parse import urlsplit
 
 from playwright.sync_api import expect, sync_playwright
 
 BASE_URL = os.environ.get("BT_E2E_BASE_URL", "http://localhost:8888")
+SITE_URL = os.environ.get("BT_E2E_SITE_URL", f"{urlsplit(BASE_URL).scheme}://{urlsplit(BASE_URL).netloc}")
 PASSWORD = "alpha-saved-pass"
 
 
 def login(page, username: str) -> None:
-    page.goto(f"{BASE_URL}/wp-login.php", wait_until="domcontentloaded")
+    page.goto(f"{SITE_URL}/wp-login.php", wait_until="domcontentloaded")
     page.locator("#user_login").fill(username)
     page.locator("#user_pass").fill(PASSWORD)
     page.locator("#wp-submit").click()
@@ -26,7 +28,7 @@ def main() -> None:
         context = browser.new_context(viewport={"width": 390, "height": 844})
         page = context.new_page()
         login(page, "alpha-saved-a")
-        page.goto(f"{BASE_URL}/?pagename=my-account", wait_until="networkidle")
+        page.goto(f"{SITE_URL}/?pagename=my-account", wait_until="networkidle")
         link = page.get_by_role("link", name="Buy Again", exact=True).first
         expect(link).to_be_visible()
         link.click()

@@ -109,9 +109,13 @@ jobs:
           npx -y @wordpress/env@10.39.0 run cli wp plugin status storefront-core
           npx -y @wordpress/env@10.39.0 run cli wp theme activate storefront-theme
           npx -y @wordpress/env@10.39.0 run cli wp eval-file wp-content/plugins/storefront-core/tests/e2e/seed-products.php
+          WORKSPACE_URL="$(npx -y @wordpress/env@10.39.0 run cli wp eval-file wp-content/plugins/storefront-core/tests/e2e/seed-workspace-page.php | grep -Eo 'http://localhost:8888/[^[:space:]]+' | tail -1)"
+          test -n "$WORKSPACE_URL"
+          echo "BT_E2E_SITE_URL=http://localhost:8888" >> "$GITHUB_ENV"
+          echo "BT_E2E_BASE_URL=$WORKSPACE_URL" >> "$GITHUB_ENV"
+          echo "Workspace: $WORKSPACE_URL"
+          curl --fail --silent --show-error http://localhost:8888/ >/dev/null
       - name: Exercise core shopper flows in Chrome
-        env:
-          BT_E2E_BASE_URL: http://localhost:8888
         run: |
           python packages/storefront-core/tests/e2e/store-api-slice.spec.py
           python packages/storefront-core/tests/e2e/saved-products-api.spec.py
@@ -120,8 +124,6 @@ jobs:
           python packages/storefront-core/tests/e2e/department-browse.spec.py
           python packages/storefront-core/tests/e2e/visual-system.spec.py
       - name: Exercise department overflow and delivery contracts
-        env:
-          BT_E2E_BASE_URL: http://localhost:8888
         run: |
           npx -y @wordpress/env@10.39.0 run cli wp eval-file wp-content/plugins/storefront-core/tests/e2e/seed-department-overflow.php
           python packages/storefront-core/tests/e2e/department-browse-overflow.spec.py
@@ -133,8 +135,6 @@ jobs:
           npx -y @wordpress/env@10.39.0 run cli wp eval "update_option( 'woocommerce_ship_to_countries', 'disabled' );"
           python packages/storefront-core/tests/e2e/serviceability-disabled.spec.py
       - name: Exercise Buy Again account isolation and cart flow
-        env:
-          BT_E2E_BASE_URL: http://localhost:8888
         run: |
           npx -y @wordpress/env@10.39.0 run cli wp eval-file wp-content/plugins/storefront-core/tests/e2e/seed-buy-again.php
           python packages/storefront-core/tests/e2e/buy-again-api.spec.py

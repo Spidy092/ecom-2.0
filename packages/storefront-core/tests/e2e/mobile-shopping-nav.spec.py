@@ -5,10 +5,12 @@ from __future__ import annotations
 
 import os
 import re
+from urllib.parse import urlsplit
 
 from playwright.sync_api import expect, sync_playwright
 
 BASE_URL = os.environ.get("BT_E2E_BASE_URL", "http://localhost:8888")
+SITE_URL = os.environ.get("BT_E2E_SITE_URL", f"{urlsplit(BASE_URL).scheme}://{urlsplit(BASE_URL).netloc}")
 
 
 def product_card(page, name: str):
@@ -25,7 +27,7 @@ def search_for(page, query: str) -> None:
 
 
 def checkout_url(page) -> str:
-    response = page.request.get(f"{BASE_URL}/?rest_route=/wp/v2/pages&slug=checkout")
+    response = page.request.get(f"{SITE_URL}/?rest_route=/wp/v2/pages&slug=checkout")
     assert response.ok, response.status
     pages = response.json()
     assert pages, "WooCommerce checkout page was not found."

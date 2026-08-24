@@ -4,20 +4,22 @@
 from __future__ import annotations
 
 import os
+from urllib.parse import urlsplit
 
 from playwright.sync_api import sync_playwright
 
 BASE_URL = os.environ.get("BT_E2E_BASE_URL", "http://localhost:8888")
+SITE_URL = os.environ.get("BT_E2E_SITE_URL", f"{urlsplit(BASE_URL).scheme}://{urlsplit(BASE_URL).netloc}")
 PASSWORD = "alpha-saved-pass"
 
 
 def login(page, username: str) -> None:
-    page.goto(f"{BASE_URL}/wp-login.php", wait_until="domcontentloaded")
+    page.goto(f"{SITE_URL}/wp-login.php", wait_until="domcontentloaded")
     page.locator("#user_login").fill(username)
     page.locator("#user_pass").fill(PASSWORD)
     page.locator("#wp-submit").click()
     page.wait_for_load_state("networkidle")
-    assert any(cookie["name"].startswith("wordpress_logged_in_") for cookie in page.context.cookies(BASE_URL))
+    assert any(cookie["name"].startswith("wordpress_logged_in_") for cookie in page.context.cookies(SITE_URL))
 
 
 def request(page, endpoint: str, nonce: str = "") -> dict:
@@ -39,13 +41,13 @@ def main() -> None:
         browser = playwright.chromium.launch(headless=True)
 
         guest = browser.new_page()
-        result = request(guest, f"{BASE_URL}/?rest_route=/bhaivatech-storefront/v1/buy-again")
+        result = request(guest, f"{SITE_URL}/?rest_route=/bhaivatech-storefront/v1/buy-again")
         assert result["status"] in (401, 403), result
         guest.close()
 
         page = browser.new_page()
         login(page, "alpha-saved-a")
-        page.goto(f"{BASE_URL}/?pagename=my-account", wait_until="networkidle")
+        page.goto(f"{SITE_URL}/?pagename=my-account", wait_until="networkidle")
         config = page.evaluate("() => window.BhaivaTechBuyAgainConfig || null")
         # The dedicated endpoint injects this config; query-form permalinks are
         # used by the pinned wp-env setup when pretty permalinks are disabled.
