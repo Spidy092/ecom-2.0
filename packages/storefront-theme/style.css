@@ -739,7 +739,7 @@ textarea:focus-visible {
 	.storefront-header-inner,
 	.grovia-header__inner {
 		width: min(100% - 1rem, 1280px);
-		flex-wrap: wrap;
+		flex-wrap: wrap !important;
 		gap: 0.65rem;
 	}
 
