@@ -7,8 +7,10 @@ on:
       - 'packages/storefront-core/**'
       - 'tools/release/**'
       - 'release/third-party-assets.json'
+      - 'release/demo-assets.json'
       - 'docs/COMMERCIAL-PACKAGE-CONTRACT.md'
       - 'docs/ASSET-LICENSING-GATE.md'
+      - 'docs/VISUAL-ASSET-STRATEGY.md'
       - 'docs/RELEASE.md'
       - '.wp-env.package.json'
       - '.github/workflows/package-contract.yml'
@@ -20,6 +22,7 @@ on:
       - 'packages/storefront-core/**'
       - 'tools/release/**'
       - 'release/third-party-assets.json'
+      - 'release/demo-assets.json'
       - '.wp-env.package.json'
       - '.github/workflows/package-contract.yml'
 
@@ -46,9 +49,17 @@ jobs:
           python -m py_compile tools/release/build_packages.py
           python -m py_compile tools/release/verify_asset_inventory.py
           python -m py_compile tools/release/test_asset_inventory.py
+          python -m py_compile tools/release/verify_demo_assets.py
+          python -m py_compile tools/release/test_demo_assets.py
 
       - name: Exercise third-party asset licensing gate
         run: python tools/release/test_asset_inventory.py
+
+      - name: Exercise canonical demo asset provenance gate
+        run: python tools/release/test_demo_assets.py
+
+      - name: Verify canonical demo asset manifest
+        run: python tools/release/verify_demo_assets.py
 
       - name: Verify repository asset inventory and generated notices
         run: python tools/release/verify_asset_inventory.py
