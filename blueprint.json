@@ -3,7 +3,7 @@
   "meta": {
     "title": "Grovia Modern Grocery Storefront Demo",
     "author": "BhaivaTech",
-    "description": "One-click WordPress Playground starter environment with WooCommerce and Grovia storefront core plugin & block theme."
+    "description": "One-click WordPress Playground starter environment with WooCommerce and Grovia storefront core plugin and block theme."
   },
   "landingPage": "/",
   "preferredVersions": {
@@ -28,10 +28,30 @@
       }
     },
     {
+      "step": "installPlugin",
+      "pluginData": {
+        "resource": "url",
+        "url": "https://raw.githubusercontent.com/Spidy092/ecom-2.0/main/dist/bhaivatech-storefront-core-0.0.1-alpha.zip"
+      },
+      "options": {
+        "activate": true
+      }
+    },
+    {
+      "step": "installTheme",
+      "themeData": {
+        "resource": "url",
+        "url": "https://raw.githubusercontent.com/Spidy092/ecom-2.0/main/dist/bhaivatech-grocery-alpha-0.0.1-alpha.zip"
+      },
+      "options": {
+        "activate": true
+      }
+    },
+    {
       "step": "setSiteOptions",
       "options": {
         "blogname": "Grovia Organic Groceries",
-        "blogdescription": "Instant grocery ordering & postcode delivery",
+        "blogdescription": "Instant grocery ordering and postcode delivery",
         "woocommerce_store_address": "12 Kurla West",
         "woocommerce_store_city": "Mumbai",
         "woocommerce_default_country": "IN:MH",
