@@ -1,6 +1,6 @@
 # Grovia Licensing & Commercial Distribution Strategy
 
-**Status:** Planning document — not legal advice  
+**Status:** Engineering/commercial planning document — not legal advice  
 **Date:** 2026-08-19
 
 ## 1. Recommended product licensing direction
@@ -13,8 +13,8 @@ Why:
 - a paid WordPress business can charge for maintained downloads, automatic updates, support, starter experiences, services and brand value without attempting to restrict the freedoms granted by the GPL.
 
 Official references:
-- https://make.wordpress.org/themes/handbook/review/required/
 - https://developer.wordpress.org/themes/releasing-your-theme/
+- https://developer.wordpress.org/themes/core-concepts/main-stylesheet/
 - https://wordpress.org/themes/commercial/
 
 ## 2. Theme vs plugin functionality
@@ -135,19 +135,28 @@ This repository is currently being used to bootstrap planning. Before proprietar
 
 Do not accidentally publish secrets, customer data, licensed demo assets, unreleased marketplace packages, or private business credentials.
 
-## 10. License files before first customer release
+## 10. Package license engineering gate
 
-Before paid beta/public release create and review:
-- root/project license policy;
-- theme `LICENSE` / headers as required;
-- plugin `LICENSE` / headers as required;
-- machine-readable third-party/demo asset inventory;
-- generated/reviewed Theme/Core `THIRD-PARTY-NOTICES.md`;
-- demo asset manifest entries;
-- font/icon/image attribution/source records;
-- customer-facing license/updates/support explanation.
+Theme and Core now have an explicit customer-package contract in `docs/PACKAGE-LICENSE-CONTRACT.md`.
 
-Passing the automated asset inventory does not remove these human release blockers.
+The engineering-alpha package roots are required to contain:
+- `LICENSE.txt` with the reviewed complete GNU GPL version 2 text;
+- `NOTICE.md` describing the package-level GPLv2-or-later boundary and unresolved legal-holder review;
+- generated `THIRD-PARTY-NOTICES.md`.
+
+Theme `style.css` and Core `storefront-core.php` must both declare `GNU General Public License v2 or later` and the canonical GPLv2 URI. The release manifest normalizes the effective code-license identifier to `GPL-2.0-or-later`.
+
+`tools/release/verify_package_licenses.py` pins the reviewed GPLv2 text fingerprint and rejects missing/altered license copies, header drift or missing notice surfaces. `tools/release/build_packages.py` also requires these legal files inside both deterministic customer ZIPs.
+
+This closes the **mechanical missing-LICENSE-file blocker** once CI is green. It does **not** close the legal/commercial review boundary.
+
+Before the first paid/public release still confirm:
+- final legal copyright holder/entity name;
+- customer-facing treatment of non-code starter/demo assets;
+- final machine-readable third-party/demo asset inventory and notices;
+- trademark/product-name position;
+- customer license/updates/support/refund explanation;
+- qualified review for any ambiguous third-party/non-code rights.
 
 ## 11. Legal review trigger
 
