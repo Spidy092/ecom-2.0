@@ -2,6 +2,12 @@
 /**
  * Render callback for Product Quick Add block.
  *
+ * Outputs a compact quantity stepper with:
+ * - Accessible labels and live status region
+ * - Interactivity API context for client-side state
+ * - Stock quantity ceiling from WooCommerce product data
+ * - data-state attribute for CSS visual states
+ *
  * @package StorefrontCore
  *
  * @var array    $attributes Block attributes.
@@ -16,21 +22,42 @@ if ( ! $product_id ) {
 	return;
 }
 
-$wrapper_attributes = get_block_wrapper_attributes( [
-	'class' => 'storefront-quick-add-block',
-] );
+// Resolve stock ceiling from WooCommerce product data.
+$stock_quantity = 9999;
+$wc_product     = wc_get_product( $product_id );
+if ( $wc_product ) {
+	// Only simple, in-stock products support quick-add.
+	if ( ! $wc_product->is_purchasable() || ! $wc_product->is_in_stock() ) {
+		return;
+	}
+	if ( $wc_product->managing_stock() && $wc_product->get_stock_quantity() > 0 ) {
+		$stock_quantity = (int) $wc_product->get_stock_quantity();
+	}
+}
+
+$wrapper_attributes = get_block_wrapper_attributes(
+	[
+		'class'      => 'storefront-quick-add-block',
+		'data-state' => 'idle',
+	]
+);
 
 $context = [
-	'productId' => $product_id,
-	'quantity'  => 1,
-	'isBusy'    => false,
-	'added'     => false,
+	'productId'     => (int) $product_id,
+	'quantity'      => 1,
+	'stockQuantity' => $stock_quantity,
+	'isBusy'        => false,
+	'added'         => false,
+	'error'         => false,
 ];
+
+$product_name = $wc_product ? $wc_product->get_name() : '';
 ?>
 
 <div <?php echo $wrapper_attributes; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 	data-wp-interactive="storefrontCore/quickAdd"
 	<?php echo function_exists( 'wp_interactivity_data_wp_context' ) ? wp_interactivity_data_wp_context( $context ) : ''; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+	aria-label="<?php printf( /* translators: %s product name */ esc_attr__( 'Add %s to cart', 'storefront-core' ), esc_attr( $product_name ) ); ?>"
 >
 	<div class="storefront-quick-add-stepper">
 		<button
@@ -39,17 +66,21 @@ $context = [
 			aria-label="<?php esc_attr_e( 'Decrease quantity', 'storefront-core' ); ?>"
 			data-wp-on--click="actions.decrement"
 			data-wp-bind--disabled="context.quantity <= 1 || context.isBusy"
-		>-</button>
+		>&minus;</button>
 
-		<span class="storefront-quick-add-qty" data-wp-text="context.quantity">1</span>
+		<span
+			class="storefront-quick-add-qty"
+			aria-label="<?php esc_attr_e( 'Quantity', 'storefront-core' ); ?>"
+			data-wp-text="context.quantity"
+		>1</span>
 
 		<button
 			type="button"
 			class="storefront-quick-add-btn storefront-quick-add-btn--plus"
 			aria-label="<?php esc_attr_e( 'Increase quantity', 'storefront-core' ); ?>"
 			data-wp-on--click="actions.increment"
-			data-wp-bind--disabled="context.isBusy"
-		>+</button>
+			data-wp-bind--disabled="context.isBusy || context.quantity >= context.stockQuantity"
+		>&plus;</button>
 
 		<button
 			type="button"
@@ -57,8 +88,11 @@ $context = [
 			data-wp-on--click="actions.addToCart"
 			data-wp-bind--disabled="context.isBusy"
 		>
-			<span data-wp-bind--hidden="context.added"><?php esc_html_e( 'Add', 'storefront-core' ); ?></span>
-			<span data-wp-bind--hidden="!context.added"><?php esc_html_e( '✓ Added', 'storefront-core' ); ?></span>
+			<span data-wp-bind--hidden="context.added || context.error"><?php esc_html_e( 'Add', 'storefront-core' ); ?></span>
+			<span data-wp-bind--hidden="!context.added"><?php esc_html_e( 'Added', 'storefront-core' ); ?></span>
+			<span data-wp-bind--hidden="!context.error"><?php esc_html_e( 'Retry', 'storefront-core' ); ?></span>
 		</button>
+
+		<p class="storefront-quick-add-status" role="status" aria-live="polite" aria-atomic="true" data-level=""></p>
 	</div>
 </div>

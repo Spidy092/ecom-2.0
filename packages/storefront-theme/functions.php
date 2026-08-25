@@ -139,6 +139,12 @@ function storefront_theme_register_block_styles(): void {
 				'file'   => 'assets/css/mobile-shopping-nav.css',
 			),
 		),
+		'storefront-core/product-quick-add' => array(
+			array(
+				'handle' => 'bhaivatech-grocery-alpha-product-quick-add',
+				'file'   => 'assets/css/product-quick-add.css',
+			),
+		),
 	);
 
 	foreach ( $styles as $block_name => $block_styles ) {
@@ -176,6 +182,29 @@ function storefront_theme_enqueue_shell_style(): void {
 	);
 }
 add_action( 'wp_enqueue_scripts', 'storefront_theme_enqueue_shell_style', 15 );
+
+/**
+ * Load Cart & Checkout block presentation styles on cart/checkout pages.
+ *
+ * @return void
+ */
+function storefront_theme_cart_checkout_assets(): void {
+	if ( ! function_exists( 'is_cart' ) || ! function_exists( 'is_checkout' ) ) {
+		return;
+	}
+
+	if ( ! is_cart() && ! is_checkout() ) {
+		return;
+	}
+
+	wp_enqueue_style(
+		'bhaivatech-grocery-alpha-cart-checkout',
+		get_theme_file_uri( 'assets/css/cart-checkout.css' ),
+		array(),
+		wp_get_theme()->get( 'Version' ) ?: '0.0.1'
+	);
+}
+add_action( 'wp_enqueue_scripts', 'storefront_theme_cart_checkout_assets', 20 );
 
 /**
  * Load Buy Again presentation styles only on the dedicated account endpoint.

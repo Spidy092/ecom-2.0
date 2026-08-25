@@ -1,0 +1,397 @@
+/**
+ * Cart & Checkout Block presentation styles.
+ *
+ * WooCommerce owns Cart/Checkout behavior — these styles compose the
+ * supported blocks into the warm paper/copper Storefront Design System
+ * without replacing checkout or overriding payment processing.
+ *
+ * @package StorefrontTheme
+ */
+
+/* -----------------------------------------------------------------------
+ * Shared tokens (resolved from theme.json)
+ * ----------------------------------------------------------------------- */
+
+.wc-block-cart,
+.wc-block-checkout {
+	--cart-surface: var(--wp--preset--color--surface, #fff);
+	--cart-base: var(--wp--preset--color--base, #f5f4f1);
+	--cart-ink: var(--wp--preset--color--text, #1c1b19);
+	--cart-muted: var(--wp--preset--color--text-2, #6e6c69);
+	--cart-border: var(--wp--preset--color--border, #e0ddd6);
+	--cart-accent: var(--wp--preset--color--accent, #d4600b);
+	--cart-accent-light: var(--wp--preset--color--accent-2, #f5ece4);
+	--cart-accent-text: var(--wp--preset--color--accent-text, #fff);
+	--cart-success: var(--wp--preset--color--success, #1a6b35);
+	--cart-success-bg: var(--wp--preset--color--success-bg, #ebf5ef);
+	--cart-error: var(--wp--preset--color--error, #b53d2f);
+	--cart-error-bg: var(--wp--preset--color--error-bg, #fbecea);
+	--cart-radius: var(--wp--custom--radius--md, 8px);
+	--cart-radius-sm: var(--wp--custom--radius--sm, 4px);
+	--cart-shadow: var(--wp--custom--shadow--sm, 0 1px 3px 0 rgb(0 0 0 / 0.08), 0 1px 2px -1px rgb(0 0 0 / 0.04));
+}
+
+/* -----------------------------------------------------------------------
+ * Cart Block
+ * ----------------------------------------------------------------------- */
+
+.wc-block-cart {
+	color: var(--cart-ink);
+}
+
+/* Cart items table */
+.wc-block-cart-items .wc-block-cart-items__row {
+	border-bottom: 1px solid var(--cart-border);
+	padding-block: 1.25rem;
+}
+
+.wc-block-cart-items .wc-block-cart-items__row:last-child {
+	border-bottom: none;
+}
+
+/* Product image */
+.wc-block-cart-item__image img {
+	border-radius: var(--cart-radius-sm);
+	background: var(--cart-base);
+}
+
+/* Product name */
+.wc-block-cart-item__product-name {
+	color: var(--cart-ink);
+	font-weight: 700;
+	text-decoration: none;
+}
+
+.wc-block-cart-item__product-name:hover {
+	color: var(--cart-accent);
+}
+
+/* Price */
+.wc-block-cart-item__prices,
+.wc-block-components-product-price {
+	color: var(--cart-ink);
+	font-weight: 800;
+	font-variant-numeric: tabular-nums;
+}
+
+/* Quantity stepper in cart */
+.wc-block-components-quantity-selector {
+	border: 1px solid var(--cart-border);
+	border-radius: var(--cart-radius-sm);
+	overflow: hidden;
+}
+
+.wc-block-components-quantity-selector input {
+	border: none;
+	font-weight: 700;
+	font-variant-numeric: tabular-nums;
+	text-align: center;
+}
+
+.wc-block-components-quantity-selector button {
+	min-width: 2.5rem;
+	min-height: 2.5rem;
+	border: none;
+	background: transparent;
+	color: var(--cart-ink);
+	font-weight: 700;
+	transition: background 120ms ease;
+}
+
+.wc-block-components-quantity-selector button:hover {
+	background: var(--cart-accent-light);
+	color: var(--cart-accent);
+}
+
+/* Remove link */
+.wc-block-cart-item__remove-link {
+	color: var(--cart-muted);
+	font-size: 0.8125rem;
+	font-weight: 600;
+}
+
+.wc-block-cart-item__remove-link:hover {
+	color: var(--cart-error);
+}
+
+/* Cart totals sidebar */
+.wc-block-cart__totals-title {
+	color: var(--cart-ink);
+	font-size: 1.125rem;
+	font-weight: 800;
+}
+
+.wc-block-components-totals-wrapper {
+	border-top: 1px solid var(--cart-border);
+}
+
+.wc-block-components-totals-item__label {
+	color: var(--cart-muted);
+	font-weight: 600;
+}
+
+.wc-block-components-totals-item__value {
+	color: var(--cart-ink);
+	font-weight: 800;
+	font-variant-numeric: tabular-nums;
+}
+
+.wc-block-components-totals-footer-item .wc-block-components-totals-item__label,
+.wc-block-components-totals-footer-item .wc-block-components-totals-item__value {
+	color: var(--cart-ink);
+	font-size: 1.125rem;
+	font-weight: 800;
+}
+
+/* Proceed to checkout button */
+.wc-block-cart__submit-button .wc-block-components-button {
+	min-height: 3.25rem;
+	border-radius: var(--cart-radius-sm);
+	background: var(--cart-accent);
+	color: var(--cart-accent-text);
+	font-size: 0.9375rem;
+	font-weight: 700;
+	letter-spacing: 0.01em;
+	transition: background 120ms ease;
+}
+
+.wc-block-cart__submit-button .wc-block-components-button:hover {
+	background: var(--cart-accent);
+	filter: brightness(0.88);
+}
+
+.wc-block-cart__submit-button .wc-block-components-button:focus-visible {
+	outline: 3px solid var(--cart-accent);
+	outline-offset: 3px;
+}
+
+/* Empty cart */
+.wc-block-cart--is-empty .wc-block-cart__empty-cart__title {
+	color: var(--cart-ink);
+}
+
+/* Coupon form */
+.wc-block-components-totals-coupon .wc-block-components-totals-coupon__input-wrapper input {
+	border: 1px solid var(--cart-border);
+	border-radius: var(--cart-radius-sm);
+	min-height: 2.75rem;
+}
+
+.wc-block-components-totals-coupon .wc-block-components-totals-coupon__button {
+	min-height: 2.75rem;
+	border-radius: var(--cart-radius-sm);
+	background: var(--cart-ink);
+	color: var(--cart-surface);
+	font-weight: 700;
+}
+
+.wc-block-components-totals-coupon .wc-block-components-totals-coupon__button:hover {
+	filter: brightness(1.15);
+}
+
+/* -----------------------------------------------------------------------
+ * Checkout Block
+ * ----------------------------------------------------------------------- */
+
+.wc-block-checkout {
+	color: var(--cart-ink);
+}
+
+/* Section headings */
+.wc-block-components-checkout-step__heading {
+	color: var(--cart-ink);
+	font-weight: 800;
+}
+
+.wc-block-components-checkout-step__description {
+	color: var(--cart-muted);
+}
+
+/* Form fields */
+.wc-block-components-text-input input,
+.wc-block-components-textarea textarea,
+.wc-block-components-combobox .wc-block-components-combobox-control input {
+	border: 1px solid var(--cart-border);
+	border-radius: var(--cart-radius-sm);
+	background: var(--cart-surface);
+	color: var(--cart-ink);
+	min-height: 3rem;
+	font-size: 0.9375rem;
+}
+
+.wc-block-components-text-input input:focus,
+.wc-block-components-textarea textarea:focus,
+.wc-block-components-combobox .wc-block-components-combobox-control input:focus {
+	border-color: var(--cart-accent);
+	box-shadow: 0 0 0 1px var(--cart-accent);
+}
+
+.wc-block-components-text-input label,
+.wc-block-components-textarea label {
+	color: var(--cart-muted);
+	font-size: 0.8125rem;
+	font-weight: 600;
+}
+
+/* Radio controls (shipping options) */
+.wc-block-components-radio-control__option {
+	border: 1px solid var(--cart-border);
+	border-radius: var(--cart-radius-sm);
+	padding: 0.875rem 1rem;
+	margin-bottom: 0.5rem;
+	transition: border-color 120ms ease, background 120ms ease;
+}
+
+.wc-block-components-radio-control__option:hover {
+	border-color: color-mix(in srgb, var(--cart-accent) 40%, var(--cart-border));
+}
+
+.wc-block-components-radio-control__option--checked {
+	border-color: var(--cart-accent);
+	background: var(--cart-accent-light);
+}
+
+.wc-block-components-radio-control__label {
+	color: var(--cart-ink);
+	font-weight: 700;
+}
+
+.wc-block-components-radio-control__description {
+	color: var(--cart-muted);
+}
+
+.wc-block-components-radio-control__secondary-label {
+	color: var(--cart-ink);
+	font-weight: 800;
+	font-variant-numeric: tabular-nums;
+}
+
+/* Payment methods */
+.wc-block-components-payment-method-label {
+	font-weight: 700;
+}
+
+/* Place order button */
+.wc-block-components-checkout-place-order-button {
+	min-height: 3.5rem;
+	border-radius: var(--cart-radius-sm);
+	background: var(--cart-accent);
+	color: var(--cart-accent-text);
+	font-size: 1rem;
+	font-weight: 700;
+	letter-spacing: 0.01em;
+	transition: background 120ms ease;
+}
+
+.wc-block-components-checkout-place-order-button:hover {
+	background: var(--cart-accent);
+	filter: brightness(0.88);
+}
+
+.wc-block-components-checkout-place-order-button:focus-visible {
+	outline: 3px solid var(--cart-accent);
+	outline-offset: 3px;
+}
+
+/* Order summary in checkout sidebar */
+.wc-block-components-order-summary .wc-block-components-order-summary__button-text {
+	color: var(--cart-ink);
+	font-weight: 700;
+}
+
+.wc-block-components-order-summary-item__image img {
+	border-radius: var(--cart-radius-sm);
+	background: var(--cart-base);
+}
+
+.wc-block-components-order-summary-item__description .wc-block-components-product-name {
+	color: var(--cart-ink);
+	font-weight: 700;
+}
+
+.wc-block-components-order-summary-item__total-price {
+	font-weight: 800;
+	font-variant-numeric: tabular-nums;
+}
+
+/* -----------------------------------------------------------------------
+ * Notices & validation
+ * ----------------------------------------------------------------------- */
+
+.wc-block-components-notice-banner {
+	border-radius: var(--cart-radius-sm);
+	padding: 0.875rem 1rem;
+}
+
+.wc-block-components-notice-banner.is-success {
+	background: var(--cart-success-bg);
+	color: var(--cart-success);
+	border-left: 3px solid var(--cart-success);
+}
+
+.wc-block-components-notice-banner.is-error {
+	background: var(--cart-error-bg);
+	color: var(--cart-error);
+	border-left: 3px solid var(--cart-error);
+}
+
+.wc-block-components-notice-banner.is-info {
+	background: var(--cart-accent-light);
+	color: var(--cart-ink);
+	border-left: 3px solid var(--cart-accent);
+}
+
+.wc-block-components-validation-error p {
+	color: var(--cart-error);
+	font-size: 0.8125rem;
+	font-weight: 600;
+}
+
+/* -----------------------------------------------------------------------
+ * Loading / skeleton states
+ * ----------------------------------------------------------------------- */
+
+.wc-block-components-loading-mask::after {
+	background: color-mix(in srgb, var(--cart-base) 75%, transparent);
+}
+
+/* -----------------------------------------------------------------------
+ * Responsive adjustments
+ * ----------------------------------------------------------------------- */
+
+@media (max-width: 700px) {
+	.wc-block-cart__main,
+	.wc-block-checkout__main {
+		padding-inline: 0.25rem;
+	}
+
+	.wc-block-components-checkout-place-order-button {
+		position: sticky;
+		bottom: calc(4.5rem + env(safe-area-inset-bottom));
+		z-index: 10;
+		margin-top: 1rem;
+		box-shadow: var(--cart-shadow);
+	}
+
+	.wc-block-cart__submit-button .wc-block-components-button {
+		position: sticky;
+		bottom: calc(4.5rem + env(safe-area-inset-bottom));
+		z-index: 10;
+		box-shadow: var(--cart-shadow);
+	}
+}
+
+/* -----------------------------------------------------------------------
+ * Reduced motion
+ * ----------------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+	.wc-block-cart *,
+	.wc-block-cart *::before,
+	.wc-block-cart *::after,
+	.wc-block-checkout *,
+	.wc-block-checkout *::before,
+	.wc-block-checkout *::after {
+		transition-duration: 0.01ms !important;
+	}
+}

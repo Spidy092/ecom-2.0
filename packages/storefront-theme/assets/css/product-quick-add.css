@@ -1,0 +1,272 @@
+/**
+ * Product Quick Add — stepper block presentation.
+ *
+ * Follows the Storefront Design System action hierarchy:
+ * - Primary Add uses Copper.
+ * - Quantity state uses Copper outline/tinted surface.
+ * - States: default, hover, busy/loading, added/success, error, disabled.
+ * - 48px minimum touch targets on mobile.
+ *
+ * @package StorefrontTheme
+ */
+
+.storefront-quick-add-block {
+	--qa-copper: var(--wp--preset--color--accent, #9a3412);
+	--qa-copper-dark: #7c2d12;
+	--qa-surface: var(--wp--preset--color--surface, #fff);
+	--qa-ink: var(--wp--preset--color--text, #17201f);
+	--qa-line: var(--wp--preset--color--border, #d9dedb);
+	--qa-muted: var(--wp--preset--color--text-2, #596463);
+	--qa-success: var(--wp--preset--color--success, #146c43);
+	--qa-success-bg: var(--wp--preset--color--success-bg, #ebf5ef);
+	--qa-error: var(--wp--preset--color--error, #b53d2f);
+	--qa-error-bg: var(--wp--preset--color--error-bg, #fbecea);
+	--qa-radius: var(--wp--custom--radius--sm, 4px);
+	--qa-transition: var(--wp--custom--motion--duration-fast, 120ms) var(--wp--custom--motion--easing-standard, cubic-bezier(0.4, 0, 0.2, 1));
+}
+
+/* -----------------------------------------------------------------------
+ * Stepper container
+ * ----------------------------------------------------------------------- */
+
+.storefront-quick-add-stepper {
+	display: inline-grid;
+	grid-template-columns: 40px minmax(2rem, auto) 40px auto;
+	align-items: center;
+	gap: 0;
+	overflow: hidden;
+	border: 1px solid var(--qa-line);
+	border-radius: var(--qa-radius);
+	background: var(--qa-surface);
+	transition: border-color var(--qa-transition), box-shadow var(--qa-transition);
+}
+
+.storefront-quick-add-stepper:focus-within {
+	border-color: var(--qa-copper);
+	box-shadow: 0 0 0 2px color-mix(in srgb, var(--qa-copper) 20%, transparent);
+}
+
+/* -----------------------------------------------------------------------
+ * Stepper buttons (minus / plus)
+ * ----------------------------------------------------------------------- */
+
+.storefront-quick-add-btn {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-width: 40px;
+	min-height: 40px;
+	border: 0;
+	padding: 0;
+	background: transparent;
+	color: var(--qa-ink);
+	font-size: 1.125rem;
+	font-weight: 700;
+	line-height: 1;
+	cursor: pointer;
+	transition: background var(--qa-transition), color var(--qa-transition);
+	-webkit-tap-highlight-color: transparent;
+}
+
+.storefront-quick-add-btn:hover:not(:disabled) {
+	background: color-mix(in srgb, var(--qa-copper) 10%, transparent);
+	color: var(--qa-copper-dark);
+}
+
+.storefront-quick-add-btn:active:not(:disabled) {
+	background: color-mix(in srgb, var(--qa-copper) 18%, transparent);
+}
+
+.storefront-quick-add-btn:disabled {
+	color: var(--qa-muted);
+	opacity: 0.5;
+	cursor: not-allowed;
+}
+
+.storefront-quick-add-btn:focus-visible {
+	outline: 3px solid var(--qa-copper);
+	outline-offset: -3px;
+}
+
+/* -----------------------------------------------------------------------
+ * Quantity display
+ * ----------------------------------------------------------------------- */
+
+.storefront-quick-add-qty {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	min-width: 2rem;
+	min-height: 40px;
+	padding: 0 0.25rem;
+	color: var(--qa-ink);
+	font-size: 0.9375rem;
+	font-weight: 800;
+	font-variant-numeric: tabular-nums;
+	text-align: center;
+	user-select: none;
+}
+
+/* -----------------------------------------------------------------------
+ * Submit button (Add / Added)
+ * ----------------------------------------------------------------------- */
+
+.storefront-quick-add-submit {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-width: 64px;
+	min-height: 40px;
+	border: 0;
+	border-inline-start: 1px solid var(--qa-line);
+	padding: 0.5rem 0.75rem;
+	background: var(--qa-copper);
+	color: #fff;
+	font-size: 0.8125rem;
+	font-weight: 700;
+	letter-spacing: 0.01em;
+	text-transform: none;
+	cursor: pointer;
+	transition: background var(--qa-transition), border-color var(--qa-transition);
+}
+
+.storefront-quick-add-submit:hover:not(:disabled) {
+	background: var(--qa-copper-dark);
+}
+
+.storefront-quick-add-submit:active:not(:disabled) {
+	background: color-mix(in srgb, var(--qa-copper-dark) 85%, #000);
+}
+
+.storefront-quick-add-submit:disabled {
+	opacity: 0.6;
+	cursor: not-allowed;
+}
+
+.storefront-quick-add-submit:focus-visible {
+	outline: 3px solid var(--qa-copper);
+	outline-offset: -3px;
+}
+
+/* -----------------------------------------------------------------------
+ * Busy / Loading state
+ * ----------------------------------------------------------------------- */
+
+.storefront-quick-add-block[data-state="busy"] .storefront-quick-add-stepper {
+	border-color: var(--qa-muted);
+	opacity: 0.75;
+	pointer-events: none;
+}
+
+.storefront-quick-add-block[data-state="busy"] .storefront-quick-add-submit {
+	position: relative;
+	color: transparent;
+}
+
+.storefront-quick-add-block[data-state="busy"] .storefront-quick-add-submit::after {
+	content: "";
+	position: absolute;
+	inset: 0;
+	margin: auto;
+	width: 14px;
+	height: 14px;
+	border: 2px solid #fff;
+	border-top-color: transparent;
+	border-radius: 50%;
+	animation: qa-spin 0.6s linear infinite;
+}
+
+@keyframes qa-spin {
+	to { transform: rotate(360deg); }
+}
+
+/* -----------------------------------------------------------------------
+ * Added / Success state
+ * ----------------------------------------------------------------------- */
+
+.storefront-quick-add-block[data-state="added"] .storefront-quick-add-stepper {
+	border-color: var(--qa-success);
+}
+
+.storefront-quick-add-block[data-state="added"] .storefront-quick-add-submit {
+	background: var(--qa-success);
+	border-inline-start-color: var(--qa-success);
+}
+
+/* -----------------------------------------------------------------------
+ * Error state
+ * ----------------------------------------------------------------------- */
+
+.storefront-quick-add-block[data-state="error"] .storefront-quick-add-stepper {
+	border-color: var(--qa-error);
+}
+
+.storefront-quick-add-block[data-state="error"] .storefront-quick-add-submit {
+	background: var(--qa-error);
+	border-inline-start-color: var(--qa-error);
+}
+
+/* -----------------------------------------------------------------------
+ * Status message (accessible announcement)
+ * ----------------------------------------------------------------------- */
+
+.storefront-quick-add-status {
+	grid-column: 1 / -1;
+	padding: 0.375rem 0.5rem;
+	font-size: 0.75rem;
+	font-weight: 600;
+	line-height: 1.3;
+}
+
+.storefront-quick-add-status:empty {
+	display: none;
+}
+
+.storefront-quick-add-status[data-level="success"] {
+	background: var(--qa-success-bg);
+	color: var(--qa-success);
+}
+
+.storefront-quick-add-status[data-level="error"] {
+	background: var(--qa-error-bg);
+	color: var(--qa-error);
+}
+
+/* -----------------------------------------------------------------------
+ * Mobile (48px touch targets)
+ * ----------------------------------------------------------------------- */
+
+@media (max-width: 700px) {
+	.storefront-quick-add-stepper {
+		grid-template-columns: 48px minmax(2.25rem, auto) 48px auto;
+	}
+
+	.storefront-quick-add-btn {
+		min-width: 48px;
+		min-height: 48px;
+	}
+
+	.storefront-quick-add-qty {
+		min-height: 48px;
+	}
+
+	.storefront-quick-add-submit {
+		min-width: 72px;
+		min-height: 48px;
+		padding: 0.5rem 1rem;
+		font-size: 0.875rem;
+	}
+}
+
+/* -----------------------------------------------------------------------
+ * Reduced motion
+ * ----------------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+	.storefront-quick-add-block *,
+	.storefront-quick-add-block *::before,
+	.storefront-quick-add-block *::after {
+		transition-duration: 0.01ms !important;
+		animation-duration: 0.01ms !important;
+	}
+}

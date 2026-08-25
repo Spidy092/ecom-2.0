@@ -145,8 +145,10 @@ function storefront_core_bootstrap(): void {
 	require_once __DIR__ . '/includes/class-buy-again-service.php';
 	require_once __DIR__ . '/includes/class-setup-wizard.php';
 	require_once __DIR__ . '/includes/class-storefront-frontend.php';
+	require_once __DIR__ . '/includes/class-system-status.php';
 	( new BhaivaTech\Storefront\Storefront_Frontend( new BhaivaTech\Storefront\Buy_Again_Service() ) )->register();
 	( new BhaivaTech\Storefront\Setup_Wizard() )->register();
+	( new BhaivaTech\Storefront\System_Status() )->register();
 
 	/**
 	 * Register Custom Blocks (apiVersion 3 + Interactivity API)

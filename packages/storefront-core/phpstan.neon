@@ -16,3 +16,4 @@ parameters:
         - includes/class-buy-again-service.php
         - includes/class-storefront-frontend.php
         - includes/class-setup-wizard.php
+        - includes/class-system-status.php
