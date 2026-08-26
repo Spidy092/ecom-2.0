@@ -121,7 +121,7 @@ $product_name = (string) $wc_product->get_name();
 			class="storefront-quick-add-btn storefront-quick-add-btn--plus"
 			aria-label="<?php esc_attr_e( 'Increase quantity', 'storefront-core' ); ?>"
 			data-wp-on--click="actions.increment"
-			data-wp-bind--disabled="context.isBusy || context.quantity >= context.stockQuantity"
+			data-wp-bind--disabled="context.isBusy || context.stockQuantity <= context.quantity"
 		>&plus;</button>
 
 		<button

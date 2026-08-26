@@ -74,29 +74,6 @@ function storefront_core_uninstall(): void {
 	StorefrontCore\ShoppingList\Installer::uninstall();
 }
 
-/**
- * Enqueue the quantity-rail view module on customer-facing browse surfaces.
- *
- * WordPress normally discovers a block's viewScriptModule from block.json.
- * Product Collection can render the pattern in a context where that
- * discovery is deferred, so keep the small interaction layer available when
- * the rail is present. Cart and checkout remain owned by WooCommerce.
- *
- * @return void
- */
-function storefront_core_enqueue_product_quick_add_assets(): void {
-	if ( is_admin() || is_cart() || is_checkout() || ! function_exists( 'wp_enqueue_script_module' ) ) {
-		return;
-	}
-
-	wp_enqueue_script_module(
-		'storefront-core-product-quick-add',
-		plugins_url( 'blocks/product-quick-add/view.js', BHAIVATECH_STOREFRONT_CORE_FILE ),
-		[],
-		BHAIVATECH_STOREFRONT_CORE_VERSION
-	);
-}
-
 // ---------------------------------------------------------------------------
 // GDPR Erasure
 // ---------------------------------------------------------------------------
@@ -153,7 +130,6 @@ function storefront_core_bootstrap(): void {
 	add_action( 'rest_api_init', 'bhaivatech_storefront_register_serviceability_route' );
 	add_action( 'rest_api_init', 'bhaivatech_storefront_register_buy_again_routes' );
 	add_action( 'wp_enqueue_scripts', 'bhaivatech_storefront_enqueue_buy_again_assets', 20 );
-	add_action( 'wp_enqueue_scripts', 'storefront_core_enqueue_product_quick_add_assets', 25 );
 	add_filter( 'woocommerce_get_query_vars', 'bhaivatech_storefront_buy_again_query_vars' );
 	add_filter( 'woocommerce_account_menu_items', 'bhaivatech_storefront_buy_again_account_menu' );
 	add_action( 'woocommerce_account_dashboard', 'bhaivatech_storefront_render_buy_again_dashboard_link', 20 );
