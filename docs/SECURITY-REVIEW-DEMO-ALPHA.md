@@ -34,6 +34,9 @@ environment as local.
 - `--reset` deletes only posts, product variations, attachments, marked product
   categories, and the marked Grovia navigation menu. Products and variations
   are deleted through WooCommerce CRUD; unrelated content is not selected.
+- The seeder may update only the pages currently assigned by WooCommerce as
+  its Shop, Cart, Checkout, or My Account system page. Other same-named pages
+  are left untouched and a separate marked fixture is created.
 - Demo image paths are fixed filenames resolved from the active theme. No
   request value can choose a path, URL, callback, or executable file.
 - Product, category, variation, page, media, and option writes use public
