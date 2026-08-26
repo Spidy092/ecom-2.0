@@ -1043,7 +1043,10 @@ textarea:focus-visible {
 	}
 
 	.storefront-product-ledger > .wp-block-woocommerce-product-template {
-		grid-template-columns: 1fr;
+		/* WooCommerce's responsive collection class is loaded after the theme
+		 * stylesheet; keep one full-width ledger row at phone widths so the
+		 * quantity rail cannot be clipped or covered by the product image. */
+		grid-template-columns: 1fr !important;
 	}
 
 	.storefront-ledger-row {
