@@ -27,6 +27,10 @@ def main() -> None:
         page = context.new_page()
         page.goto(BASE_URL, wait_until="networkidle")
 
+        # Empty-cart feedback must not cover the first shopping action. The
+        # banner becomes useful only after a real add-to-cart mutation.
+        expect(page.locator("[data-cart-feedback]")).to_be_hidden()
+
         spinach = ledger_row(page, "Baby Spinach")
         expect(spinach).to_be_visible()
         quick_add = spinach.locator(".storefront-quick-add-block")

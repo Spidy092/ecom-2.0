@@ -796,6 +796,14 @@ body.admin-bar:not(.woocommerce-cart):not(.woocommerce-checkout) .grovia-site-he
 	z-index: 19;
 }
 
+/* Author styles that set display:flex override the browser's default hidden
+ * presentation. Keep cart feedback truly invisible until a non-empty cart
+ * state or add-to-cart event makes it useful. */
+.grovia-cart-feedback[hidden],
+.storefront-basket-pulse[hidden] {
+	display: none !important;
+}
+
 .grovia-cart-feedback p {
 	margin: 0;
 }
