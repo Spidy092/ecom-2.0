@@ -17,6 +17,7 @@
 	<!-- wp:group {"className":"storefront-ledger-row__info","layout":{"type":"flex","orientation":"vertical","flexWrap":"nowrap"},"style":{"layout":{"selfStretch":"fill"}}} -->
 	<div class="wp-block-group storefront-ledger-row__info">
 		<!-- wp:woocommerce/product-title {"level":3,"className":"storefront-ledger-row__title","isLink":true,"headingLevel":3,"textAlign":"left"} /-->
+		<!-- wp:storefront/product-unit {"className":"storefront-ledger-row__unit"} /-->
 		<!-- wp:woocommerce/product-price {"className":"storefront-ledger-row__price"} /-->
 	</div>
 	<!-- /wp:group -->

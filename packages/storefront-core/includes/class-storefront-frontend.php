@@ -49,7 +49,7 @@ final class Storefront_Frontend {
 
 		ob_start();
 		?>
-		<section class="grovia-delivery-checker storefront-delivery-checker" data-delivery-checker>
+		<section id="grovia-delivery-checker" class="grovia-delivery-checker storefront-delivery-checker" data-delivery-checker>
 			<div class="grovia-delivery-checker__copy">
 				<p class="grovia-kicker"><?php echo esc_html__( 'Delivery certainty', 'bhaivatech-storefront-alpha' ); ?></p>
 				<h2><?php echo esc_html__( 'Know before you fill the basket.', 'bhaivatech-storefront-alpha' ); ?></h2>
@@ -112,7 +112,19 @@ final class Storefront_Frontend {
 			<?php else : ?>
 				<ul class="grovia-buy-again__items">
 					<?php foreach ( $products as $product ) : ?>
-						<li class="grovia-buy-again__item"><div><a href="<?php echo esc_url( $product->get_permalink() ); ?>"><?php echo esc_html( $product->get_name() ); ?></a><div class="grovia-shopping-list__price"><?php echo wp_kses_post( $product->get_price_html() ); ?></div></div><?php if ( ! $product->is_in_stock() || ! $product->is_purchasable() ) : ?><span class="grovia-buy-again__action"><?php echo esc_html__( 'Unavailable', 'bhaivatech-storefront-alpha' ); ?></span><?php elseif ( $product->is_type( 'simple' ) ) : ?><a class="grovia-buy-again__action" href="<?php echo esc_url( $product->add_to_cart_url() ); ?>"><?php echo esc_html__( 'Add again', 'bhaivatech-storefront-alpha' ); ?></a><?php else : ?><a class="grovia-buy-again__action" href="<?php echo esc_url( $product->get_permalink() ); ?>"><?php echo esc_html__( 'Choose options', 'bhaivatech-storefront-alpha' ); ?></a><?php endif; ?></li>
+						<li class="grovia-buy-again__item">
+							<div>
+								<a href="<?php echo esc_url( $product->get_permalink() ); ?>"><?php echo esc_html( $product->get_name() ); ?></a>
+								<div class="grovia-shopping-list__price"><?php echo wp_kses_post( $product->get_price_html() ); ?></div>
+							</div>
+							<?php if ( ! $product->is_in_stock() || ! $product->is_purchasable() ) : ?>
+								<span class="grovia-buy-again__action"><?php echo esc_html__( 'Unavailable', 'bhaivatech-storefront-alpha' ); ?></span>
+							<?php elseif ( $product->is_type( 'simple' ) ) : ?>
+								<a class="grovia-buy-again__action" href="<?php echo esc_url( $product->add_to_cart_url() ); ?>"><?php echo esc_html__( 'Add again', 'bhaivatech-storefront-alpha' ); ?></a>
+							<?php else : ?>
+								<a class="grovia-buy-again__action" href="<?php echo esc_url( $product->get_permalink() ); ?>"><?php echo esc_html__( 'Choose options', 'bhaivatech-storefront-alpha' ); ?></a>
+							<?php endif; ?>
+						</li>
 					<?php endforeach; ?>
 				</ul>
 			<?php endif; ?>

@@ -35,3 +35,19 @@ Do not use WooCommerce internal APIs or direct order-table/post-table assumption
 - WooCommerce > Storefront setup — capability-protected three-step merchant setup for store basics and delivery areas; WooCommerce tax/shipping/payment configuration remains separate and authoritative.
 
 Delivery configuration belongs in WooCommerce Shipping Zones; the checker does not maintain a second postcode database. Shopping List entries are stored in the `storefront_shopping_list` custom table, while current product truth is resolved by WooCommerce when entries are read.
+
+## Disposable Grovia demo
+
+When WP-CLI is available in a local, development, or staging environment, the
+core plugin registers a namespaced seeder:
+
+```bash
+wp grovia seed-demo
+wp grovia seed-demo --reset
+```
+
+The command creates only marked Grovia demo departments, products, pages,
+media, and store options. `--reset` removes only those marked fixtures; it
+does not delete unrelated products, pages, orders, users, or media. The seed
+uses WooCommerce CRUD APIs for catalog data and WordPress APIs for pages,
+options, and attachments so the fixture remains compatible with HPOS.

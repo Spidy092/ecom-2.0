@@ -6,6 +6,8 @@ on:
     paths:
       - 'packages/**'
       - 'tools/**'
+      - 'blueprint.json'
+      - 'wp-env.json'
       - '.wp-env.json'
       - '.github/workflows/engineering-alpha-php.yml'
   push:
@@ -13,6 +15,8 @@ on:
     paths:
       - 'packages/**'
       - 'tools/**'
+      - 'blueprint.json'
+      - 'wp-env.json'
       - '.wp-env.json'
       - '.github/workflows/engineering-alpha-php.yml'
   workflow_dispatch:
@@ -143,6 +147,12 @@ jobs:
           ./node_modules/.bin/wp-env run cli wp eval-file wp-content/plugins/storefront-core/tests/e2e/seed-buy-again.php
           python packages/storefront-core/tests/e2e/buy-again-api.spec.py
           python packages/storefront-core/tests/e2e/buy-again-ui.spec.py
+      - name: Smoke-test the reusable Grovia demo seeder
+        run: |
+          ./node_modules/.bin/wp-env run cli wp eval-file wp-content/plugins/storefront-core/tests/e2e/seed-grovia-demo.php
+          test "$(./node_modules/.bin/wp-env run cli wp option get show_on_front)" = "page"
+          test "$(./node_modules/.bin/wp-env run cli wp post list --post_type=product --meta_key=_grovia_demo_fixture --meta_value=1 --format=count)" = "12"
+          test "$(./node_modules/.bin/wp-env run cli wp post list --name=hello-world --post_type=post --format=count)" = "0"
       - name: Stop wp-env
         if: always()
         run: ./node_modules/.bin/wp-env stop

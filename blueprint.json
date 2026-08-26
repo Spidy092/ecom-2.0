@@ -8,20 +8,29 @@
   "landingPage": "/",
   "preferredVersions": {
     "php": "8.3",
-    "wp": "latest"
+    "wp": "7.1"
   },
+  "extraLibraries": [
+    "wp-cli"
+  ],
   "features": {
     "networking": true
   },
   "steps": [
+    {
+      "step": "defineWpConfigConsts",
+      "consts": {
+        "WP_ENVIRONMENT_TYPE": "local"
+      }
+    },
     {
       "step": "login"
     },
     {
       "step": "installPlugin",
       "pluginData": {
-        "resource": "wordpress.org/plugins",
-        "slug": "woocommerce"
+        "resource": "url",
+        "url": "https://downloads.wordpress.org/plugin/woocommerce.11.0.1.zip"
       },
       "options": {
         "activate": true
@@ -31,7 +40,7 @@
       "step": "installPlugin",
       "pluginData": {
         "resource": "url",
-        "url": "https://github.com/Spidy092/ecom-2.0/releases/download/v0.0.2-alpha/bhaivatech-storefront-core-0.0.1-alpha.zip"
+        "url": "https://github.com/Spidy092/ecom-2.0/releases/download/v0.0.3-alpha/bhaivatech-storefront-core-0.0.3-alpha.zip"
       },
       "options": {
         "activate": true
@@ -41,7 +50,7 @@
       "step": "installTheme",
       "themeData": {
         "resource": "url",
-        "url": "https://github.com/Spidy092/ecom-2.0/releases/download/v0.0.2-alpha/bhaivatech-grocery-alpha-0.0.1-alpha.zip"
+        "url": "https://github.com/Spidy092/ecom-2.0/releases/download/v0.0.3-alpha/bhaivatech-grocery-alpha-0.0.3-alpha.zip"
       },
       "options": {
         "activate": true
@@ -57,6 +66,10 @@
         "woocommerce_default_country": "IN:MH",
         "woocommerce_currency": "INR"
       }
+    },
+    {
+      "step": "wp-cli",
+      "command": "wp grovia seed-demo"
     }
   ]
 }
