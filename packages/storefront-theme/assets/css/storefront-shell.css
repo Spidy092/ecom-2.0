@@ -2,6 +2,43 @@
   min-height: 100vh;
 }
 
+/* The product workspace is embedded in several page templates, so keep its
+ * grid item shrinkable even when a block-theme parent emits a constrained
+ * layout. This prevents chooser labels from establishing a wider min-content
+ * width than the mobile viewport. */
+.bt-product-workspace {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+}
+
+@media (max-width: 700px) {
+  /* Search remains the primary compact-header action; the delivery shortcut
+   * is available from the page checker and is omitted here to avoid overflow. */
+  body .grovia-header__context,
+  body .grovia-header__delivery-note {
+    display: none !important;
+  }
+
+  .bt-department-browse,
+  .bt-department-browse__departments,
+  .bt-department-browse__departments--chooser {
+    box-sizing: border-box;
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .bt-department-browse__departments--chooser .bt-department-browse__department {
+    box-sizing: border-box;
+    min-width: 0;
+    max-width: 100%;
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+}
+
 .bt-storefront-intro {
   display: grid;
   gap: 0.65rem;
