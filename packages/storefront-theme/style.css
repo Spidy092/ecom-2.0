@@ -15,7 +15,7 @@ Text Domain: bhaivatech-grocery-alpha
 	--grovia-shadow: 0 12px 32px rgba(23, 34, 27, 0.08);
 	/* Backwards-compatible aliases for the scoped Core styles. */
 	--wp--preset--color--paper: var(--wp--preset--color--base, #f5f4f1);
-	--wp--preset--color--ink: var(--wp--preset--color--text, #1c1b19);
+	--wp--preset--color--ink: #17201f;
 	--wp--preset--color--soft: var(--wp--preset--color--surface-2, #eceae4);
 	--wp--preset--color--muted: var(--wp--preset--color--text-2, #6e6c69);
 	--wp--preset--color--line: var(--wp--preset--color--border, #e0ddd6);
