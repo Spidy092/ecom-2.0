@@ -238,6 +238,223 @@ body.admin-bar:not(.woocommerce-cart):not(.woocommerce-checkout) .grovia-site-he
 	font-size: clamp(1.1rem, 2vw, 1.35rem);
 }
 
+/*
+ * Basket brief hero: a visual merchandising layer for the first viewport,
+ * without turning the grocery journey into a carousel or a builder demo.
+ * The images are local starter assets and the copy describes real product
+ * behavior (price, stock, delivery) rather than invented promotions.
+ */
+.grovia-hero {
+	box-sizing: border-box;
+	display: grid;
+	grid-template-columns: minmax(0, 1.05fr) minmax(20rem, 0.95fr);
+	align-items: center;
+	gap: clamp(2rem, 6vw, 6rem);
+	max-width: 1280px;
+	margin: 0 auto;
+	padding-block: clamp(2rem, 5vw, 4.5rem) clamp(2.5rem, 6vw, 5rem);
+}
+
+.grovia-hero__copy {
+	min-width: 0;
+}
+
+.grovia-hero h1 {
+	max-width: 12ch;
+	margin: 0.6rem 0 1.25rem;
+	color: var(--wp--preset--color--text, #1c1b19);
+	font-size: clamp(2.7rem, 6vw, 5.4rem);
+	letter-spacing: -0.055em;
+	line-height: 0.96;
+	text-wrap: balance;
+}
+
+.grovia-hero__lede {
+	max-width: 38rem;
+	margin: 0;
+	color: var(--wp--preset--color--text-2, #6e6c69);
+	font-size: clamp(1.05rem, 1.6vw, 1.25rem);
+	line-height: 1.55;
+}
+
+.grovia-hero__actions {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 0.7rem;
+	margin-top: 1.6rem;
+}
+
+.grovia-hero__primary,
+.grovia-hero__secondary {
+	display: inline-flex;
+	min-height: 3rem;
+	align-items: center;
+	justify-content: center;
+	gap: 0.7rem;
+	border-radius: var(--wp--custom--radius--sm, 4px);
+	padding: 0.7rem 1rem;
+	font-size: 0.9rem;
+	font-weight: 760;
+	text-decoration: none;
+}
+
+.grovia-hero__primary {
+	background: var(--wp--preset--color--accent, #d4600b);
+	color: var(--wp--preset--color--accent-text, #fff);
+}
+
+.grovia-hero__primary:hover {
+	background: #b8520a;
+	color: var(--wp--preset--color--accent-text, #fff);
+}
+
+.grovia-hero__primary span {
+	font-size: 1.15rem;
+	line-height: 1;
+}
+
+.grovia-hero__secondary {
+	border: 1px solid var(--wp--preset--color--border, #e0ddd6);
+	background: var(--wp--preset--color--surface, #fff);
+	color: var(--wp--preset--color--text, #1c1b19);
+}
+
+.grovia-hero__secondary:hover {
+	border-color: var(--wp--preset--color--accent, #d4600b);
+	color: var(--wp--preset--color--accent, #d4600b);
+}
+
+.grovia-hero__signals {
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	gap: 0.75rem;
+	margin: 2rem 0 0;
+	padding: 1rem 0 0;
+	border-top: 1px solid var(--wp--preset--color--border, #e0ddd6);
+	list-style: none;
+}
+
+.grovia-hero__signals li {
+	display: grid;
+	gap: 0.25rem;
+	min-width: 0;
+}
+
+.grovia-hero__signals strong {
+	color: var(--wp--preset--color--accent, #d4600b);
+	font-family: var(--wp--preset--font-family--mono, ui-monospace, monospace);
+	font-size: 0.7rem;
+	letter-spacing: 0.08em;
+}
+
+.grovia-hero__signals span {
+	color: var(--wp--preset--color--text-2, #6e6c69);
+	font-size: 0.77rem;
+	line-height: 1.35;
+}
+
+.grovia-hero__visual {
+	position: relative;
+	min-height: 29rem;
+	border: 1px solid var(--wp--preset--color--border, #e0ddd6);
+	background: var(--wp--preset--color--surface-2, #eceae4);
+	overflow: hidden;
+}
+
+.grovia-hero__image {
+	position: absolute;
+	overflow: hidden;
+	background: var(--wp--preset--color--surface, #fff);
+}
+
+.grovia-hero__image img {
+	display: block;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+.grovia-hero__image--main {
+	inset: 1.1rem 22% 3.5rem 1.1rem;
+}
+
+.grovia-hero__image--secondary {
+	inset: auto 1.1rem 1.1rem auto;
+	width: 34%;
+	height: 34%;
+	border: 0.75rem solid var(--wp--preset--color--surface-2, #eceae4);
+	border-top-width: 0.75rem;
+	border-left-width: 0.75rem;
+}
+
+.grovia-hero__brief {
+	position: absolute;
+	right: 1.1rem;
+	top: 1.1rem;
+	display: grid;
+	gap: 0.25rem;
+	width: min(11rem, 42%);
+	padding: 0.9rem;
+	border: 1px solid var(--wp--preset--color--border, #e0ddd6);
+	background: var(--wp--preset--color--surface, #fff);
+	box-shadow: var(--wp--custom--shadow--sm, 0 1px 3px rgb(0 0 0 / 8%));
+}
+
+.grovia-hero__brief .grovia-kicker {
+	font-size: 0.65rem;
+}
+
+.grovia-hero__brief strong {
+	font-size: 0.92rem;
+	line-height: 1.25;
+}
+
+.grovia-hero__brief span {
+	color: var(--wp--preset--color--text-2, #6e6c69);
+	font-size: 0.72rem;
+	line-height: 1.35;
+}
+
+@media (max-width: 760px) {
+	.grovia-hero {
+		grid-template-columns: 1fr;
+		gap: 1.75rem;
+		padding-block: 2rem 2.5rem;
+	}
+
+	.grovia-hero h1 {
+		max-width: 14ch;
+		font-size: clamp(2.45rem, 12vw, 4rem);
+	}
+
+	.grovia-hero__signals {
+		gap: 0.5rem;
+	}
+
+	.grovia-hero__signals span {
+		font-size: 0.72rem;
+	}
+
+	.grovia-hero__visual {
+		min-height: min(82vw, 24rem);
+	}
+}
+
+@media (max-width: 430px) {
+	.grovia-hero__actions > * {
+		flex: 1 1 100%;
+	}
+
+	.grovia-hero__visual {
+		min-height: 20rem;
+	}
+
+	.grovia-hero__brief {
+		width: 45%;
+	}
+}
+
 .grovia-delivery-checker {
 	align-items: end;
 	background: #dce9dd;
