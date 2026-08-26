@@ -11,12 +11,13 @@ BASE_URL = os.environ.get("BT_E2E_BASE_URL", "http://localhost:8888")
 
 
 def ledger_row(page, name: str):
-    # Product Collection wrappers vary between WooCommerce block releases.
-    # Anchor on the visible product link, then climb to the nearest container
-    # that owns a Grovia purchase action instead of relying on a wrapper tag.
-    return page.get_by_role("link", name=name, exact=True).locator(
-        "xpath=ancestor::*[.//*[contains(@class, 'storefront-quick-add')]][1]"
-    )
+    # Product Collection wrappers vary between WooCommerce block releases,
+    # but each product item exposes the stable public product-item class.
+    # Anchoring on the item keeps normal, variable, and unavailable cards on
+    # the same assertion path.
+    return page.locator("li.wc-block-product").filter(
+        has=page.get_by_role("link", name=name, exact=True)
+    ).first()
 
 
 def main() -> None:
