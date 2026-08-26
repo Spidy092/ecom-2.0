@@ -17,7 +17,7 @@ def ledger_row(page, name: str):
     # the same assertion path.
     return page.locator("li.wc-block-product").filter(
         has=page.get_by_role("link", name=name, exact=True)
-    ).first()
+    ).first
 
 
 def main() -> None:
