@@ -1049,6 +1049,14 @@ textarea:focus-visible {
 		grid-template-columns: 1fr !important;
 	}
 
+	/* WooCommerce 11 adds the responsive class to the rendered template and
+	 * may place an additional wrapper between it and the collection block.
+	 * Match that public class as well so every Grovia product ledger remains a
+	 * single, tappable column on phones. */
+	body .wc-block-product-template__responsive.wc-block-product-template__responsive {
+		grid-template-columns: 1fr !important;
+	}
+
 	.storefront-ledger-row {
 		min-height: 6.5rem;
 	}
