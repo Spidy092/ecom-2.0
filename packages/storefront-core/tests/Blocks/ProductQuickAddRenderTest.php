@@ -240,6 +240,55 @@ final class ProductQuickAddRenderTest extends TestCase {
 		$this->assertStringContainsString( 'Retry', $output );
 	}
 
+	/**
+	 * The ledger must keep variable products safe instead of silently adding a
+	 * variation that the shopper did not choose.
+	 */
+	public function test_render_outputs_options_fallback_for_variable_product(): void {
+		$mock_product = $this->create_mock_product( 18, 'Basmati Rice', true, true, false, 0, false );
+		$mock_product->shouldReceive( 'get_permalink' )->andReturn( 'https://example.test/product/rice/' );
+
+		Functions\expect( 'wc_get_product' )
+			->once()
+			->with( 18 )
+			->andReturn( $mock_product );
+
+		Functions\stubs( [
+			'esc_url'    => function ( $url ) { return $url; },
+			'esc_html__' => function ( $text ) { return $text; },
+		] );
+
+		$output = $this->invoke_render( [ 'productId' => 18, 'renderFallback' => true ] );
+
+		$this->assertNotNull( $output );
+		$this->assertStringContainsString( 'Choose options', $output );
+		$this->assertStringContainsString( 'https://example.test/product/rice/', $output );
+	}
+
+	/**
+	 * The ledger should explain why an unavailable product cannot be added.
+	 */
+	public function test_render_outputs_unavailable_fallback(): void {
+		$mock_product = $this->create_mock_product( 19, 'Vine Tomatoes', false, true, false, 0 );
+
+		Functions\expect( 'wc_get_product' )
+			->once()
+			->with( 19 )
+			->andReturn( $mock_product );
+
+		Functions\stubs( [
+			'esc_html__'       => function ( $text ) { return $text; },
+			'esc_attr'         => function ( $text ) { return $text; },
+			'wp_strip_all_tags' => function ( $text ) { return $text; },
+		] );
+
+		$output = $this->invoke_render( [ 'productId' => 19, 'renderFallback' => true ] );
+
+		$this->assertNotNull( $output );
+		$this->assertStringContainsString( 'Out of stock', $output );
+		$this->assertStringContainsString( 'role="status"', $output );
+	}
+
 	// -----------------------------------------------------------------------
 	// Helpers
 	// -----------------------------------------------------------------------
@@ -288,11 +337,13 @@ final class ProductQuickAddRenderTest extends TestCase {
 		bool $in_stock,
 		bool $purchasable,
 		bool $managing_stock,
-		int $stock_quantity
+		int $stock_quantity,
+		bool $is_simple = true
 	): object {
 		$product = \Mockery::mock( 'WC_Product' );
 		$product->shouldReceive( 'get_id' )->andReturn( $id );
 		$product->shouldReceive( 'get_name' )->andReturn( $name );
+		$product->shouldReceive( 'is_type' )->andReturn( $is_simple );
 		$product->shouldReceive( 'is_in_stock' )->andReturn( $in_stock );
 		$product->shouldReceive( 'is_purchasable' )->andReturn( $purchasable );
 		$product->shouldReceive( 'managing_stock' )->andReturn( $managing_stock );

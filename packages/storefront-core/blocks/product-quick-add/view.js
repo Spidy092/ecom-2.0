@@ -31,6 +31,21 @@ function getStoreApiNonce() {
 }
 
 /**
+ * Return the scoped Store API endpoint supplied by the theme when available.
+ * WordPress Playground prefixes REST routes with a disposable site scope, so
+ * a root-relative `/wp-json` URL is not safe for every supported environment.
+ *
+ * @return {string} Cart add-item endpoint.
+ */
+function getCartAddEndpoint() {
+	const configuredBase = typeof window !== 'undefined' && window.storefrontConfig
+		? window.storefrontConfig.storeApiUrl
+		: '';
+	const base = configuredBase || '/wp-json/wc/store/v1/';
+	return `${base.replace( /\/$/, '' )}/cart/add-item`;
+}
+
+/**
  * Set the visual state on the block wrapper element.
  *
  * @param {HTMLElement} el    The block root element.
@@ -100,7 +115,7 @@ store( 'storefrontCore/quickAdd', {
 			}
 
 			try {
-				const response = yield fetch( '/wp-json/wc/store/v1/cart/add-item', {
+				const response = yield fetch( getCartAddEndpoint(), {
 					method: 'POST',
 					credentials: 'same-origin',
 					headers,

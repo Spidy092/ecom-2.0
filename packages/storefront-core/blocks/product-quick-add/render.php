@@ -22,17 +22,56 @@ if ( ! $product_id ) {
 	return;
 }
 
-// Resolve stock ceiling from WooCommerce product data.
-$stock_quantity = 9999;
-$wc_product     = wc_get_product( $product_id );
-if ( $wc_product ) {
-	// Only simple, in-stock products support quick-add.
-	if ( ! $wc_product->is_purchasable() || ! $wc_product->is_in_stock() ) {
+// Resolve current product truth from WooCommerce product data.
+$stock_quantity  = 9999;
+$wc_product      = wc_get_product( $product_id );
+$render_fallback = ! empty( $attributes['renderFallback'] );
+if ( ! $wc_product ) {
+	return;
+}
+
+$is_simple      = is_callable( array( $wc_product, 'is_type' ) ) && $wc_product->is_type( 'simple' );
+$is_purchasable = is_callable( array( $wc_product, 'is_purchasable' ) ) && $wc_product->is_purchasable();
+$is_in_stock    = is_callable( array( $wc_product, 'is_in_stock' ) ) && $wc_product->is_in_stock();
+
+// The ledger uses this same block for safe non-simple/unavailable states.
+// Keep the historical early-return behavior when the fallback attribute is
+// not requested so the block remains useful as a standalone quick-add.
+if ( ! $is_simple || ! $is_purchasable || ! $is_in_stock ) {
+	if ( ! $render_fallback ) {
 		return;
 	}
-	if ( $wc_product->managing_stock() && $wc_product->get_stock_quantity() > 0 ) {
-		$stock_quantity = (int) $wc_product->get_stock_quantity();
+
+	$product_name = (string) $wc_product->get_name();
+	if ( ! $is_purchasable || ! $is_in_stock ) {
+		$availability_label = $is_in_stock
+			? esc_html__( 'Unavailable', 'storefront-core' )
+			: esc_html__( 'Out of stock', 'storefront-core' );
+		printf(
+			'<span class="storefront-quick-add-fallback storefront-quick-add-fallback--unavailable" role="status" aria-label="%s">%s</span>',
+			esc_attr( $product_name . ': ' . wp_strip_all_tags( $availability_label ) ),
+			$availability_label
+		);
+		return;
 	}
+
+	if ( ! $is_simple ) {
+		$product_url = (string) $wc_product->get_permalink();
+		if ( '' === $product_url ) {
+			return;
+		}
+
+		printf(
+			'<a class="storefront-quick-add-fallback storefront-quick-add-fallback--options" href="%s">%s</a>',
+			esc_url( $product_url ),
+			esc_html__( 'Choose options', 'storefront-core' )
+		);
+		return;
+	}
+}
+
+if ( $wc_product->managing_stock() && $wc_product->get_stock_quantity() > 0 ) {
+	$stock_quantity = (int) $wc_product->get_stock_quantity();
 }
 
 $wrapper_attributes = get_block_wrapper_attributes(
@@ -51,7 +90,7 @@ $context = [
 	'error'         => false,
 ];
 
-$product_name = $wc_product ? $wc_product->get_name() : '';
+$product_name = (string) $wc_product->get_name();
 ?>
 
 <div <?php echo $wrapper_attributes; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>

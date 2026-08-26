@@ -300,10 +300,11 @@ function storefront_theme_inline_config(): void {
 	}
 	$config = wp_json_encode(
 		[
-			'restUrl'  => esc_url_raw( rest_url() ),
-			'nonce'    => wp_create_nonce( 'wp_rest' ),
-			'currency' => get_woocommerce_currency_symbol(),
-			'isUser'   => is_user_logged_in(),
+			'restUrl'     => esc_url_raw( rest_url() ),
+			'storeApiUrl' => esc_url_raw( rest_url( 'wc/store/v1/' ) ),
+			'nonce'       => wp_create_nonce( 'wp_rest' ),
+			'currency'    => get_woocommerce_currency_symbol(),
+			'isUser'      => is_user_logged_in(),
 		],
 		JSON_HEX_TAG | JSON_HEX_AMP
 	);

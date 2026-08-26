@@ -25,7 +25,7 @@
 	<!-- Add to cart action -->
 	<!-- wp:group {"className":"storefront-ledger-row__action","layout":{"type":"flex","flexWrap":"nowrap","verticalAlignment":"center"}} -->
 	<div class="wp-block-group storefront-ledger-row__action">
-		<!-- wp:woocommerce/product-button {"className":"storefront-add-btn"} /-->
+		<!-- wp:storefront-core/product-quick-add {"renderFallback":true} /-->
 	</div>
 	<!-- /wp:group -->
 

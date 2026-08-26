@@ -153,6 +153,7 @@ jobs:
           test "$(./node_modules/.bin/wp-env run cli wp option get show_on_front)" = "page"
           test "$(./node_modules/.bin/wp-env run cli wp post list --post_type=product --meta_key=_grovia_demo_fixture --meta_value=1 --format=count)" = "12"
           test "$(./node_modules/.bin/wp-env run cli wp post list --name=hello-world --post_type=post --format=count)" = "0"
+          BT_E2E_BASE_URL=http://localhost:8888 python packages/storefront-core/tests/e2e/grocery-ledger-ui.spec.py
       - name: Stop wp-env
         if: always()
         run: ./node_modules/.bin/wp-env stop
