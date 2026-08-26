@@ -11,7 +11,10 @@ BASE_URL = os.environ.get("BT_E2E_BASE_URL", "http://localhost:8888")
 
 
 def ledger_row(page, name: str):
-    return page.locator(".storefront-ledger-row").filter(has_text=name).first
+    # Product Collection wrappers vary between WooCommerce block releases,
+    # but each rendered product remains a list item. Anchor the smoke test on
+    # the visible product name rather than an implementation-only wrapper.
+    return page.locator("li").filter(has_text=name).first
 
 
 def main() -> None:
