@@ -12,11 +12,11 @@ defined( 'ABSPATH' ) || exit;
 final class Command {
 
 	/**
-	 * Register the `wp grovia` namespace.
+	 * Register the `wp grovia seed-demo` command.
 	 */
 	public static function register(): void {
 		if ( defined( 'WP_CLI' ) && WP_CLI ) {
-			call_user_func( array( 'WP_CLI', 'add_command' ), 'grovia', new self() );
+			call_user_func( array( 'WP_CLI', 'add_command' ), 'grovia seed-demo', new self() );
 		}
 	}
 
