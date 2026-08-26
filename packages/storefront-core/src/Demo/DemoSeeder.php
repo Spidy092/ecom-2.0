@@ -72,6 +72,11 @@ final class DemoSeeder {
 		update_option( 'woocommerce_store_city', 'Mumbai' );
 		update_option( 'woocommerce_default_country', 'IN:MH' );
 		update_option( 'woocommerce_currency', 'INR' );
+		// The disposable Blueprint is a working storefront demo, not a
+		// private coming-soon preview. Keep the catalog visible to logged-out
+		// shoppers as well as the auto-logged-in Playground administrator.
+		update_option( 'woocommerce_coming_soon', 'no' );
+		update_option( 'woocommerce_store_pages_only', 'no' );
 		update_option( 'bhaivatech_storefront_delivery_postcodes', "400001\n400050\n560001\n560034\n560038" );
 		update_option( 'permalink_structure', '/%postname%/' );
 	}

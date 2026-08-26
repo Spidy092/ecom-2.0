@@ -219,11 +219,23 @@ add_action( 'init', 'storefront_theme_register_block_styles', 20 );
  * @return void
  */
 function storefront_theme_enqueue_shell_style(): void {
+	$version = wp_get_theme()->get( 'Version' ) ?: '0.0.1';
+
+	// The root stylesheet is the theme's canonical public design layer. Block
+	// themes may omit it when installed from a ZIP, so enqueue it explicitly
+	// before the conditional block styles and shell helpers.
+	wp_enqueue_style(
+		'bhaivatech-grocery-alpha-style',
+		get_stylesheet_uri(),
+		array(),
+		$version
+	);
+
 	wp_enqueue_style(
 		'bhaivatech-grocery-alpha-storefront-shell',
 		get_theme_file_uri( 'assets/css/storefront-shell.css' ),
 		array(),
-		wp_get_theme()->get( 'Version' ) ?: '0.0.1'
+		$version
 	);
 }
 add_action( 'wp_enqueue_scripts', 'storefront_theme_enqueue_shell_style', 15 );
