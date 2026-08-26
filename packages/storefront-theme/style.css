@@ -143,9 +143,11 @@ textarea:focus-visible {
 }
 
 @media (max-width: 700px) {
-	.grovia-header__context,
-	.grovia-header__delivery-note {
-		display: none;
+	/* The compact header keeps search full-width; the delivery shortcut is
+	 * intentionally omitted here so it cannot force a horizontal scroll. */
+	body .grovia-header__context,
+	body .grovia-header__delivery-note {
+		display: none !important;
 	}
 
 	.grovia-header__search-row {
