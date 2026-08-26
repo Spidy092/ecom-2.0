@@ -981,7 +981,7 @@ textarea:focus-visible {
 
 @media (max-width: 700px) {
 	html {
-		scroll-padding-top: 11rem;
+		scroll-padding-top: 10rem;
 	}
 
 	body.admin-bar:not(.woocommerce-cart):not(.woocommerce-checkout) .grovia-site-header {
@@ -992,6 +992,20 @@ textarea:focus-visible {
 	.grovia-main {
 		width: min(100% - 1rem, 1280px);
 		padding-bottom: 7rem;
+	}
+
+	/* Keep the sticky shell useful without letting account-block defaults turn
+	 * the mobile header into a second hero section. */
+	.grovia-header__inner {
+		min-height: 3.75rem;
+	}
+
+	.grovia-header__actions .wp-block-woocommerce-customer-account {
+		padding: 0;
+	}
+
+	.grovia-header__search-row {
+		margin-block: 0.5rem;
 	}
 
 	.storefront-header-inner,
