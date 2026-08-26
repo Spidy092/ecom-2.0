@@ -122,7 +122,7 @@ store( 'storefrontCore/quickAdd', {
 			setBlockState( block, 'busy' );
 			announce( block, 'Adding to cart\u2026', '' );
 
-			const nonce = getStoreApiNonce();
+			const nonce = context.storeApiNonce || getStoreApiNonce();
 			const headers = {
 				'Content-Type': 'application/json',
 			};
