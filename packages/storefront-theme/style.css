@@ -19,8 +19,8 @@ Text Domain: bhaivatech-grocery-alpha
 	--wp--preset--color--soft: var(--wp--preset--color--surface-2, #eceae4);
 	--wp--preset--color--muted: var(--wp--preset--color--text-2, #6e6c69);
 	--wp--preset--color--line: var(--wp--preset--color--border, #e0ddd6);
-	--wp--preset--color--copper: var(--wp--preset--color--accent, #d4600b);
-	--wp--preset--color--copper-dark: color-mix(in srgb, var(--wp--preset--color--accent, #d4600b) 78%, var(--wp--preset--color--text, #1c1b19));
+	--wp--preset--color--copper: #9a3412;
+	--wp--preset--color--copper-dark: #7c2d12;
 	--wp--preset--color--danger: var(--wp--preset--color--error, #b53d2f);
 	--wp--preset--color--info: #155e75;
 }
@@ -628,7 +628,7 @@ button:focus-visible,
 input:focus-visible,
 select:focus-visible,
 textarea:focus-visible {
-	outline-color: var(--wp--preset--color--accent, #d4600b);
+	outline-color: var(--wp--preset--color--copper, #9a3412);
 }
 
 .storefront-main,
