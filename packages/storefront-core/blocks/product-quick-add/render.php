@@ -89,6 +89,7 @@ $context = [
 	'quantity'      => 1,
 	'stockQuantity' => $stock_quantity,
 	'atLimit'       => 1 >= $stock_quantity,
+	'storeApiNonce' => wp_create_nonce( 'wc_store_api' ),
 	'isBusy'        => false,
 	'added'         => false,
 	'error'         => false,

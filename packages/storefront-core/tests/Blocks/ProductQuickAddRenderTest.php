@@ -24,6 +24,7 @@ final class ProductQuickAddRenderTest extends TestCase {
 		Monkey\setUp();
 		Functions\stubs( [
 			'absint' => function ( $value ) { return abs( (int) $value ); },
+			'wp_create_nonce' => function ( $action ) { return 'test-' . $action; },
 		] );
 	}
 
@@ -192,6 +193,7 @@ final class ProductQuickAddRenderTest extends TestCase {
 		$this->assertSame( 7, $captured_context['productId'] );
 		$this->assertSame( 1, $captured_context['quantity'] );
 		$this->assertSame( 25, $captured_context['stockQuantity'] );
+		$this->assertSame( 'test-wc_store_api', $captured_context['storeApiNonce'] );
 		$this->assertFalse( $captured_context['isBusy'] );
 		$this->assertFalse( $captured_context['added'] );
 		$this->assertFalse( $captured_context['error'] );
