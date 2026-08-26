@@ -40,7 +40,7 @@
       "step": "installPlugin",
       "pluginData": {
         "resource": "url",
-        "url": "https://github.com/Spidy092/ecom-2.0/releases/download/v0.0.3-alpha.1/bhaivatech-storefront-core-0.0.3-alpha.1.zip"
+        "url": "https://github.com/Spidy092/ecom-2.0/releases/download/v0.0.3-alpha.2/bhaivatech-storefront-core-0.0.3-alpha.2.zip"
       },
       "options": {
         "activate": true
@@ -50,7 +50,7 @@
       "step": "installTheme",
       "themeData": {
         "resource": "url",
-        "url": "https://github.com/Spidy092/ecom-2.0/releases/download/v0.0.3-alpha.1/bhaivatech-grocery-alpha-0.0.3-alpha.1.zip"
+        "url": "https://github.com/Spidy092/ecom-2.0/releases/download/v0.0.3-alpha.2/bhaivatech-grocery-alpha-0.0.3-alpha.2.zip"
       },
       "options": {
         "activate": true

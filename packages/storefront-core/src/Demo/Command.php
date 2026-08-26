@@ -16,7 +16,13 @@ final class Command {
 	 */
 	public static function register(): void {
 		if ( defined( 'WP_CLI' ) && WP_CLI ) {
-			call_user_func( array( 'WP_CLI', 'add_command' ), 'grovia seed-demo', array( self::class, 'seed_demo' ) );
+			call_user_func(
+				array( 'WP_CLI', 'add_command' ),
+				'grovia seed-demo',
+				static function ( array $args, array $assoc_args ): void {
+					self::seed_demo( $args, $assoc_args );
+				}
+			);
 		}
 	}
 
