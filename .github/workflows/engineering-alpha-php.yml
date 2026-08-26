@@ -76,10 +76,12 @@ jobs:
           node --check packages/storefront-core/assets/js/department-browse.js
           node --check packages/storefront-core/assets/js/buy-again-model.js
           node --check packages/storefront-core/assets/js/buy-again.js
+          node --check packages/storefront-core/blocks/product-quick-add/view.js
       - name: Validate JSON metadata
         run: |
           node -e "JSON.parse(require('fs').readFileSync('packages/storefront-theme/theme.json','utf8'))"
           node -e "JSON.parse(require('fs').readFileSync('packages/storefront-core/blocks/product-workspace/block.json','utf8'))"
+          node -e "JSON.parse(require('fs').readFileSync('packages/storefront-core/blocks/product-quick-add/block.json','utf8'))"
       - name: Run storefront model tests
         run: node --test packages/storefront-core/tests/js/*.test.js
 
