@@ -406,15 +406,25 @@ final class DemoSeeder {
 		$page_ids = array();
 
 		foreach ( $pages as $key => $definition ) {
-			$page = get_page_by_path( sanitize_title( $definition['title'] ), OBJECT, 'page' );
-			$post = array(
+			$page                        = get_page_by_path( sanitize_title( $definition['title'] ), OBJECT, 'page' );
+			$woocommerce_page_keys       = array(
+				'shop'     => 'shop',
+				'cart'     => 'cart',
+				'checkout' => 'checkout',
+				'account'  => 'myaccount',
+			);
+			$can_manage_woocommerce_page = $page
+				&& isset( $woocommerce_page_keys[ $key ] )
+				&& function_exists( 'wc_get_page_id' )
+				&& absint( wc_get_page_id( $woocommerce_page_keys[ $key ] ) ) === (int) $page->ID;
+			$post                        = array(
 				'post_title'   => $definition['title'],
 				'post_name'    => sanitize_title( $definition['title'] ),
 				'post_content' => $definition['content'],
 				'post_status'  => 'publish',
 				'post_type'    => 'page',
 			);
-			if ( $page && self::MARKER_VALUE === (string) get_post_meta( $page->ID, self::MARKER_KEY, true ) ) {
+			if ( $page && ( $can_manage_woocommerce_page || self::MARKER_VALUE === (string) get_post_meta( $page->ID, self::MARKER_KEY, true ) ) ) {
 				$post['ID'] = $page->ID;
 			}
 			$page_id = wp_insert_post( $post, true );

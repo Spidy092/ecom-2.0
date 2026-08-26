@@ -33,6 +33,7 @@ final class Storefront_Frontend {
 		add_shortcode( 'bhaivatech_delivery_checker', array( $this, 'render_delivery_checker' ) );
 		add_shortcode( 'bhaivatech_shopping_list', array( $this, 'render_shopping_list' ) );
 		add_shortcode( 'bhaivatech_buy_again', array( $this, 'render_buy_again' ) );
+		add_shortcode( 'bhaivatech_buy_again_link', array( $this, 'render_buy_again_link' ) );
 		add_shortcode( 'bhaivatech_cart_feedback', array( $this, 'render_cart_feedback' ) );
 		add_filter( 'woocommerce_loop_add_to_cart_link', array( $this, 'append_shopping_list_button' ), 20, 3 );
 	}
@@ -131,6 +132,23 @@ final class Storefront_Frontend {
 		</section>
 		<?php
 		return (string) ob_get_clean();
+	}
+
+	/**
+	 * Render a canonical, account-page-aware Buy Again entry point.
+	 *
+	 * @return string
+	 */
+	public function render_buy_again_link(): string {
+		$account_url = function_exists( 'wc_get_page_permalink' ) ? wc_get_page_permalink( 'myaccount' ) : get_permalink();
+		$target      = function_exists( 'wc_get_endpoint_url' ) ? wc_get_endpoint_url( 'buy-again', '', $account_url ) : $account_url;
+		$href        = is_user_logged_in() ? $target : wp_login_url( $target );
+
+		return sprintf(
+			'<a class="wp-element-button" href="%s">%s</a>',
+			esc_url( $href ),
+			esc_html__( 'Open Buy Again →', 'bhaivatech-storefront-alpha' )
+		);
 	}
 
 	/**

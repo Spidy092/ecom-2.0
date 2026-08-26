@@ -7,6 +7,9 @@
   --bt-copper: var(--wp--preset--color--copper, #9a3412);
   --bt-copper-dark: var(--wp--preset--color--copper-dark, #7c2d12);
   display: grid;
+  box-sizing: border-box;
+  min-width: 0;
+  max-width: 100%;
   gap: 0.875rem;
   border-block: 1px solid var(--bt-line);
   padding-block: 1rem;
@@ -51,6 +54,8 @@
 .bt-department-browse__heading-row a,
 .bt-department-browse__department,
 .bt-department-browse__selected button {
+  box-sizing: border-box;
+  min-width: 0;
   min-height: 44px;
   border: 1px solid var(--bt-line);
   border-radius: 999px;
@@ -109,6 +114,8 @@
 
 .bt-department-browse__departments--chooser {
   display: grid;
+  min-width: 0;
+  width: 100%;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 10rem), 1fr));
 }
 
@@ -144,6 +151,12 @@
 
   .bt-department-browse__departments--chooser {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .bt-department-browse__departments--chooser .bt-department-browse__department {
+    max-width: 100%;
+    overflow-wrap: anywhere;
+    white-space: normal;
   }
 }
 

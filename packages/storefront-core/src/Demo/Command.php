@@ -16,7 +16,13 @@ final class Command {
 	 */
 	public static function register(): void {
 		if ( defined( 'WP_CLI' ) && WP_CLI ) {
-			call_user_func( array( 'WP_CLI', 'add_command' ), 'grovia seed-demo', new self() );
+			call_user_func(
+				array( 'WP_CLI', 'add_command' ),
+				'grovia seed-demo',
+				static function ( array $args, array $assoc_args ): void {
+					self::seed_demo( $args, $assoc_args );
+				}
+			);
 		}
 	}
 
@@ -36,7 +42,7 @@ final class Command {
 	 * @param array<string,mixed> $args Positional arguments.
 	 * @param array<string,mixed> $assoc_args Associative arguments.
 	 */
-	public function seed_demo( array $args, array $assoc_args ): void {
+	public static function seed_demo( array $args, array $assoc_args ): void {
 		if ( ! empty( $args ) ) {
 			call_user_func( array( 'WP_CLI', 'error' ), 'seed-demo does not accept positional arguments.' );
 			return;
