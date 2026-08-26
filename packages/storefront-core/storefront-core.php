@@ -169,3 +169,7 @@ function storefront_core_bootstrap(): void {
 	do_action( 'storefront_core_loaded' );
 }
 add_action( 'plugins_loaded', 'storefront_core_bootstrap', 20 );
+
+if ( defined( 'WP_CLI' ) && WP_CLI ) {
+	StorefrontCore\Demo\Command::register();
+}

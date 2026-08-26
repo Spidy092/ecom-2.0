@@ -1,0 +1,20 @@
+{
+  "generated_at": "2026-08-25",
+  "source": "OpenAI image generation tool",
+  "license": "Original generated assets; Grovia redistribution permitted",
+  "dimensions": "640px maximum edge, WebP",
+  "assets": [
+    { "file": "milk.webp", "product": "Farm Fresh Milk" },
+    { "file": "bread.webp", "product": "Sourdough Bread" },
+    { "file": "tomatoes.webp", "product": "Vine Tomatoes" },
+    { "file": "apples.webp", "product": "Crisp Red Apples" },
+    { "file": "bananas.webp", "product": "Robusta Bananas" },
+    { "file": "spinach.webp", "product": "Baby Spinach" },
+    { "file": "eggs.webp", "product": "Free Range Eggs" },
+    { "file": "yogurt.webp", "product": "Plain Greek Yogurt" },
+    { "file": "rice.webp", "product": "Everyday Basmati Rice" },
+    { "file": "lentils.webp", "product": "Red Lentils" },
+    { "file": "oil.webp", "product": "Cold Pressed Groundnut Oil" },
+    { "file": "cereal.webp", "product": "Toasted Oat Cereal" }
+  ]
+}

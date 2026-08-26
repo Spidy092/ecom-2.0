@@ -8,20 +8,29 @@
   "landingPage": "/",
   "preferredVersions": {
     "php": "8.3",
-    "wp": "latest"
+    "wp": "7.1"
   },
+  "extraLibraries": [
+    "wp-cli"
+  ],
   "features": {
     "networking": true
   },
   "steps": [
+    {
+      "step": "defineWpConfigConsts",
+      "consts": {
+        "WP_ENVIRONMENT_TYPE": "local"
+      }
+    },
     {
       "step": "login"
     },
     {
       "step": "installPlugin",
       "pluginData": {
-        "resource": "wordpress.org/plugins",
-        "slug": "woocommerce"
+        "resource": "url",
+        "url": "https://downloads.wordpress.org/plugin/woocommerce.11.0.1.zip"
       },
       "options": {
         "activate": true
@@ -57,6 +66,10 @@
         "woocommerce_default_country": "IN:MH",
         "woocommerce_currency": "INR"
       }
+    },
+    {
+      "step": "wp-cli",
+      "command": "wp grovia seed-demo"
     }
   ]
 }

@@ -75,6 +75,51 @@ function storefront_theme_pattern_categories(): void {
 }
 add_action( 'init', 'storefront_theme_pattern_categories' );
 
+/**
+ * Register the small product-unit block used by ledger rows.
+ *
+ * The block reads only current WooCommerce product presentation data. It is
+ * intentionally theme-owned so catalog behavior remains in Storefront Core.
+ */
+function storefront_theme_product_unit_block(): void {
+	register_block_type(
+		'storefront/product-unit',
+		array(
+			'render_callback' => 'storefront_theme_render_product_unit',
+		)
+	);
+}
+add_action( 'init', 'storefront_theme_product_unit_block' );
+
+/**
+ * Render a product's bounded grocery unit label inside a query-loop card.
+ *
+ * @param array<string,mixed> $attributes Block attributes.
+ * @return string
+ */
+function storefront_theme_render_product_unit( array $attributes = array() ): string {
+	global $product;
+	if ( ! is_object( $product ) || ! is_callable( array( $product, 'get_meta' ) ) ) {
+		return '';
+	}
+
+	$raw_unit = $product->get_meta( '_grovia_unit', true );
+	$unit     = is_scalar( $raw_unit ) ? (string) $raw_unit : '';
+	if ( '' === $unit && is_callable( array( $product, 'get_short_description' ) ) ) {
+		$unit = wp_strip_all_tags( (string) $product->get_short_description() );
+	}
+	if ( '' === $unit ) {
+		return '';
+	}
+
+	$class_name = 'storefront-ledger-row__unit';
+	if ( ! empty( $attributes['className'] ) && is_string( $attributes['className'] ) ) {
+		$class_name .= ' ' . $attributes['className'];
+	}
+
+	return '<span class="' . esc_attr( $class_name ) . '">' . esc_html( $unit ) . '</span>';
+}
+
 // ---------------------------------------------------------------------------
 // 4. Assets
 // ---------------------------------------------------------------------------

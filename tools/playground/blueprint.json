@@ -7,15 +7,18 @@
   },
   "preferredVersions": {
     "php": "8.3",
-    "wp": "latest"
+    "wp": "7.1"
   },
   "landingPage": "/",
+  "extraLibraries": [
+    "wp-cli"
+  ],
   "steps": [
     {
       "step": "installPlugin",
       "pluginData": {
-        "resource": "wordpress.org/plugins",
-        "slug": "woocommerce"
+        "resource": "url",
+        "url": "https://downloads.wordpress.org/plugin/woocommerce.11.0.1.zip"
       },
       "options": {
         "activate": true
@@ -27,7 +30,8 @@
         "WP_DEBUG": true,
         "WP_DEBUG_LOG": true,
         "WP_DEBUG_DISPLAY": false,
-        "SCRIPT_DEBUG": true
+        "SCRIPT_DEBUG": true,
+        "WP_ENVIRONMENT_TYPE": "local"
       }
     },
     {
@@ -46,8 +50,8 @@
       }
     },
     {
-      "step": "runPHP",
-      "code": "<?php\nrequire '/wordpress/wp-load.php';\n\nupdate_option( 'bhaivatech_storefront_delivery_postcodes', \"560001\\n560034\\n560038\", false );\n\nif ( function_exists( 'wc_get_page_id' ) ) {\n    $page_ids = array();\n    $pages = array(\n        'shop' => array( 'title' => 'Shop', 'content' => '[woocommerce_product_search]\\n[woocommerce_all_products]' ),\n        'cart' => array( 'title' => 'Cart', 'content' => '<!-- wp:woocommerce/cart /-->' ),\n        'checkout' => array( 'title' => 'Checkout', 'content' => '<!-- wp:woocommerce/checkout /-->' ),\n        'myaccount' => array( 'title' => 'My account', 'content' => '[bhaivatech_shopping_list]\\n[bhaivatech_buy_again]' )\n    );\n    foreach ( $pages as $key => $page ) {\n        $existing = get_page_by_title( $page['title'], OBJECT, 'page' );\n        $page_ids[ $key ] = $existing ? $existing->ID : wp_insert_post( array( 'post_title' => $page['title'], 'post_content' => $page['content'], 'post_status' => 'publish', 'post_type' => 'page' ) );\n    }\n    update_option( 'woocommerce_shop_page_id', $page_ids['shop'] );\n    update_option( 'woocommerce_cart_page_id', $page_ids['cart'] );\n    update_option( 'woocommerce_checkout_page_id', $page_ids['checkout'] );\n    update_option( 'woocommerce_myaccount_page_id', $page_ids['myaccount'] );\n}\n\n$products = array(\n    array( 'name' => 'Fresh Tomatoes', 'price' => '42', 'category' => 'Produce' ),\n    array( 'name' => 'Whole Milk', 'price' => '68', 'category' => 'Dairy' ),\n    array( 'name' => 'Sourdough Bread', 'price' => '95', 'category' => 'Bakery' ),\n    array( 'name' => 'Basmati Rice', 'price' => '249', 'category' => 'Pantry' ),\n    array( 'name' => 'Free Range Eggs', 'price' => '120', 'category' => 'Dairy' ),\n    array( 'name' => 'Banana Robusta', 'price' => '55', 'category' => 'Produce' )\n);\nforeach ( $products as $item ) {\n    if ( get_page_by_title( $item['name'], OBJECT, 'product' ) ) {\n        continue;\n    }\n    $product = new WC_Product_Simple();\n    $product->set_name( $item['name'] );\n    $product->set_status( 'publish' );\n    $product->set_catalog_visibility( 'visible' );\n    $product->set_regular_price( $item['price'] );\n    $product->set_stock_status( 'instock' );\n    $product_id = $product->save();\n    $term = term_exists( $item['category'], 'product_cat' );\n    $term_id = $term ? (int) $term['term_id'] : wp_insert_term( $item['category'], 'product_cat' )['term_id'];\n    wp_set_object_terms( $product_id, array( $term_id ), 'product_cat' );\n}\n"
+      "step": "wp-cli",
+      "command": "wp grovia seed-demo"
     },
     {
       "step": "runPHP",
