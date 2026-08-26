@@ -14,20 +14,34 @@
 import { store, getContext, getElement } from '@wordpress/interactivity';
 
 /**
- * Retrieve the Store API nonce from the WooCommerce-injected cookie/header.
- * WooCommerce Store API expects a `Nonce` header from the cookie
- * `woocommerce_store_api_nonce` or the inline global.
+ * Retrieve the Store API nonce from the inline storefront config.
+ * WooCommerce validates this token against the `wc_store_api` action.
  *
  * @return {string} Nonce value or empty string.
  */
+let storeApiNonce = '';
+
 function getStoreApiNonce() {
-	// WooCommerce injects the nonce into wcStoreApiNonce or the cookie.
-	if ( typeof window !== 'undefined' && window.wcStoreApiNonce ) {
-		return window.wcStoreApiNonce;
+	if ( storeApiNonce ) {
+		return storeApiNonce;
 	}
-	// Fallback: parse from cookies.
-	const match = document.cookie.match( /(?:^|;\s*)woocommerce_store_api_nonce=([^;]+)/ );
-	return match ? decodeURIComponent( match[ 1 ] ) : '';
+
+	if ( typeof window !== 'undefined' ) {
+		if ( window.storefrontConfig?.storeApiNonce ) {
+			storeApiNonce = window.storefrontConfig.storeApiNonce;
+		} else if ( window.wcStoreApiNonce ) {
+			storeApiNonce = window.wcStoreApiNonce;
+		}
+	}
+
+	return storeApiNonce;
+}
+
+function updateStoreApiNonce( response ) {
+	const refreshed = response.headers.get( 'Nonce' );
+	if ( refreshed ) {
+		storeApiNonce = refreshed;
+	}
 }
 
 /**
@@ -126,6 +140,7 @@ store( 'storefrontCore/quickAdd', {
 						quantity: Number( context.quantity ),
 					} ),
 				} );
+				updateStoreApiNonce( response );
 
 				if ( ! response.ok ) {
 					const body = yield response.json().catch( () => ( {} ) );

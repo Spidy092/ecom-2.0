@@ -302,6 +302,7 @@ function storefront_theme_inline_config(): void {
 		[
 			'restUrl'     => esc_url_raw( rest_url() ),
 			'storeApiUrl' => esc_url_raw( rest_url( 'wc/store/v1/' ) ),
+			'storeApiNonce' => wp_create_nonce( 'wc_store_api' ),
 			'nonce'       => wp_create_nonce( 'wp_rest' ),
 			'currency'    => get_woocommerce_currency_symbol(),
 			'isUser'      => is_user_logged_in(),
