@@ -22,6 +22,9 @@ final class ProductQuickAddRenderTest extends TestCase {
 	protected function setUp(): void {
 		parent::setUp();
 		Monkey\setUp();
+		Functions\stubs( [
+			'absint' => function ( $value ) { return abs( (int) $value ); },
+		] );
 	}
 
 	protected function tearDown(): void {
@@ -39,6 +42,41 @@ final class ProductQuickAddRenderTest extends TestCase {
 		$output = $this->invoke_render( [ 'productId' => 0 ] );
 
 		$this->assertNull( $output, 'Should return null/empty when no product ID is available.' );
+	}
+
+	/**
+	 * Query-loop blocks receive a default productId of zero and must resolve the
+	 * current WooCommerce product from the loop context.
+	 */
+	public function test_render_uses_global_product_when_attribute_is_zero(): void {
+		global $product;
+		$product = $this->create_mock_product( 24, 'Loop Milk', true, true, false, 0 );
+
+		Functions\expect( 'wc_get_product' )
+			->once()
+			->with( 24 )
+			->andReturn( $product );
+
+		Functions\expect( 'get_block_wrapper_attributes' )
+			->once()
+			->andReturn( 'class="storefront-quick-add-block" data-state="idle"' );
+
+		Functions\expect( 'wp_interactivity_data_wp_context' )
+			->once()
+			->andReturn( 'data-wp-context="{}"' );
+
+		Functions\stubs( [
+			'esc_attr_e' => function ( $text ) { echo $text; },
+			'esc_html_e' => function ( $text ) { echo $text; },
+			'esc_attr__'  => function ( $text ) { return $text; },
+			'esc_attr'    => function ( $text ) { return $text; },
+			'__'          => function ( $text ) { return $text; },
+		] );
+
+		$output = $this->invoke_render( [ 'productId' => 0 ] );
+
+		$this->assertNotNull( $output );
+		$this->assertStringContainsString( 'Loop Milk', $output );
 	}
 
 	/**

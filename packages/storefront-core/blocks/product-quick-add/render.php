@@ -17,7 +17,10 @@
 
 global $product;
 
-$product_id = $attributes['productId'] ?? ( $product ? $product->get_id() : 0 );
+$product_id = absint( $attributes['productId'] ?? 0 );
+if ( ! $product_id && is_object( $product ) && is_callable( array( $product, 'get_id' ) ) ) {
+	$product_id = absint( $product->get_id() );
+}
 if ( ! $product_id ) {
 	return;
 }
