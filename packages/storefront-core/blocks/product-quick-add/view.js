@@ -82,6 +82,7 @@ store( 'storefrontCore/quickAdd', {
 			if ( context.quantity < max ) {
 				context.quantity += 1;
 			}
+			context.atLimit = context.quantity >= max;
 		},
 
 		decrement() {
@@ -91,6 +92,7 @@ store( 'storefrontCore/quickAdd', {
 			if ( context.quantity > 1 ) {
 				context.quantity -= 1;
 			}
+			context.atLimit = context.quantity >= ( context.stockQuantity || 9999 );
 		},
 
 		*addToCart() {
