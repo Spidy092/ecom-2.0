@@ -880,6 +880,15 @@ body:not(.woocommerce-cart):not(.woocommerce-checkout) .grovia-site-header,
 	box-shadow: none;
 }
 
+/* The template-part wrapper receives its own block-theme background rule in
+ * some WordPress builds; keep the entire header surface dark so the white
+ * wordmark and controls never lose contrast. */
+.grovia-site-header,
+.grovia-site-header > .grovia-header {
+	background: var(--grovia-dispatch-ink) !important;
+	color: #fff;
+}
+
 .grovia-header {
 	padding-inline: 1rem;
 }
