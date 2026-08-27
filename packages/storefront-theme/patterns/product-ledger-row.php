@@ -16,7 +16,7 @@
 	<!-- Title + pack/unit + price group -->
 	<!-- wp:group {"className":"storefront-ledger-row__info","layout":{"type":"flex","orientation":"vertical","flexWrap":"nowrap"},"style":{"layout":{"selfStretch":"fill"}}} -->
 	<div class="wp-block-group storefront-ledger-row__info">
-		<!-- wp:woocommerce/product-title {"level":3,"className":"storefront-ledger-row__title","isLink":true,"headingLevel":3,"textAlign":"left"} /-->
+		<!-- wp:post-title {"textAlign":"left","level":3,"isLink":true,"className":"storefront-ledger-row__title","__woocommerceNamespace":"woocommerce/product-collection/product-title"} /-->
 		<!-- wp:storefront/product-unit {"className":"storefront-ledger-row__unit"} /-->
 		<!-- wp:woocommerce/product-price {"className":"storefront-ledger-row__price"} /-->
 	</div>
@@ -25,7 +25,7 @@
 	<!-- Add to cart action -->
 	<!-- wp:group {"className":"storefront-ledger-row__action","layout":{"type":"flex","flexWrap":"nowrap","verticalAlignment":"center"}} -->
 	<div class="wp-block-group storefront-ledger-row__action">
-		<!-- wp:woocommerce/product-button {"className":"storefront-add-btn"} /-->
+		<!-- wp:storefront-core/product-quick-add {"renderFallback":true} /-->
 	</div>
 	<!-- /wp:group -->
 

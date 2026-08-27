@@ -219,11 +219,23 @@ add_action( 'init', 'storefront_theme_register_block_styles', 20 );
  * @return void
  */
 function storefront_theme_enqueue_shell_style(): void {
+	$version = wp_get_theme()->get( 'Version' ) ?: '0.0.1';
+
+	// The root stylesheet is the theme's canonical public design layer. Block
+	// themes may omit it when installed from a ZIP, so enqueue it explicitly
+	// before the conditional block styles and shell helpers.
+	wp_enqueue_style(
+		'bhaivatech-grocery-alpha-style',
+		get_stylesheet_uri(),
+		array(),
+		$version
+	);
+
 	wp_enqueue_style(
 		'bhaivatech-grocery-alpha-storefront-shell',
 		get_theme_file_uri( 'assets/css/storefront-shell.css' ),
 		array(),
-		wp_get_theme()->get( 'Version' ) ?: '0.0.1'
+		$version
 	);
 }
 add_action( 'wp_enqueue_scripts', 'storefront_theme_enqueue_shell_style', 15 );
@@ -288,10 +300,12 @@ function storefront_theme_inline_config(): void {
 	}
 	$config = wp_json_encode(
 		[
-			'restUrl'  => esc_url_raw( rest_url() ),
-			'nonce'    => wp_create_nonce( 'wp_rest' ),
-			'currency' => get_woocommerce_currency_symbol(),
-			'isUser'   => is_user_logged_in(),
+			'restUrl'     => esc_url_raw( rest_url() ),
+			'storeApiUrl' => esc_url_raw( rest_url( 'wc/store/v1/' ) ),
+			'storeApiNonce' => wp_create_nonce( 'wc_store_api' ),
+			'nonce'       => wp_create_nonce( 'wp_rest' ),
+			'currency'    => get_woocommerce_currency_symbol(),
+			'isUser'      => is_user_logged_in(),
 		],
 		JSON_HEX_TAG | JSON_HEX_AMP
 	);

@@ -15,11 +15,23 @@ PASSWORD = "alpha-saved-pass"
 
 
 def login(page, username: str) -> None:
-    page.goto(f"{SITE_URL}/wp-login.php", wait_until="domcontentloaded")
-    page.locator("#user_login").fill(username)
-    page.locator("#user_pass").fill(PASSWORD)
-    page.locator("#wp-submit").click()
-    page.wait_for_load_state("networkidle")
+    for attempt in range(2):
+        page.goto(f"{SITE_URL}/wp-login.php", wait_until="domcontentloaded")
+        page.locator("#user_login").fill(username)
+        page.locator("#user_pass").fill(PASSWORD)
+        page.locator("#wp-submit").click()
+        page.wait_for_load_state("networkidle")
+
+        if any(
+            cookie["name"].startswith("wordpress_logged_in_")
+            for cookie in page.context.cookies(SITE_URL)
+        ):
+            return
+
+        if attempt == 0:
+            page.context.clear_cookies()
+
+    raise AssertionError(f"WordPress login cookie was not established for {username}.")
 
 
 def main() -> None:

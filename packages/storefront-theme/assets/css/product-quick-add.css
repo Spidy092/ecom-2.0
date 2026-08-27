@@ -148,6 +148,46 @@
 	outline-offset: -3px;
 }
 
+/* Safe ledger fallbacks for variable and unavailable products. These retain
+ * the action footprint without implying that a silent default variation can
+ * be added. */
+.storefront-quick-add-fallback {
+	display: inline-flex;
+	min-height: 40px;
+	align-items: center;
+	justify-content: center;
+	border: 1px solid var(--qa-line);
+	border-radius: var(--qa-radius);
+	padding: 0.5rem 0.75rem;
+	font-size: 0.8125rem;
+	font-weight: 700;
+	line-height: 1.2;
+	text-align: center;
+	text-decoration: none;
+}
+
+.storefront-quick-add-fallback--options {
+	border-color: var(--qa-copper);
+	background: color-mix(in srgb, var(--qa-copper) 8%, var(--qa-surface));
+	color: var(--qa-copper-dark);
+}
+
+.storefront-quick-add-fallback--options:hover {
+	background: color-mix(in srgb, var(--qa-copper) 15%, var(--qa-surface));
+	color: var(--qa-copper-dark);
+}
+
+.storefront-quick-add-fallback--options:focus-visible {
+	outline: 3px solid var(--qa-copper);
+	outline-offset: 2px;
+}
+
+.storefront-quick-add-fallback--unavailable {
+	background: color-mix(in srgb, var(--qa-line) 36%, var(--qa-surface));
+	color: var(--qa-muted);
+	cursor: not-allowed;
+}
+
 /* -----------------------------------------------------------------------
  * Busy / Loading state
  * ----------------------------------------------------------------------- */

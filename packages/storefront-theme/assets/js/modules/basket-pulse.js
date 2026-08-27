@@ -7,6 +7,7 @@ export function initBasketPulse( cfg, restUrl ) {
 	const countEl   = document.getElementById( 'storefront-basket-count' );
 	const totalEl   = document.getElementById( 'storefront-basket-total' );
 	const cartCount = document.getElementById( 'storefront-cart-count' );
+	let lastKnownCount = 0;
 
 	if ( ! pulse ) return;
 
@@ -15,7 +16,6 @@ export function initBasketPulse( cfg, restUrl ) {
 
 	async function updatePulse( e ) {
 		const detail = e.detail ?? {};
-		pulse.hidden = false;
 
 		if ( detail.product_name && lastAdded ) {
 			lastAdded.textContent = `Added: ${detail.product_name}`;
@@ -32,6 +32,11 @@ export function initBasketPulse( cfg, restUrl ) {
 
 			const count = cart.items_count ?? 0;
 			const total = cart.totals?.total_price ?? '0';
+			lastKnownCount = Number.isFinite( Number( count ) ) ? Number( count ) : 0;
+			/* Do not cover the first viewport with an empty-basket banner. The
+			 * pulse is feedback after a real cart mutation, not a second cart
+			 * navigation surface that should render on page load. */
+			pulse.hidden = lastKnownCount < 1;
 
 			if ( countEl ) countEl.textContent = `${count} item${count === 1 ? '' : 's'}`;
 			if ( totalEl ) totalEl.textContent  = formatPrice( total, cart.totals?.currency_minor_unit ?? 2, cfg.currency );
@@ -42,7 +47,9 @@ export function initBasketPulse( cfg, restUrl ) {
 				cartCount.dataset.count = count;
 			}
 		} catch {
-			// Pulse remains visible with last state
+			// Keep the last known state, but never reveal an empty pulse just
+			// because a cart refresh failed.
+			pulse.hidden = lastKnownCount < 1;
 		}
 	}
 }

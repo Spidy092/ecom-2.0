@@ -72,6 +72,11 @@ final class DemoSeeder {
 		update_option( 'woocommerce_store_city', 'Mumbai' );
 		update_option( 'woocommerce_default_country', 'IN:MH' );
 		update_option( 'woocommerce_currency', 'INR' );
+		// The disposable Blueprint is a working storefront demo, not a
+		// private coming-soon preview. Keep the catalog visible to logged-out
+		// shoppers as well as the auto-logged-in Playground administrator.
+		update_option( 'woocommerce_coming_soon', 'no' );
+		update_option( 'woocommerce_store_pages_only', 'no' );
 		update_option( 'bhaivatech_storefront_delivery_postcodes', "400001\n400050\n560001\n560034\n560038" );
 		update_option( 'permalink_structure', '/%postname%/' );
 	}
@@ -346,8 +351,23 @@ final class DemoSeeder {
 			)
 		);
 		$attachment_id = ! empty( $existing ) ? (int) $existing[0]->ID : 0;
+		// A previous Playground build could persist the mounted theme path as
+		// the attachment file. Remove only that marked fixture so the next run
+		// can place the image in WordPress's real uploads directory.
+		if ( $attachment_id && ! file_exists( (string) get_attached_file( $attachment_id ) ) ) {
+			wp_delete_attachment( $attachment_id, true );
+			$attachment_id = 0;
+		}
 
 		if ( ! $attachment_id ) {
+			$bits = file_get_contents( $path );
+			if ( false === $bits ) {
+				return;
+			}
+			$upload = wp_upload_bits( $filename, null, $bits );
+			if ( ! empty( $upload['error'] ) || empty( $upload['file'] ) ) {
+				return;
+			}
 			$mime              = wp_check_filetype( $filename, null );
 			$attachment_result = wp_insert_attachment(
 				array(
@@ -355,7 +375,7 @@ final class DemoSeeder {
 					'post_status'    => 'inherit',
 					'post_mime_type' => ! empty( $mime['type'] ) ? $mime['type'] : 'image/png',
 				),
-				$path
+				$upload['file']
 			);
 			// @phpstan-ignore-next-line
 			if ( is_wp_error( $attachment_result ) ) {
@@ -368,7 +388,7 @@ final class DemoSeeder {
 			update_post_meta( $attachment_id, self::MARKER_KEY, self::MARKER_VALUE );
 			update_post_meta( $attachment_id, '_grovia_demo_asset', $filename );
 			require_once ABSPATH . 'wp-admin/includes/image.php';
-			$metadata = wp_generate_attachment_metadata( $attachment_id, $path );
+			$metadata = wp_generate_attachment_metadata( $attachment_id, $upload['file'] );
 			if ( ! empty( $metadata ) ) {
 				wp_update_attachment_metadata( $attachment_id, $metadata );
 			}

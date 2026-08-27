@@ -3,7 +3,7 @@ Theme Name: BhaivaTech Grocery Alpha (Internal)
 Theme URI: https://bhaivatech.com/
 Author: BhaivaTech
 Description: Internal engineering-alpha block theme for the grocery-first WooCommerce product. Not a public/final product name.
-Version: 0.0.1-alpha
+Version: 0.0.3-alpha.33
 Requires at least: 6.9
 Requires PHP: 8.3
 License: GNU General Public License v2 or later
@@ -15,12 +15,12 @@ Text Domain: bhaivatech-grocery-alpha
 	--grovia-shadow: 0 12px 32px rgba(23, 34, 27, 0.08);
 	/* Backwards-compatible aliases for the scoped Core styles. */
 	--wp--preset--color--paper: var(--wp--preset--color--base, #f5f4f1);
-	--wp--preset--color--ink: var(--wp--preset--color--text, #1c1b19);
+	--wp--preset--color--ink: #17201f;
 	--wp--preset--color--soft: var(--wp--preset--color--surface-2, #eceae4);
 	--wp--preset--color--muted: var(--wp--preset--color--text-2, #6e6c69);
 	--wp--preset--color--line: var(--wp--preset--color--border, #e0ddd6);
-	--wp--preset--color--copper: var(--wp--preset--color--accent, #d4600b);
-	--wp--preset--color--copper-dark: color-mix(in srgb, var(--wp--preset--color--accent, #d4600b) 78%, var(--wp--preset--color--text, #1c1b19));
+	--wp--preset--color--copper: #9a3412;
+	--wp--preset--color--copper-dark: #7c2d12;
 	--wp--preset--color--danger: var(--wp--preset--color--error, #b53d2f);
 	--wp--preset--color--info: #155e75;
 }
@@ -48,6 +48,25 @@ textarea:focus-visible {
 	background: #f5f7f2;
 }
 
+/*
+ * Keep the grocery shell available while a shopper scans a long ledger.
+ * Stick the template-part wrapper (rather than the nested header group) so
+ * the containing block remains the full page and the shell can travel beyond
+ * its own height. Cart and Checkout intentionally keep their native flow so
+ * payment actions never compete with persistent theme chrome.
+ */
+body:not(.woocommerce-cart):not(.woocommerce-checkout) .grovia-site-header {
+	position: sticky;
+	top: 0;
+	z-index: 50;
+	background: var(--wp--preset--color--base, #f5f4f1);
+	box-shadow: 0 1px 0 var(--wp--preset--color--border, #e0ddd6);
+}
+
+body.admin-bar:not(.woocommerce-cart):not(.woocommerce-checkout) .grovia-site-header {
+	top: 32px;
+}
+
 .grovia-header {
 	background: var(--wp--preset--color--base, #fcfbf7);
 	border-bottom: 1px solid var(--wp--preset--color--border, #d9dedb);
@@ -57,6 +76,11 @@ textarea:focus-visible {
 .grovia-header__inner,
 .grovia-header__search-row {
 	width: 100%;
+}
+
+#grovia-main,
+#storefront-main {
+	scroll-margin-top: 9.5rem;
 }
 
 .grovia-header__inner {
@@ -212,6 +236,223 @@ textarea:focus-visible {
 	max-width: 48rem;
 	color: #526158;
 	font-size: clamp(1.1rem, 2vw, 1.35rem);
+}
+
+/*
+ * Basket brief hero: a visual merchandising layer for the first viewport,
+ * without turning the grocery journey into a carousel or a builder demo.
+ * The images are local starter assets and the copy describes real product
+ * behavior (price, stock, delivery) rather than invented promotions.
+ */
+.grovia-hero {
+	box-sizing: border-box;
+	display: grid;
+	grid-template-columns: minmax(0, 1.05fr) minmax(20rem, 0.95fr);
+	align-items: center;
+	gap: clamp(2rem, 6vw, 6rem);
+	max-width: 1280px;
+	margin: 0 auto;
+	padding-block: clamp(2rem, 5vw, 4.5rem) clamp(2.5rem, 6vw, 5rem);
+}
+
+.grovia-hero__copy {
+	min-width: 0;
+}
+
+.grovia-hero h1 {
+	max-width: 12ch;
+	margin: 0.6rem 0 1.25rem;
+	color: var(--wp--preset--color--text, #1c1b19);
+	font-size: clamp(2.7rem, 6vw, 5.4rem);
+	letter-spacing: -0.055em;
+	line-height: 0.96;
+	text-wrap: balance;
+}
+
+.grovia-hero__lede {
+	max-width: 38rem;
+	margin: 0;
+	color: var(--wp--preset--color--text-2, #6e6c69);
+	font-size: clamp(1.05rem, 1.6vw, 1.25rem);
+	line-height: 1.55;
+}
+
+.grovia-hero__actions {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 0.7rem;
+	margin-top: 1.6rem;
+}
+
+.grovia-hero__primary,
+.grovia-hero__secondary {
+	display: inline-flex;
+	min-height: 3rem;
+	align-items: center;
+	justify-content: center;
+	gap: 0.7rem;
+	border-radius: var(--wp--custom--radius--sm, 4px);
+	padding: 0.7rem 1rem;
+	font-size: 0.9rem;
+	font-weight: 760;
+	text-decoration: none;
+}
+
+.grovia-hero__primary {
+	background: var(--wp--preset--color--accent, #d4600b);
+	color: var(--wp--preset--color--accent-text, #fff);
+}
+
+.grovia-hero__primary:hover {
+	background: #b8520a;
+	color: var(--wp--preset--color--accent-text, #fff);
+}
+
+.grovia-hero__primary span {
+	font-size: 1.15rem;
+	line-height: 1;
+}
+
+.grovia-hero__secondary {
+	border: 1px solid var(--wp--preset--color--border, #e0ddd6);
+	background: var(--wp--preset--color--surface, #fff);
+	color: var(--wp--preset--color--text, #1c1b19);
+}
+
+.grovia-hero__secondary:hover {
+	border-color: var(--wp--preset--color--accent, #d4600b);
+	color: var(--wp--preset--color--accent, #d4600b);
+}
+
+.grovia-hero__signals {
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	gap: 0.75rem;
+	margin: 2rem 0 0;
+	padding: 1rem 0 0;
+	border-top: 1px solid var(--wp--preset--color--border, #e0ddd6);
+	list-style: none;
+}
+
+.grovia-hero__signals li {
+	display: grid;
+	gap: 0.25rem;
+	min-width: 0;
+}
+
+.grovia-hero__signals strong {
+	color: var(--wp--preset--color--accent, #d4600b);
+	font-family: var(--wp--preset--font-family--mono, ui-monospace, monospace);
+	font-size: 0.7rem;
+	letter-spacing: 0.08em;
+}
+
+.grovia-hero__signals span {
+	color: var(--wp--preset--color--text-2, #6e6c69);
+	font-size: 0.77rem;
+	line-height: 1.35;
+}
+
+.grovia-hero__visual {
+	position: relative;
+	min-height: 29rem;
+	border: 1px solid var(--wp--preset--color--border, #e0ddd6);
+	background: var(--wp--preset--color--surface-2, #eceae4);
+	overflow: hidden;
+}
+
+.grovia-hero__image {
+	position: absolute;
+	overflow: hidden;
+	background: var(--wp--preset--color--surface, #fff);
+}
+
+.grovia-hero__image img {
+	display: block;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+.grovia-hero__image--main {
+	inset: 1.1rem 22% 3.5rem 1.1rem;
+}
+
+.grovia-hero__image--secondary {
+	inset: auto 1.1rem 1.1rem auto;
+	width: 34%;
+	height: 34%;
+	border: 0.75rem solid var(--wp--preset--color--surface-2, #eceae4);
+	border-top-width: 0.75rem;
+	border-left-width: 0.75rem;
+}
+
+.grovia-hero__brief {
+	position: absolute;
+	right: 1.1rem;
+	top: 1.1rem;
+	display: grid;
+	gap: 0.25rem;
+	width: min(11rem, 42%);
+	padding: 0.9rem;
+	border: 1px solid var(--wp--preset--color--border, #e0ddd6);
+	background: var(--wp--preset--color--surface, #fff);
+	box-shadow: var(--wp--custom--shadow--sm, 0 1px 3px rgb(0 0 0 / 8%));
+}
+
+.grovia-hero__brief .grovia-kicker {
+	font-size: 0.65rem;
+}
+
+.grovia-hero__brief strong {
+	font-size: 0.92rem;
+	line-height: 1.25;
+}
+
+.grovia-hero__brief span {
+	color: var(--wp--preset--color--text-2, #6e6c69);
+	font-size: 0.72rem;
+	line-height: 1.35;
+}
+
+@media (max-width: 760px) {
+	.grovia-hero {
+		grid-template-columns: 1fr;
+		gap: 1.75rem;
+		padding-block: 2rem 2.5rem;
+	}
+
+	.grovia-hero h1 {
+		max-width: 14ch;
+		font-size: clamp(2.45rem, 12vw, 4rem);
+	}
+
+	.grovia-hero__signals {
+		gap: 0.5rem;
+	}
+
+	.grovia-hero__signals span {
+		font-size: 0.72rem;
+	}
+
+	.grovia-hero__visual {
+		min-height: min(82vw, 24rem);
+	}
+}
+
+@media (max-width: 430px) {
+	.grovia-hero__actions > * {
+		flex: 1 1 100%;
+	}
+
+	.grovia-hero__visual {
+		min-height: 20rem;
+	}
+
+	.grovia-hero__brief {
+		width: 45%;
+	}
 }
 
 .grovia-delivery-checker {
@@ -555,6 +796,14 @@ textarea:focus-visible {
 	z-index: 19;
 }
 
+/* Author styles that set display:flex override the browser's default hidden
+ * presentation. Keep cart feedback truly invisible until a non-empty cart
+ * state or add-to-cart event makes it useful. */
+.grovia-cart-feedback[hidden],
+.storefront-basket-pulse[hidden] {
+	display: none !important;
+}
+
 .grovia-cart-feedback p {
 	margin: 0;
 }
@@ -606,6 +855,748 @@ textarea:focus-visible {
 	}
 }
 
+/* Product Collection is a dynamic WooCommerce block. WooCommerce 11 renders
+ * its product template as the collection's direct UL, so keep the ledger
+ * treatment scoped to the explicit wrapper in front-page.html instead of
+ * relying on a class on the dynamic block itself. */
+.grovia-fresh-dispatch .grovia-market-board > .wp-block-woocommerce-product-collection,
+.grovia-fresh-dispatch .grovia-market-board > .wc-block-product-template,
+.grovia-fresh-dispatch .grovia-market-board > ul.wc-block-product-template {
+	width: 100%;
+}
+
+.grovia-fresh-dispatch .grovia-market-board > ul.wc-block-product-template,
+.grovia-fresh-dispatch .grovia-market-board .wc-block-product-template__responsive {
+	display: grid;
+	grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+	gap: 0;
+	margin: 0;
+	border: 2px solid var(--grovia-dispatch-ink);
+}
+
+.grovia-fresh-dispatch .grovia-market-board li.wc-block-product {
+	box-sizing: border-box;
+	min-width: 0;
+	margin: 0;
+	padding: 0;
+	border: 0;
+	border-inline-end: 2px solid var(--grovia-dispatch-ink);
+	background: transparent;
+}
+
+.grovia-fresh-dispatch .grovia-market-board li.wc-block-product:nth-child(4n) {
+	border-inline-end: 0;
+}
+
+.grovia-fresh-dispatch .grovia-market-board .storefront-ledger-row {
+	display: flex;
+	flex-direction: column;
+	align-items: stretch;
+	gap: 0.7rem;
+	min-width: 0;
+	min-height: 100%;
+	border: 0;
+	border-radius: 0;
+	padding: 1rem;
+	background: transparent;
+	box-shadow: none;
+	transform: none;
+}
+
+.grovia-fresh-dispatch .grovia-market-board .storefront-ledger-row__image {
+	width: 100% !important;
+	flex: none;
+	margin: 0;
+	border-radius: 0;
+	aspect-ratio: 1 / 1;
+	background: #fff;
+}
+
+.grovia-fresh-dispatch .grovia-market-board .storefront-ledger-row__image img {
+	display: block;
+	width: 100% !important;
+	height: 100% !important;
+	object-fit: cover;
+}
+
+.grovia-fresh-dispatch .grovia-market-board .storefront-ledger-row__info {
+	flex: 1 1 auto;
+	min-width: 0;
+	gap: 0.3rem;
+}
+
+.grovia-fresh-dispatch .grovia-market-board .storefront-ledger-row__title {
+	font-size: 1.1rem;
+	font-weight: 800;
+}
+
+.grovia-fresh-dispatch .grovia-market-board .storefront-ledger-row__price {
+	color: var(--grovia-dispatch-tomato);
+	font-size: 1.4rem;
+}
+
+.grovia-fresh-dispatch .grovia-market-board .storefront-ledger-row__action,
+.grovia-fresh-dispatch .grovia-market-board .storefront-ledger-row__action > *,
+.grovia-fresh-dispatch .grovia-market-board .storefront-quick-add-block,
+.grovia-fresh-dispatch .grovia-market-board .storefront-quick-add-stepper {
+	width: 100%;
+}
+
+.grovia-fresh-dispatch .grovia-market-board .storefront-quick-add-stepper {
+	flex-wrap: nowrap;
+}
+
+@media (max-width: 900px) {
+	.grovia-fresh-dispatch .grovia-market-board > ul.wc-block-product-template,
+	.grovia-fresh-dispatch .grovia-market-board .wc-block-product-template__responsive {
+		grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+	}
+
+	.grovia-fresh-dispatch .grovia-market-board li.wc-block-product:nth-child(4n) {
+		border-inline-end: 2px solid var(--grovia-dispatch-ink);
+	}
+
+	.grovia-fresh-dispatch .grovia-market-board li.wc-block-product:nth-child(2n) {
+		border-inline-end: 0;
+	}
+}
+
+@media (max-width: 767px) {
+	.grovia-fresh-dispatch .grovia-market-board > ul.wc-block-product-template,
+	.grovia-fresh-dispatch .grovia-market-board .wc-block-product-template__responsive {
+		grid-template-columns: minmax(0, 1fr) !important;
+	}
+
+	.grovia-fresh-dispatch .grovia-market-board li.wc-block-product,
+	.grovia-fresh-dispatch .grovia-market-board li.wc-block-product:nth-child(2n),
+	.grovia-fresh-dispatch .grovia-market-board li.wc-block-product:nth-child(4n) {
+		border-inline-end: 0;
+		border-bottom: 2px solid var(--grovia-dispatch-ink);
+	}
+
+	.grovia-fresh-dispatch .grovia-market-board li.wc-block-product:last-child {
+		border-bottom: 0;
+	}
+
+	.grovia-fresh-dispatch .grovia-market-board .storefront-ledger-row {
+		gap: 0.65rem;
+		padding: 0.75rem;
+	}
+
+	.grovia-fresh-dispatch .grovia-market-board .storefront-ledger-row__image {
+		height: clamp(10rem, 52vw, 13rem);
+		aspect-ratio: auto;
+	}
+
+	.grovia-fresh-dispatch .grovia-market-board .storefront-ledger-row__title {
+		font-size: 1.1rem;
+	}
+}
+
+/* -------------------------------------------------------------------------
+ * Fresh Dispatch — selected 2026-08-27 visual direction.
+ * The aubergine field, numbered aisles, compressed display type, and gapless
+ * product board are the canonical Modern Grocery signature.
+ * ---------------------------------------------------------------------- */
+
+:root {
+	--grovia-dispatch-ink: #1e1424;
+	--grovia-dispatch-tomato: #ff4b2b;
+	--grovia-dispatch-paper: #fffdf8;
+	--grovia-dispatch-apricot: #f6d8c8;
+	--grovia-display: Impact, Haettenschweiler, "Arial Narrow Bold", "Arial Narrow", sans-serif;
+}
+
+body {
+	background: var(--grovia-dispatch-paper);
+}
+
+body:not(.woocommerce-cart):not(.woocommerce-checkout) .grovia-site-header,
+.grovia-header {
+	border-color: rgb(255 255 255 / 22%);
+	background: var(--grovia-dispatch-ink);
+	box-shadow: none;
+}
+
+/* The template-part wrapper receives its own block-theme background rule in
+ * some WordPress builds; keep the entire header surface dark so the white
+ * wordmark and controls never lose contrast. */
+.grovia-site-header,
+.grovia-site-header > .grovia-header {
+	background: var(--grovia-dispatch-ink) !important;
+	color: #fff;
+}
+
+.grovia-header {
+	padding-inline: 1rem;
+}
+
+.grovia-header__utility,
+.grovia-header__inner,
+.grovia-header__search-row {
+	box-sizing: border-box;
+	width: min(100% - 2rem, 1280px);
+	margin-inline: auto;
+}
+
+.grovia-header__utility {
+	min-height: 2.25rem;
+	border-bottom: 1px solid rgb(255 255 255 / 20%);
+	color: #fff;
+	font-size: 0.75rem;
+}
+
+.grovia-header__utility p,
+.grovia-header__utility a {
+	margin: 0;
+	color: inherit;
+}
+
+.grovia-header__inner {
+	min-height: 4.25rem;
+	padding-block: 0.55rem;
+}
+
+.grovia-header__brand a,
+.grovia-header__actions a,
+.grovia-header .wp-block-navigation a,
+.grovia-header .wc-block-mini-cart__amount,
+.grovia-header .wc-block-mini-cart__button {
+	color: #fff;
+}
+
+.grovia-header__brand a {
+	font-family: var(--grovia-display);
+	font-size: clamp(2rem, 4vw, 3.25rem);
+	font-weight: 900;
+	letter-spacing: -0.035em;
+	line-height: 0.85;
+	text-transform: none;
+}
+
+.grovia-header__actions {
+	gap: 1rem;
+}
+
+.grovia-header__actions .wp-block-woocommerce-customer-account {
+	padding: 0 !important;
+}
+
+/* Keep the complete WordPress site title as the accessible link name while
+ * presenting the short product mark in the visual header. */
+.grovia-header__brand a {
+	font-size: 0;
+}
+
+.grovia-header__brand a::after {
+	content: "Grovia";
+	display: inline-block;
+	font-family: var(--grovia-display);
+	font-size: clamp(2rem, 4vw, 3.25rem);
+	font-weight: 900;
+	letter-spacing: -0.035em;
+	line-height: 0.85;
+}
+
+.grovia-header__search-row {
+	gap: 0.75rem;
+	border-top: 1px solid rgb(255 255 255 / 20%);
+	padding-block: 0.75rem;
+}
+
+.grovia-header__search .wp-block-search__inside-wrapper {
+	min-height: 3.25rem;
+	border: 0;
+	border-radius: 2px;
+	background: #fff;
+}
+
+.grovia-header__search .wp-block-search__input {
+	min-height: 3.25rem;
+	border: 0;
+	border-radius: 2px;
+	padding-inline: 1rem;
+	color: var(--grovia-dispatch-ink);
+}
+
+.grovia-header__search .wp-block-search__button {
+	min-width: 3.25rem;
+	min-height: 3.25rem;
+	border-radius: 2px;
+	background: var(--grovia-dispatch-tomato);
+}
+
+.grovia-header__delivery-note a {
+	display: inline-flex;
+	min-height: 3.25rem;
+	align-items: center;
+	border: 1px solid rgb(255 255 255 / 55%);
+	border-radius: 2px;
+	padding-inline: 1rem;
+	color: #fff;
+	text-decoration: none;
+}
+
+.grovia-fresh-dispatch {
+	padding-top: 0;
+}
+
+.grovia-fresh-dispatch .grovia-hero {
+	position: relative;
+	display: grid;
+	grid-template-columns: 8.75rem minmax(20rem, 0.75fr) minmax(30rem, 1.25fr);
+	align-items: center;
+	gap: clamp(1rem, 2.5vw, 2.5rem);
+	min-height: clamp(34rem, 49vw, 44rem);
+	max-width: none;
+	margin-inline: 0;
+	padding: clamp(2.5rem, 5vw, 5rem) clamp(1rem, 3vw, 2.5rem);
+	background: var(--grovia-dispatch-ink);
+	color: #fff;
+	overflow: hidden;
+}
+
+.grovia-fresh-dispatch .grovia-hero::after {
+	content: "";
+	position: absolute;
+	inset: 0;
+	z-index: 1;
+	background: linear-gradient(90deg, var(--grovia-dispatch-ink) 0 38%, rgb(30 20 36 / 78%) 48%, transparent 72%);
+	pointer-events: none;
+}
+
+.grovia-hero__aisles,
+.grovia-hero__copy {
+	position: relative;
+	z-index: 2;
+}
+
+.grovia-hero__aisles {
+	display: grid;
+	align-self: stretch;
+	align-content: center;
+}
+
+.grovia-hero__aisles a {
+	display: grid;
+	gap: 0.2rem;
+	min-height: 5.4rem;
+	align-content: center;
+	border-bottom: 1px solid rgb(255 255 255 / 30%);
+	color: #fff;
+	text-decoration: none;
+}
+
+.grovia-hero__aisles strong {
+	color: var(--grovia-dispatch-tomato);
+	font-family: var(--grovia-display);
+	font-size: 1.75rem;
+	line-height: 1;
+}
+
+.grovia-hero__aisles span {
+	font-size: 0.9rem;
+	font-weight: 700;
+}
+
+.grovia-fresh-dispatch .grovia-hero h1 {
+	max-width: 9ch;
+	margin: 0;
+	color: #fff;
+	font-family: var(--grovia-display);
+	font-size: clamp(4.2rem, 7.6vw, 7.5rem);
+	font-weight: 900;
+	letter-spacing: -0.035em;
+	line-height: 0.86;
+	text-transform: uppercase;
+	text-wrap: balance;
+}
+
+.grovia-hero__copy > p {
+	max-width: 34rem;
+	margin: 1.25rem 0 0;
+	color: rgb(255 255 255 / 76%);
+	font-size: 1rem;
+}
+
+.grovia-fresh-dispatch .grovia-hero__primary {
+	min-width: 15rem;
+	min-height: 3.6rem;
+	margin-top: 1.5rem;
+	border-radius: 2px;
+	background: var(--grovia-dispatch-tomato);
+	color: #fff;
+	font-size: 1rem;
+}
+
+.grovia-fresh-dispatch .grovia-hero__primary:hover {
+	background: #d93519;
+}
+
+.grovia-fresh-dispatch .grovia-hero__visual {
+	position: absolute;
+	inset: 0;
+	z-index: 0;
+	min-height: 0;
+	border: 0;
+	background: var(--grovia-dispatch-ink);
+}
+
+.grovia-fresh-dispatch .grovia-hero__visual img {
+	display: block;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	object-position: center;
+}
+
+.grovia-fresh-dispatch .storefront-aisle-rail {
+	margin: 0;
+	border: 0;
+	border-bottom: 1px solid var(--grovia-dispatch-ink);
+	padding: 0;
+	background: var(--grovia-dispatch-ink);
+}
+
+.grovia-fresh-dispatch .storefront-aisle-rail__list {
+	gap: 0;
+}
+
+.grovia-fresh-dispatch .storefront-aisle-rail__link {
+	min-width: 10.5rem;
+	min-height: 4.75rem;
+	gap: 0.75rem;
+	border: 0;
+	border-inline-end: 1px solid rgb(255 255 255 / 30%);
+	border-radius: 0;
+	padding-inline: 1rem;
+	color: #fff;
+}
+
+.grovia-fresh-dispatch .storefront-aisle-rail__num {
+	color: var(--grovia-dispatch-tomato);
+	font-family: var(--grovia-display);
+	font-size: 1.65rem;
+}
+
+.grovia-fresh-dispatch .storefront-aisle-rail__link:hover,
+.grovia-fresh-dispatch .storefront-aisle-rail__link:focus-visible {
+	background: var(--grovia-dispatch-apricot);
+	color: var(--grovia-dispatch-ink);
+}
+
+.grovia-product-section {
+	margin: 0;
+	padding: clamp(2.5rem, 6vw, 5rem) clamp(1rem, 3vw, 2.5rem) 1.25rem;
+	background: var(--grovia-dispatch-apricot);
+}
+
+.grovia-product-section h2 {
+	margin: 0;
+	font-family: var(--grovia-display);
+	font-size: clamp(3rem, 7vw, 6.5rem);
+	letter-spacing: -0.025em;
+	line-height: 0.9;
+	text-transform: uppercase;
+}
+
+.grovia-product-section p {
+	margin: 0.65rem 0 0;
+}
+
+.grovia-market-board {
+	margin: 0;
+	padding: 0 clamp(1rem, 3vw, 2.5rem) clamp(2.5rem, 6vw, 5rem);
+	background: var(--grovia-dispatch-apricot);
+}
+
+.grovia-market-board > .wp-block-woocommerce-product-template,
+body .grovia-market-board .wc-block-product-template__responsive {
+	display: grid;
+	grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+	gap: 0;
+	border: 2px solid var(--grovia-dispatch-ink);
+}
+
+.grovia-market-board .storefront-ledger-row {
+	display: flex;
+	flex-direction: column;
+	align-items: stretch;
+	gap: 0.7rem;
+	min-height: 100%;
+	border: 0;
+	border-inline-end: 2px solid var(--grovia-dispatch-ink);
+	border-radius: 0;
+	padding: 1rem;
+	background: transparent;
+	box-shadow: none;
+	transform: none;
+}
+
+.grovia-market-board li:nth-child(4n) .storefront-ledger-row {
+	border-inline-end: 0;
+}
+
+.grovia-market-board .storefront-ledger-row__image {
+	width: 100% !important;
+	flex: none;
+	margin: 0;
+	border-radius: 0;
+	aspect-ratio: 1 / 1;
+	background: #fff;
+}
+
+.grovia-market-board .storefront-ledger-row__image img {
+	width: 100% !important;
+	height: 100% !important;
+	object-fit: cover;
+}
+
+.grovia-market-board .storefront-ledger-row__info {
+	flex: 1 1 auto;
+	gap: 0.3rem;
+}
+
+.grovia-market-board .storefront-ledger-row__title {
+	font-size: 1.1rem;
+	font-weight: 800;
+}
+
+.grovia-market-board .storefront-ledger-row__unit {
+	font-size: 0.875rem;
+	letter-spacing: 0;
+}
+
+.grovia-market-board .storefront-ledger-row__price {
+	color: var(--grovia-dispatch-tomato);
+	font-size: 1.4rem;
+}
+
+.grovia-market-board .storefront-ledger-row__action,
+.grovia-market-board .storefront-ledger-row__action > *,
+.grovia-market-board .wp-block-button,
+.grovia-market-board .wp-block-button__link,
+.grovia-market-board .wc-block-components-product-button__button {
+	width: 100%;
+}
+
+.grovia-market-board .wp-block-button__link,
+.grovia-market-board .wc-block-components-product-button__button {
+	min-height: 3rem;
+	border: 1px solid var(--grovia-dispatch-ink);
+	border-radius: 2px;
+	background: var(--grovia-dispatch-tomato);
+	color: #fff;
+}
+
+.grovia-home-note {
+	margin: 0;
+	border-radius: 0;
+	background: #050506;
+	padding: clamp(1.5rem, 4vw, 3rem) clamp(1rem, 3vw, 2.5rem);
+}
+
+.grovia-home-note h2 {
+	max-width: 19ch;
+	color: var(--grovia-dispatch-tomato);
+	font-family: var(--grovia-display);
+	font-size: clamp(2.4rem, 5vw, 4.75rem);
+	letter-spacing: -0.02em;
+	line-height: 0.95;
+	text-transform: uppercase;
+}
+
+.grovia-home-note a {
+	min-height: 3.25rem;
+	border: 1px solid #fff;
+	border-radius: 0;
+	background: transparent;
+	color: #fff;
+	padding-inline: 2rem;
+}
+
+.grovia-fresh-dispatch .grovia-delivery-checker {
+	margin: 0;
+	border: 0;
+	border-radius: 0;
+	background: var(--grovia-dispatch-paper);
+	box-shadow: none;
+}
+
+@media (max-width: 900px) {
+	.grovia-fresh-dispatch .grovia-hero {
+		grid-template-columns: 6rem minmax(0, 1fr);
+	}
+
+	.grovia-market-board > .wp-block-woocommerce-product-template,
+	body .grovia-market-board .wc-block-product-template__responsive {
+		grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+	}
+
+	.grovia-market-board li:nth-child(odd) .storefront-ledger-row {
+		border-inline-end: 2px solid var(--grovia-dispatch-ink);
+	}
+
+	.grovia-market-board li:nth-child(even) .storefront-ledger-row {
+		border-inline-end: 0;
+	}
+}
+
+@media (max-width: 700px) {
+	body:not(.woocommerce-cart):not(.woocommerce-checkout) .grovia-site-header {
+		position: relative;
+		top: auto;
+	}
+
+	.grovia-header__utility {
+		width: 100%;
+		min-height: 2.75rem;
+	}
+
+	.grovia-header__utility p:first-child {
+		display: none;
+	}
+
+	.grovia-header__inner,
+	.grovia-header__search-row {
+		width: 100%;
+	}
+
+	.grovia-header__inner {
+		min-height: 4rem;
+		flex-wrap: nowrap !important;
+	}
+
+	.grovia-header__brand a {
+		font-size: 0;
+	}
+
+	.grovia-header__brand a::after {
+		font-size: 2.4rem;
+	}
+
+	.grovia-header__actions {
+		margin-inline-start: auto;
+	}
+
+	.grovia-header__search-row {
+		margin: 0 !important;
+		padding-block: 0 0.75rem;
+	}
+
+	.grovia-header__delivery-note {
+		display: none !important;
+	}
+
+	.grovia-fresh-dispatch.storefront-main {
+		width: 100%;
+		padding: 0 0 7rem;
+	}
+
+	.grovia-fresh-dispatch .grovia-hero {
+		display: block;
+		min-height: 34rem;
+		padding: 2.75rem 1rem 1.5rem;
+	}
+
+	.grovia-fresh-dispatch .grovia-hero::after {
+		background: linear-gradient(180deg, var(--grovia-dispatch-ink) 0 43%, rgb(30 20 36 / 76%) 58%, transparent 82%);
+	}
+
+	.grovia-hero__aisles {
+		display: none;
+	}
+
+	.grovia-fresh-dispatch .grovia-hero h1 {
+		max-width: 8.5ch;
+		font-size: clamp(3.4rem, 15vw, 4.35rem);
+		line-height: 0.86;
+	}
+
+	.grovia-hero__copy > p {
+		display: none;
+	}
+
+	.grovia-fresh-dispatch .grovia-hero__primary {
+		min-width: 12.5rem;
+		margin-top: 1.25rem;
+	}
+
+	.grovia-fresh-dispatch .grovia-hero__visual img {
+		object-position: 64% center;
+	}
+
+	.grovia-fresh-dispatch .storefront-aisle-rail__link {
+		min-width: 9.75rem;
+	}
+
+	.grovia-product-section {
+		padding: 2.75rem 0.75rem 1rem;
+	}
+
+	.grovia-product-section h2 {
+		font-size: clamp(2.8rem, 14vw, 4.2rem);
+	}
+
+	.grovia-market-board {
+		padding: 0 0.75rem 2.75rem;
+	}
+
+	.grovia-market-board .storefront-ledger-row {
+		gap: 0.5rem;
+		padding: 0.55rem;
+	}
+
+	.grovia-market-board .storefront-ledger-row__title {
+		font-size: 0.95rem;
+	}
+
+	.grovia-market-board .storefront-ledger-row__price {
+		font-size: 1.15rem;
+	}
+
+	.grovia-home-note {
+		align-items: stretch;
+		padding: 2rem 1rem;
+	}
+
+	.grovia-home-note h2 {
+		font-size: clamp(2.35rem, 12vw, 3.5rem);
+	}
+
+	.storefront-mobile-nav {
+		inset-inline: 0;
+		bottom: 0;
+		border-color: rgb(255 255 255 / 30%);
+		border-radius: 0;
+		background: var(--grovia-dispatch-ink);
+		box-shadow: none;
+		backdrop-filter: none;
+	}
+
+	.storefront-mobile-nav__link {
+		min-height: 4rem;
+		color: #fff;
+	}
+
+	.storefront-mobile-nav__link:hover,
+	.storefront-mobile-nav__link:focus-visible {
+		color: var(--grovia-dispatch-tomato);
+	}
+}
+
+@media (max-width: 360px) {
+	.grovia-market-board > .wp-block-woocommerce-product-template,
+	body .grovia-market-board .wc-block-product-template__responsive {
+		grid-template-columns: minmax(0, 1fr) !important;
+	}
+
+	.grovia-market-board li .storefront-ledger-row {
+		border-inline-end: 0 !important;
+		border-bottom: 2px solid var(--grovia-dispatch-ink);
+	}
+}
+
 /* -------------------------------------------------------------------------
  * Modern Grocery shell
  * -------------------------------------------------------------------------
@@ -616,6 +1607,8 @@ textarea:focus-visible {
 
 html {
 	overflow-x: clip;
+	/* Keep in-page focus/anchor targets clear of the persistent shopping shell. */
+	scroll-padding-top: 9.5rem;
 }
 
 body {
@@ -628,7 +1621,7 @@ button:focus-visible,
 input:focus-visible,
 select:focus-visible,
 textarea:focus-visible {
-	outline-color: var(--wp--preset--color--accent, #d4600b);
+	outline-color: var(--wp--preset--color--copper, #9a3412);
 }
 
 .storefront-main,
@@ -954,10 +1947,32 @@ textarea:focus-visible {
 }
 
 @media (max-width: 700px) {
+	html {
+		scroll-padding-top: 10rem;
+	}
+
+	body.admin-bar:not(.woocommerce-cart):not(.woocommerce-checkout) .grovia-site-header {
+		top: 46px;
+	}
+
 	.storefront-main,
 	.grovia-main {
 		width: min(100% - 1rem, 1280px);
 		padding-bottom: 7rem;
+	}
+
+	/* Keep the sticky shell useful without letting account-block defaults turn
+	 * the mobile header into a second hero section. */
+	.grovia-header__inner {
+		min-height: 3.75rem;
+	}
+
+	.grovia-header__actions .wp-block-woocommerce-customer-account {
+		padding: 0;
+	}
+
+	.grovia-header__search-row {
+		margin-block: 0.5rem;
 	}
 
 	.storefront-header-inner,
@@ -995,7 +2010,30 @@ textarea:focus-visible {
 	}
 
 	.storefront-product-ledger > .wp-block-woocommerce-product-template {
-		grid-template-columns: 1fr;
+		/* WooCommerce's responsive collection class is loaded after the theme
+		 * stylesheet; keep one full-width ledger row at phone widths so the
+		 * quantity rail cannot be clipped or covered by the product image. */
+		grid-template-columns: minmax(0, 1fr) !important;
+	}
+
+	/* WooCommerce 11 adds the responsive class to the rendered template and
+	 * may place an additional wrapper between it and the collection block.
+	 * Match that public class as well so every Grovia product ledger remains a
+	 * single, tappable column on phones. */
+	body .wc-block-product-template__responsive.wc-block-product-template__responsive {
+		grid-template-columns: minmax(0, 1fr) !important;
+	}
+
+	/* A plain `1fr` track still honors a long product-title/action min-content
+	 * width in some WooCommerce releases. Explicitly zero the track minimum and
+	 * cap both wrappers so the ledger cannot create horizontal page scroll. */
+	.storefront-product-ledger li.wc-block-product,
+	.storefront-product-ledger li.wc-block-product > .storefront-ledger-row,
+	body .wc-block-product-template__responsive > li.wc-block-product {
+		box-sizing: border-box;
+		width: 100% !important;
+		max-width: 100% !important;
+		min-width: 0 !important;
 	}
 
 	.storefront-ledger-row {

@@ -16,6 +16,32 @@
 @media (max-width: 700px) {
   /* Search remains the primary compact-header action; the delivery shortcut
    * is available from the page checker and is omitted here to avoid overflow. */
+  html {
+    scroll-padding-top: 10rem;
+  }
+
+  body:not(.woocommerce-cart):not(.woocommerce-checkout) .grovia-site-header {
+    top: 0;
+  }
+
+  body.admin-bar:not(.woocommerce-cart):not(.woocommerce-checkout) .grovia-site-header {
+    top: 46px;
+  }
+
+  /* Core block styles add generous account padding. Keep the account control
+   * compact because it shares the first row with the brand and cart. */
+  body .grovia-header__inner {
+    min-height: 3.75rem;
+  }
+
+  body .grovia-header__actions .wp-block-woocommerce-customer-account {
+    padding: 0 !important;
+  }
+
+  body .grovia-header__search-row {
+    margin-block: 0.5rem !important;
+  }
+
   body .grovia-header__context,
   body .grovia-header__delivery-note {
     display: none !important;

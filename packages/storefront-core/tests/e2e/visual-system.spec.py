@@ -33,6 +33,17 @@ def exercise_mobile(browser, width: int) -> None:
     workspace = page.locator("[data-bt-product-workspace]")
     expect(workspace).to_be_visible()
 
+    # The canonical shopping shell stays reachable while a shopper scans the
+    # product ledger, without adding a second fixed navigation system.
+    sticky_header = page.locator(".grovia-site-header").first
+    expect(sticky_header).to_be_visible()
+    assert css(sticky_header, "position") == "sticky", (width, css(sticky_header, "position"))
+    page.evaluate("window.scrollTo(0, 500)")
+    page.wait_for_timeout(100)
+    sticky_box = sticky_header.bounding_box()
+    assert sticky_box and sticky_box["y"] >= -1, (width, sticky_box)
+    page.evaluate("window.scrollTo(0, 0)")
+
     # The page itself must never become horizontally scrollable at alpha targets.
     overflow, offenders = page.evaluate(
         """() => {

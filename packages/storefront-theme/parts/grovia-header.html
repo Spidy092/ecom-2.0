@@ -1,17 +1,15 @@
 <!-- wp:group {"tagName":"header","align":"full","className":"grovia-header","layout":{"type":"constrained"}} -->
 <header class="wp-block-group alignfull grovia-header">
-	<!-- wp:group {"align":"wide","className":"grovia-header__inner","layout":{"type":"flex","justifyContent":"space-between","flexWrap":"wrap","verticalAlignment":"center"}} -->
+	<!-- wp:group {"align":"wide","className":"grovia-header__utility","layout":{"type":"flex","justifyContent":"space-between","flexWrap":"nowrap","verticalAlignment":"center"}} -->
+	<div class="wp-block-group alignwide grovia-header__utility">
+		<!-- wp:paragraph --><p>Same-day delivery in select areas</p><!-- /wp:paragraph -->
+		<!-- wp:paragraph --><p><a href="/#grovia-delivery-checker">Deliver to your postcode</a></p><!-- /wp:paragraph -->
+	</div>
+	<!-- /wp:group -->
+	<!-- wp:group {"align":"wide","className":"grovia-header__inner","layout":{"type":"flex","justifyContent":"space-between","flexWrap":"nowrap","verticalAlignment":"center"}} -->
 	<div class="wp-block-group alignwide grovia-header__inner">
-		<!-- wp:group {"className":"grovia-header__brand-group","layout":{"type":"flex","flexWrap":"nowrap","verticalAlignment":"center"}} -->
-		<div class="wp-block-group grovia-header__brand-group">
-			<!-- wp:site-title {"level":0,"className":"grovia-header__brand"} /-->
-			<!-- wp:paragraph {"className":"grovia-header__context"} -->
-			<p class="grovia-header__context">Everyday groceries, in a calmer basket.</p>
-			<!-- /wp:paragraph -->
-		</div>
-		<!-- /wp:group -->
-
-		<!-- wp:group {"className":"grovia-header__actions","layout":{"type":"flex","justifyContent":"right","flexWrap":"wrap","verticalAlignment":"center"}} -->
+		<!-- wp:site-title {"level":0,"className":"grovia-header__brand"} /-->
+		<!-- wp:group {"className":"grovia-header__actions","layout":{"type":"flex","justifyContent":"right","flexWrap":"nowrap","verticalAlignment":"center"}} -->
 		<div class="wp-block-group grovia-header__actions">
 			<!-- wp:navigation {"overlayMenu":"never","layout":{"type":"flex","justifyContent":"right"}} /-->
 			<!-- wp:woocommerce/customer-account {"displayStyle":"icon_only","iconClass":"grovia-account-icon"} /-->
@@ -20,13 +18,10 @@
 		<!-- /wp:group -->
 	</div>
 	<!-- /wp:group -->
-
 	<!-- wp:group {"align":"wide","className":"grovia-header__search-row","layout":{"type":"flex","flexWrap":"nowrap","verticalAlignment":"center"}} -->
 	<div class="wp-block-group alignwide grovia-header__search-row">
-		<!-- wp:search {"label":"Search groceries","showLabel":false,"placeholder":"Search milk, rice, tomatoes…","buttonText":"Search","buttonPosition":"button-outside","buttonUseIcon":true,"className":"grovia-header__search","query":{"post_type":"product"}} /-->
-		<!-- wp:paragraph {"className":"grovia-header__delivery-note"} -->
-		<p class="grovia-header__delivery-note"><a href="/#grovia-delivery-checker">Check delivery availability</a></p>
-		<!-- /wp:paragraph -->
+		<!-- wp:search {"label":"Search groceries","showLabel":false,"placeholder":"Search every aisle","buttonText":"Search","buttonPosition":"button-outside","buttonUseIcon":true,"className":"grovia-header__search","query":{"post_type":"product"}} /-->
+		<!-- wp:paragraph {"className":"grovia-header__delivery-note"} --><p class="grovia-header__delivery-note"><a href="/#grovia-delivery-checker">Check delivery</a></p><!-- /wp:paragraph -->
 	</div>
 	<!-- /wp:group -->
 </header>
