@@ -16,7 +16,9 @@
 			<!-- wp:paragraph --><p><a href="/shop">See the full shop →</a></p><!-- /wp:paragraph -->
 		</div>
 		<!-- /wp:group -->
-		<!-- wp:woocommerce/product-collection {"queryId":0,"query":{"perPage":8,"pages":0,"offset":0,"postType":"product","order":"asc","orderBy":"title","inherit":false,"taxQuery":{},"isProductCollectionBlock":true,"woocommerceStockStatus":["instock","outofstock","onbackorder"]},"namespace":"woocommerce/product-collection","tagName":"div","displayLayout":{"type":"flex","columns":4,"shrinkColumns":true},"queryContextIncludes":["collection"],"className":"storefront-product-ledger grovia-market-board"} -->
+		<!-- wp:group {"className":"storefront-product-ledger grovia-market-board","layout":{"type":"constrained"}} -->
+		<div class="wp-block-group storefront-product-ledger grovia-market-board">
+		<!-- wp:woocommerce/product-collection {"queryId":0,"query":{"perPage":8,"pages":0,"offset":0,"postType":"product","order":"asc","orderBy":"title","inherit":false,"taxQuery":{},"isProductCollectionBlock":true,"woocommerceStockStatus":["instock","outofstock","onbackorder"]},"namespace":"woocommerce/product-collection","tagName":"div","displayLayout":{"type":"flex","columns":4,"shrinkColumns":true},"queryContextIncludes":["collection"]} -->
 			<!-- wp:woocommerce/product-template -->
 				<!-- wp:pattern {"slug":"storefront/product-ledger-row"} /-->
 			<!-- /wp:woocommerce/product-template -->
@@ -24,6 +26,8 @@
 				<!-- wp:paragraph {"align":"center","className":"storefront-no-results"} --><p class="has-text-align-center storefront-no-results">The market is being stocked. Browse the shop or try again shortly.</p><!-- /wp:paragraph -->
 			<!-- /wp:woocommerce/product-collection-no-results -->
 		<!-- /wp:woocommerce/product-collection -->
+		</div>
+		<!-- /wp:group -->
 		<!-- wp:group {"className":"grovia-home-note","layout":{"type":"flex","flexWrap":"wrap","justifyContent":"space-between","verticalAlignment":"center"}} -->
 		<div class="wp-block-group grovia-home-note">
 			<!-- wp:heading {"level":2} --><h2 class="wp-block-heading">The fast way back to your regulars.</h2><!-- /wp:heading -->

@@ -3,7 +3,7 @@ Theme Name: BhaivaTech Grocery Alpha (Internal)
 Theme URI: https://bhaivatech.com/
 Author: BhaivaTech
 Description: Internal engineering-alpha block theme for the grocery-first WooCommerce product. Not a public/final product name.
-Version: 0.0.3-alpha.30
+Version: 0.0.3-alpha.31
 Requires at least: 6.9
 Requires PHP: 8.3
 License: GNU General Public License v2 or later
@@ -852,6 +852,139 @@ body.admin-bar:not(.woocommerce-cart):not(.woocommerce-checkout) .grovia-site-he
 		animation-iteration-count: 1 !important;
 		scroll-behavior: auto !important;
 		transition-duration: 0.01ms !important;
+	}
+}
+
+/* Product Collection is a dynamic WooCommerce block. WooCommerce 11 renders
+ * its product template as the collection's direct UL, so keep the ledger
+ * treatment scoped to the explicit wrapper in front-page.html instead of
+ * relying on a class on the dynamic block itself. */
+.grovia-fresh-dispatch .grovia-market-board > .wp-block-woocommerce-product-collection,
+.grovia-fresh-dispatch .grovia-market-board > .wc-block-product-template,
+.grovia-fresh-dispatch .grovia-market-board > ul.wc-block-product-template {
+	width: 100%;
+}
+
+.grovia-fresh-dispatch .grovia-market-board > ul.wc-block-product-template,
+.grovia-fresh-dispatch .grovia-market-board .wc-block-product-template__responsive {
+	display: grid;
+	grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+	gap: 0;
+	margin: 0;
+	border: 2px solid var(--grovia-dispatch-ink);
+}
+
+.grovia-fresh-dispatch .grovia-market-board li.wc-block-product {
+	box-sizing: border-box;
+	min-width: 0;
+	margin: 0;
+	padding: 0;
+	border: 0;
+	border-inline-end: 2px solid var(--grovia-dispatch-ink);
+	background: transparent;
+}
+
+.grovia-fresh-dispatch .grovia-market-board li.wc-block-product:nth-child(4n) {
+	border-inline-end: 0;
+}
+
+.grovia-fresh-dispatch .grovia-market-board .storefront-ledger-row {
+	display: flex;
+	flex-direction: column;
+	align-items: stretch;
+	gap: 0.7rem;
+	min-width: 0;
+	min-height: 100%;
+	border: 0;
+	border-radius: 0;
+	padding: 1rem;
+	background: transparent;
+	box-shadow: none;
+	transform: none;
+}
+
+.grovia-fresh-dispatch .grovia-market-board .storefront-ledger-row__image {
+	width: 100% !important;
+	flex: none;
+	margin: 0;
+	border-radius: 0;
+	aspect-ratio: 1 / 1;
+	background: #fff;
+}
+
+.grovia-fresh-dispatch .grovia-market-board .storefront-ledger-row__image img {
+	display: block;
+	width: 100% !important;
+	height: 100% !important;
+	object-fit: cover;
+}
+
+.grovia-fresh-dispatch .grovia-market-board .storefront-ledger-row__info {
+	flex: 1 1 auto;
+	min-width: 0;
+	gap: 0.3rem;
+}
+
+.grovia-fresh-dispatch .grovia-market-board .storefront-ledger-row__title {
+	font-size: 1.1rem;
+	font-weight: 800;
+}
+
+.grovia-fresh-dispatch .grovia-market-board .storefront-ledger-row__price {
+	color: var(--grovia-dispatch-tomato);
+	font-size: 1.4rem;
+}
+
+.grovia-fresh-dispatch .grovia-market-board .storefront-ledger-row__action,
+.grovia-fresh-dispatch .grovia-market-board .storefront-ledger-row__action > *,
+.grovia-fresh-dispatch .grovia-market-board .storefront-quick-add-block,
+.grovia-fresh-dispatch .grovia-market-board .storefront-quick-add-stepper {
+	width: 100%;
+}
+
+.grovia-fresh-dispatch .grovia-market-board .storefront-quick-add-stepper {
+	flex-wrap: nowrap;
+}
+
+@media (max-width: 900px) {
+	.grovia-fresh-dispatch .grovia-market-board > ul.wc-block-product-template,
+	.grovia-fresh-dispatch .grovia-market-board .wc-block-product-template__responsive {
+		grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+	}
+
+	.grovia-fresh-dispatch .grovia-market-board li.wc-block-product:nth-child(4n) {
+		border-inline-end: 2px solid var(--grovia-dispatch-ink);
+	}
+
+	.grovia-fresh-dispatch .grovia-market-board li.wc-block-product:nth-child(2n) {
+		border-inline-end: 0;
+	}
+}
+
+@media (max-width: 600px) {
+	.grovia-fresh-dispatch .grovia-market-board > ul.wc-block-product-template,
+	.grovia-fresh-dispatch .grovia-market-board .wc-block-product-template__responsive {
+		grid-template-columns: minmax(0, 1fr) !important;
+	}
+
+	.grovia-fresh-dispatch .grovia-market-board li.wc-block-product,
+	.grovia-fresh-dispatch .grovia-market-board li.wc-block-product:nth-child(2n),
+	.grovia-fresh-dispatch .grovia-market-board li.wc-block-product:nth-child(4n) {
+		border-inline-end: 0;
+		border-bottom: 2px solid var(--grovia-dispatch-ink);
+	}
+
+	.grovia-fresh-dispatch .grovia-market-board li.wc-block-product:last-child {
+		border-bottom: 0;
+	}
+
+	.grovia-fresh-dispatch .grovia-market-board .storefront-ledger-row {
+		gap: 0.65rem;
+		padding: 0.75rem;
+	}
+
+	.grovia-fresh-dispatch .grovia-market-board .storefront-ledger-row__title {
+		font-size: 1.1rem;
 	}
 }
 
