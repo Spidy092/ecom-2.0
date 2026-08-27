@@ -3,7 +3,7 @@ Theme Name: BhaivaTech Grocery Alpha (Internal)
 Theme URI: https://bhaivatech.com/
 Author: BhaivaTech
 Description: Internal engineering-alpha block theme for the grocery-first WooCommerce product. Not a public/final product name.
-Version: 0.0.3-alpha.25
+Version: 0.0.3-alpha.26
 Requires at least: 6.9
 Requires PHP: 8.3
 License: GNU General Public License v2 or later
@@ -852,6 +852,577 @@ body.admin-bar:not(.woocommerce-cart):not(.woocommerce-checkout) .grovia-site-he
 		animation-iteration-count: 1 !important;
 		scroll-behavior: auto !important;
 		transition-duration: 0.01ms !important;
+	}
+}
+
+/* -------------------------------------------------------------------------
+ * Fresh Dispatch — selected 2026-08-27 visual direction.
+ * The aubergine field, numbered aisles, compressed display type, and gapless
+ * product board are the canonical Modern Grocery signature.
+ * ---------------------------------------------------------------------- */
+
+:root {
+	--grovia-dispatch-ink: #1e1424;
+	--grovia-dispatch-tomato: #ff4b2b;
+	--grovia-dispatch-paper: #fffdf8;
+	--grovia-dispatch-apricot: #f6d8c8;
+	--grovia-display: Impact, Haettenschweiler, "Arial Narrow Bold", "Arial Narrow", sans-serif;
+}
+
+body {
+	background: var(--grovia-dispatch-paper);
+}
+
+body:not(.woocommerce-cart):not(.woocommerce-checkout) .grovia-site-header,
+.grovia-header {
+	border-color: rgb(255 255 255 / 22%);
+	background: var(--grovia-dispatch-ink);
+	box-shadow: none;
+}
+
+.grovia-header {
+	padding-inline: 1rem;
+}
+
+.grovia-header__utility,
+.grovia-header__inner,
+.grovia-header__search-row {
+	box-sizing: border-box;
+	width: min(100% - 2rem, 1280px);
+	margin-inline: auto;
+}
+
+.grovia-header__utility {
+	min-height: 2.25rem;
+	border-bottom: 1px solid rgb(255 255 255 / 20%);
+	color: #fff;
+	font-size: 0.75rem;
+}
+
+.grovia-header__utility p,
+.grovia-header__utility a {
+	margin: 0;
+	color: inherit;
+}
+
+.grovia-header__inner {
+	min-height: 4.25rem;
+	padding-block: 0.55rem;
+}
+
+.grovia-header__brand a,
+.grovia-header__actions a,
+.grovia-header .wp-block-navigation a,
+.grovia-header .wc-block-mini-cart__amount,
+.grovia-header .wc-block-mini-cart__button {
+	color: #fff;
+}
+
+.grovia-header__brand a {
+	font-family: var(--grovia-display);
+	font-size: clamp(2rem, 4vw, 3.25rem);
+	font-weight: 900;
+	letter-spacing: -0.035em;
+	line-height: 0.85;
+	text-transform: none;
+}
+
+.grovia-header__actions {
+	gap: 1rem;
+}
+
+.grovia-header__search-row {
+	gap: 0.75rem;
+	border-top: 1px solid rgb(255 255 255 / 20%);
+	padding-block: 0.75rem;
+}
+
+.grovia-header__search .wp-block-search__inside-wrapper {
+	min-height: 3.25rem;
+	border: 0;
+	border-radius: 2px;
+	background: #fff;
+}
+
+.grovia-header__search .wp-block-search__input {
+	min-height: 3.25rem;
+	border: 0;
+	border-radius: 2px;
+	padding-inline: 1rem;
+	color: var(--grovia-dispatch-ink);
+}
+
+.grovia-header__search .wp-block-search__button {
+	min-width: 3.25rem;
+	min-height: 3.25rem;
+	border-radius: 2px;
+	background: var(--grovia-dispatch-tomato);
+}
+
+.grovia-header__delivery-note a {
+	display: inline-flex;
+	min-height: 3.25rem;
+	align-items: center;
+	border: 1px solid rgb(255 255 255 / 55%);
+	border-radius: 2px;
+	padding-inline: 1rem;
+	color: #fff;
+	text-decoration: none;
+}
+
+.grovia-fresh-dispatch {
+	padding-top: 0;
+}
+
+.grovia-fresh-dispatch .grovia-hero {
+	position: relative;
+	display: grid;
+	grid-template-columns: 8.75rem minmax(20rem, 0.75fr) minmax(30rem, 1.25fr);
+	align-items: center;
+	gap: clamp(1rem, 2.5vw, 2.5rem);
+	min-height: clamp(34rem, 49vw, 44rem);
+	max-width: none;
+	margin-inline: 0;
+	padding: clamp(2.5rem, 5vw, 5rem) clamp(1rem, 3vw, 2.5rem);
+	background: var(--grovia-dispatch-ink);
+	color: #fff;
+	overflow: hidden;
+}
+
+.grovia-fresh-dispatch .grovia-hero::after {
+	content: "";
+	position: absolute;
+	inset: 0;
+	z-index: 1;
+	background: linear-gradient(90deg, var(--grovia-dispatch-ink) 0 38%, rgb(30 20 36 / 78%) 48%, transparent 72%);
+	pointer-events: none;
+}
+
+.grovia-hero__aisles,
+.grovia-hero__copy {
+	position: relative;
+	z-index: 2;
+}
+
+.grovia-hero__aisles {
+	display: grid;
+	align-self: stretch;
+	align-content: center;
+}
+
+.grovia-hero__aisles a {
+	display: grid;
+	gap: 0.2rem;
+	min-height: 5.4rem;
+	align-content: center;
+	border-bottom: 1px solid rgb(255 255 255 / 30%);
+	color: #fff;
+	text-decoration: none;
+}
+
+.grovia-hero__aisles strong {
+	color: var(--grovia-dispatch-tomato);
+	font-family: var(--grovia-display);
+	font-size: 1.75rem;
+	line-height: 1;
+}
+
+.grovia-hero__aisles span {
+	font-size: 0.9rem;
+	font-weight: 700;
+}
+
+.grovia-fresh-dispatch .grovia-hero h1 {
+	max-width: 9ch;
+	margin: 0;
+	color: #fff;
+	font-family: var(--grovia-display);
+	font-size: clamp(4.2rem, 7.6vw, 7.5rem);
+	font-weight: 900;
+	letter-spacing: -0.035em;
+	line-height: 0.86;
+	text-transform: uppercase;
+	text-wrap: balance;
+}
+
+.grovia-hero__copy > p {
+	max-width: 34rem;
+	margin: 1.25rem 0 0;
+	color: rgb(255 255 255 / 76%);
+	font-size: 1rem;
+}
+
+.grovia-fresh-dispatch .grovia-hero__primary {
+	min-width: 15rem;
+	min-height: 3.6rem;
+	margin-top: 1.5rem;
+	border-radius: 2px;
+	background: var(--grovia-dispatch-tomato);
+	color: #fff;
+	font-size: 1rem;
+}
+
+.grovia-fresh-dispatch .grovia-hero__primary:hover {
+	background: #d93519;
+}
+
+.grovia-fresh-dispatch .grovia-hero__visual {
+	position: absolute;
+	inset: 0;
+	z-index: 0;
+	min-height: 0;
+	border: 0;
+	background: var(--grovia-dispatch-ink);
+}
+
+.grovia-fresh-dispatch .grovia-hero__visual img {
+	display: block;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	object-position: center;
+}
+
+.grovia-fresh-dispatch .storefront-aisle-rail {
+	margin: 0;
+	border: 0;
+	border-bottom: 1px solid var(--grovia-dispatch-ink);
+	padding: 0;
+	background: var(--grovia-dispatch-ink);
+}
+
+.grovia-fresh-dispatch .storefront-aisle-rail__list {
+	gap: 0;
+}
+
+.grovia-fresh-dispatch .storefront-aisle-rail__link {
+	min-width: 10.5rem;
+	min-height: 4.75rem;
+	gap: 0.75rem;
+	border: 0;
+	border-inline-end: 1px solid rgb(255 255 255 / 30%);
+	border-radius: 0;
+	padding-inline: 1rem;
+	color: #fff;
+}
+
+.grovia-fresh-dispatch .storefront-aisle-rail__num {
+	color: var(--grovia-dispatch-tomato);
+	font-family: var(--grovia-display);
+	font-size: 1.65rem;
+}
+
+.grovia-fresh-dispatch .storefront-aisle-rail__link:hover,
+.grovia-fresh-dispatch .storefront-aisle-rail__link:focus-visible {
+	background: var(--grovia-dispatch-apricot);
+	color: var(--grovia-dispatch-ink);
+}
+
+.grovia-product-section {
+	margin: 0;
+	padding: clamp(2.5rem, 6vw, 5rem) clamp(1rem, 3vw, 2.5rem) 1.25rem;
+	background: var(--grovia-dispatch-apricot);
+}
+
+.grovia-product-section h2 {
+	margin: 0;
+	font-family: var(--grovia-display);
+	font-size: clamp(3rem, 7vw, 6.5rem);
+	letter-spacing: -0.025em;
+	line-height: 0.9;
+	text-transform: uppercase;
+}
+
+.grovia-product-section p {
+	margin: 0.65rem 0 0;
+}
+
+.grovia-market-board {
+	margin: 0;
+	padding: 0 clamp(1rem, 3vw, 2.5rem) clamp(2.5rem, 6vw, 5rem);
+	background: var(--grovia-dispatch-apricot);
+}
+
+.grovia-market-board > .wp-block-woocommerce-product-template,
+body .grovia-market-board .wc-block-product-template__responsive {
+	display: grid;
+	grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+	gap: 0;
+	border: 2px solid var(--grovia-dispatch-ink);
+}
+
+.grovia-market-board .storefront-ledger-row {
+	display: flex;
+	flex-direction: column;
+	align-items: stretch;
+	gap: 0.7rem;
+	min-height: 100%;
+	border: 0;
+	border-inline-end: 2px solid var(--grovia-dispatch-ink);
+	border-radius: 0;
+	padding: 1rem;
+	background: transparent;
+	box-shadow: none;
+	transform: none;
+}
+
+.grovia-market-board li:nth-child(4n) .storefront-ledger-row {
+	border-inline-end: 0;
+}
+
+.grovia-market-board .storefront-ledger-row__image {
+	width: 100% !important;
+	flex: none;
+	margin: 0;
+	border-radius: 0;
+	aspect-ratio: 1 / 1;
+	background: #fff;
+}
+
+.grovia-market-board .storefront-ledger-row__image img {
+	width: 100% !important;
+	height: 100% !important;
+	object-fit: cover;
+}
+
+.grovia-market-board .storefront-ledger-row__info {
+	flex: 1 1 auto;
+	gap: 0.3rem;
+}
+
+.grovia-market-board .storefront-ledger-row__title {
+	font-size: 1.1rem;
+	font-weight: 800;
+}
+
+.grovia-market-board .storefront-ledger-row__unit {
+	font-size: 0.875rem;
+	letter-spacing: 0;
+}
+
+.grovia-market-board .storefront-ledger-row__price {
+	color: var(--grovia-dispatch-tomato);
+	font-size: 1.4rem;
+}
+
+.grovia-market-board .storefront-ledger-row__action,
+.grovia-market-board .storefront-ledger-row__action > *,
+.grovia-market-board .wp-block-button,
+.grovia-market-board .wp-block-button__link,
+.grovia-market-board .wc-block-components-product-button__button {
+	width: 100%;
+}
+
+.grovia-market-board .wp-block-button__link,
+.grovia-market-board .wc-block-components-product-button__button {
+	min-height: 3rem;
+	border: 1px solid var(--grovia-dispatch-ink);
+	border-radius: 2px;
+	background: var(--grovia-dispatch-tomato);
+	color: #fff;
+}
+
+.grovia-home-note {
+	margin: 0;
+	border-radius: 0;
+	background: #050506;
+	padding: clamp(1.5rem, 4vw, 3rem) clamp(1rem, 3vw, 2.5rem);
+}
+
+.grovia-home-note h2 {
+	max-width: 19ch;
+	color: var(--grovia-dispatch-tomato);
+	font-family: var(--grovia-display);
+	font-size: clamp(2.4rem, 5vw, 4.75rem);
+	letter-spacing: -0.02em;
+	line-height: 0.95;
+	text-transform: uppercase;
+}
+
+.grovia-home-note a {
+	min-height: 3.25rem;
+	border: 1px solid #fff;
+	border-radius: 0;
+	background: transparent;
+	color: #fff;
+	padding-inline: 2rem;
+}
+
+.grovia-fresh-dispatch .grovia-delivery-checker {
+	margin: 0;
+	border: 0;
+	border-radius: 0;
+	background: var(--grovia-dispatch-paper);
+	box-shadow: none;
+}
+
+@media (max-width: 900px) {
+	.grovia-fresh-dispatch .grovia-hero {
+		grid-template-columns: 6rem minmax(0, 1fr);
+	}
+
+	.grovia-market-board > .wp-block-woocommerce-product-template,
+	body .grovia-market-board .wc-block-product-template__responsive {
+		grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+	}
+
+	.grovia-market-board li:nth-child(odd) .storefront-ledger-row {
+		border-inline-end: 2px solid var(--grovia-dispatch-ink);
+	}
+
+	.grovia-market-board li:nth-child(even) .storefront-ledger-row {
+		border-inline-end: 0;
+	}
+}
+
+@media (max-width: 700px) {
+	body:not(.woocommerce-cart):not(.woocommerce-checkout) .grovia-site-header {
+		position: relative;
+		top: auto;
+	}
+
+	.grovia-header__utility {
+		width: 100%;
+		min-height: 2.75rem;
+	}
+
+	.grovia-header__utility p:first-child {
+		display: none;
+	}
+
+	.grovia-header__inner,
+	.grovia-header__search-row {
+		width: 100%;
+	}
+
+	.grovia-header__inner {
+		min-height: 4rem;
+		flex-wrap: nowrap !important;
+	}
+
+	.grovia-header__brand a {
+		font-size: 2.4rem;
+	}
+
+	.grovia-header__actions {
+		margin-inline-start: auto;
+	}
+
+	.grovia-header__search-row {
+		margin: 0 !important;
+		padding-block: 0 0.75rem;
+	}
+
+	.grovia-header__delivery-note {
+		display: none !important;
+	}
+
+	.grovia-fresh-dispatch.storefront-main {
+		width: 100%;
+		padding: 0 0 7rem;
+	}
+
+	.grovia-fresh-dispatch .grovia-hero {
+		display: block;
+		min-height: 34rem;
+		padding: 2.75rem 1rem 1.5rem;
+	}
+
+	.grovia-fresh-dispatch .grovia-hero::after {
+		background: linear-gradient(180deg, var(--grovia-dispatch-ink) 0 43%, rgb(30 20 36 / 76%) 58%, transparent 82%);
+	}
+
+	.grovia-hero__aisles {
+		display: none;
+	}
+
+	.grovia-fresh-dispatch .grovia-hero h1 {
+		max-width: 8.5ch;
+		font-size: clamp(3.4rem, 15vw, 4.35rem);
+		line-height: 0.86;
+	}
+
+	.grovia-hero__copy > p {
+		display: none;
+	}
+
+	.grovia-fresh-dispatch .grovia-hero__primary {
+		min-width: 12.5rem;
+		margin-top: 1.25rem;
+	}
+
+	.grovia-fresh-dispatch .grovia-hero__visual img {
+		object-position: 64% center;
+	}
+
+	.grovia-fresh-dispatch .storefront-aisle-rail__link {
+		min-width: 9.75rem;
+	}
+
+	.grovia-product-section {
+		padding: 2.75rem 0.75rem 1rem;
+	}
+
+	.grovia-product-section h2 {
+		font-size: clamp(2.8rem, 14vw, 4.2rem);
+	}
+
+	.grovia-market-board {
+		padding: 0 0.75rem 2.75rem;
+	}
+
+	.grovia-market-board .storefront-ledger-row {
+		gap: 0.5rem;
+		padding: 0.55rem;
+	}
+
+	.grovia-market-board .storefront-ledger-row__title {
+		font-size: 0.95rem;
+	}
+
+	.grovia-market-board .storefront-ledger-row__price {
+		font-size: 1.15rem;
+	}
+
+	.grovia-home-note {
+		align-items: stretch;
+		padding: 2rem 1rem;
+	}
+
+	.grovia-home-note h2 {
+		font-size: clamp(2.35rem, 12vw, 3.5rem);
+	}
+
+	.storefront-mobile-nav {
+		inset-inline: 0;
+		bottom: 0;
+		border-color: rgb(255 255 255 / 30%);
+		border-radius: 0;
+		background: var(--grovia-dispatch-ink);
+		box-shadow: none;
+		backdrop-filter: none;
+	}
+
+	.storefront-mobile-nav__link {
+		min-height: 4rem;
+		color: #fff;
+	}
+
+	.storefront-mobile-nav__link:hover,
+	.storefront-mobile-nav__link:focus-visible {
+		color: var(--grovia-dispatch-tomato);
+	}
+}
+
+@media (max-width: 360px) {
+	.grovia-market-board > .wp-block-woocommerce-product-template,
+	body .grovia-market-board .wc-block-product-template__responsive {
+		grid-template-columns: minmax(0, 1fr) !important;
+	}
+
+	.grovia-market-board li .storefront-ledger-row {
+		border-inline-end: 0 !important;
+		border-bottom: 2px solid var(--grovia-dispatch-ink);
 	}
 }
 

@@ -6,14 +6,14 @@
     "useRootPaddingAwareAlignments": true,
     "color": {
       "palette": [
-        { "slug": "base",        "color": "#F5F4F1", "name": "Base" },
-        { "slug": "surface",     "color": "#FFFFFF",  "name": "Surface" },
-        { "slug": "surface-2",   "color": "#ECEAE4", "name": "Surface Alt" },
-        { "slug": "border",      "color": "#E0DDD6", "name": "Border" },
-        { "slug": "text",        "color": "#1C1B19", "name": "Text" },
-        { "slug": "text-2",      "color": "#6E6C69", "name": "Text Secondary" },
-        { "slug": "accent",      "color": "#D4600B", "name": "Accent" },
-        { "slug": "accent-2",    "color": "#F5ECE4", "name": "Accent Light" },
+        { "slug": "base",        "color": "#FFFDF8", "name": "Paper White" },
+        { "slug": "surface",     "color": "#FFFFFF", "name": "Surface" },
+        { "slug": "surface-2",   "color": "#F6D8C8", "name": "Market Apricot" },
+        { "slug": "border",      "color": "#1E1424", "name": "Aubergine Rule" },
+        { "slug": "text",        "color": "#1E1424", "name": "Aubergine Ink" },
+        { "slug": "text-2",      "color": "#665D68", "name": "Text Secondary" },
+        { "slug": "accent",      "color": "#FF4B2B", "name": "Tomato" },
+        { "slug": "accent-2",    "color": "#FFE4D8", "name": "Tomato Light" },
         { "slug": "accent-text", "color": "#FFFFFF",  "name": "Accent Text" },
         { "slug": "success",     "color": "#1A6B35", "name": "Success" },
         { "slug": "success-bg",  "color": "#EBF5EF", "name": "Success Background" },
@@ -151,7 +151,7 @@
           "fontWeight": "600",
           "fontSize": "var(--wp--preset--font-size--sm)"
         },
-        ":hover": { "color": { "background": "#B8520A" } },
+        ":hover": { "color": { "background": "#D93519" } },
         ":focus": {
           "outline": {
             "color": "var(--wp--preset--color--accent)",
