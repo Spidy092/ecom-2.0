@@ -3,7 +3,7 @@ Theme Name: BhaivaTech Grocery Alpha (Internal)
 Theme URI: https://bhaivatech.com/
 Author: BhaivaTech
 Description: Internal engineering-alpha block theme for the grocery-first WooCommerce product. Not a public/final product name.
-Version: 0.0.3-alpha.32
+Version: 0.0.3-alpha.33
 Requires at least: 6.9
 Requires PHP: 8.3
 License: GNU General Public License v2 or later
@@ -961,7 +961,7 @@ body.admin-bar:not(.woocommerce-cart):not(.woocommerce-checkout) .grovia-site-he
 	}
 }
 
-@media (max-width: 600px) {
+@media (max-width: 767px) {
 	.grovia-fresh-dispatch .grovia-market-board > ul.wc-block-product-template,
 	.grovia-fresh-dispatch .grovia-market-board .wc-block-product-template__responsive {
 		grid-template-columns: minmax(0, 1fr) !important;
